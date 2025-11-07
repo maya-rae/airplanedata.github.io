@@ -1,0 +1,19 @@
+Project Proposal
+================
+Maya Arnott, Karolina Wiesiolek, Casandra Laney, and Zichen Fan
+2025-11-06
+
+# Tentative Title: “Fly High”
+
+*Motivation*: In recent years it seems that news coverage on airplane
+crashes have increased, with plane crashes posing as “clickbait”. We are
+interested in assessing how airplane crashes have changed in severity
+and quantity.
+
+**Intended Final Products**: A website with our report, link to
+explainatory video, and visualization of trends, risks, and potentially
+explore predictors of severe or fatal crashes.
+
+Anticipated Data Sources: [Aviation Crashed Flights
+Data](https://www.kaggle.com/datasets/anandkushawaha/aviation-crashed-flights-data/data)
+on Kaggle.com
