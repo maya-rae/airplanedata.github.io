@@ -1,20 +1,46 @@
 ---
-title: "Project Proposal"
-author: "Maya Arnott, Karolina Wiesiolek, Casandra Laney, and Zichen Fan"
+title: "Project Proposal: Aviation Crash Data Analysis"
 date: "2025-11-06"
 output: github_document
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Tentative Title: "Fly High"
+authors:  
+  - Maya Arnott  
+  - Karolina Wiesiolek  
+  - Casandra Laney  
+  - Zichen Fan  
+  
+**Tentative Title: "Fly High"**
 
-**Motivation**: In recent years it seems that news coverage on airplane crashes have increased, with plane crashes posing as “clickbait”. We are interested in assessing how airplane crashes have changed in severity and quantity.  
+**Motivation**: In recent years it seems that news coverage on airplane crashes have increased, with plane crashes posing as “click bait”. We are interested in assessing how airplane crashes have changed in severity and quantity over time and seasons of the year. 
 
-**Intended Final Products**: A website with our report, link to explainatory video, and visualization of trends, risks, and potentially explore predictors of severe or fatal crashes.
+**Intended Final Products**: A website with our report, link to our explanatory video, and visualization of trends, risks, and potentially explore predictors of severe or fatal crashes.
 
+**Anticipated Data Sources**: [Aviation Crashed Flights Data](https://www.kaggle.com/datasets/anandkushawaha/aviation-crashed-flights-data/data) on Kaggle.com and potentially use NOAA Climate data 
 
-**Anticipated Data Sources**: [Aviation Crashed Flights Data](https://www.kaggle.com/datasets/anandkushawaha/aviation-crashed-flights-data/data) on Kaggle.com
-Potentially use NOAA weather data as well?
+**Planned Analyses/Visualizations**:  
+  - Understand which aircraft types/models have the most crashes or fatalities  
+  - Rank airlines/operators by frequency or severity of crashes  
+  - Assess whether crashes are more common in certain seasons  
+  - Historical crash data vs their 2024 delay performance: do airlines with higher delays also have more historical safety incidents?  
+  - Temporal safety trends: how has crash frequency changed over decades  
+  
+**Coding Challenges**:  
+  - Converting crash location (airport name) in data cell to a location on the map  
+  - Deciding how large the map will be (U.S. vs. whole world data)  
+  - Deciding which data to exclude  
+  
+  **Planned Timeline**  
+  - First week of November: Pick our topic, start the data collection and decipher data columns  
+  - Second week of November: Clean data and perform initial preliminary analysis/exploration  
+  - Third week of November: Continue to explore trends over time, across airlines, across the U.S and start making visualizations  
+  - Fourth week of November: Make histograms, scatterplots, and spatial leaflet plots  
+  - First week of December: Finalize analyses and write the report  
+  - Second week of December: Finish writing the report and finalize the project 
+
+  
