@@ -1,0 +1,23 @@
+---
+title: "Exploring the Data"
+author: "Maya Arnott"
+date: "2025-11-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+```
+
+
+Loading and tidying the data.
+
+```{r}
+airplane_df = read_csv("datasets/airplane_crashes.csv") |> 
+  janitor::clean_names() |> 
+  select(-flight_number) |> 
+  drop_na(date, time, operator, route, registration, cn_ln)
+```
+
