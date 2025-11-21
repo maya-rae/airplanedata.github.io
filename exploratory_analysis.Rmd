@@ -1,23 +1,178 @@
 ---
 title: "Exploring the Data"
-author: "Maya Arnott"
 date: "2025-11-18"
-output: html_document
+output: github_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, include=FALSE, message = FALSE, warning = FALSE}
+
 library(tidyverse)
 library(lubridate)
+library(stringr)
+library(ggthemes)
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+  )
+
+theme_set(theme_economist() + theme(legend.position = "bottom"))
+
+
 ```
 
 
-Loading and tidying the data.
+
+# Loading and cleaning the data.
 
 ```{r}
 airplane_df = read_csv("datasets/airplane_crashes.csv") |> 
   janitor::clean_names() |> 
-  select(-flight_number) |> 
-  drop_na(date, time, operator, route, registration, cn_ln)
+  filter(ground != "NULL", aboard != "NULL") |> 
+
+  # removes an unnecessary column
+  select(-flight_number, -fatalities_passangers, -fatalities_crew, -aboard_passangers, -aboard_crew) |> 
+  drop_na(date, time, operator, route, aboard, fatalities, registration, cn_ln, ground, summary)       
+
+
+```
+
+Creating a datetime column.
+
+```{r}
+airplane_df = airplane_df |> 
+  mutate(
+    # remove leading/trailing spaces
+    time = str_trim(time),
+    
+    # replace the invalid times with NA
+    time = ifelse(time %in% c("91:5", "90:0"), NA, time),
+    
+    # combine the cleaned date and time columns into datetime
+    datetime = mdy_hm(paste(date, time))
+  ) |> 
+  
+  # remove any rows that could not be parsed
+  drop_na(datetime)
+```
+
+
+Converting variables to their proper variable types.
+
+```{r}
+
+airplane_df = airplane_df |> 
+  mutate(
+    year       = year(datetime), 
+    month      = month(datetime), 
+    month_name = month(datetime, label = TRUE),
+    
+    aboard     = as.numeric(aboard),
+    fatalities =  as.numeric(ground),
+    operator   = as.factor(operator)  # to group by operator
+    ) |> 
+  select(datetime, year, month, month_name, everything()) |> 
+  select(-date, -time)
+
+```
+
+
+## Exploring the data. 
+
+Crashes per year?
+
+```{r}
+airplane_df |> 
+  group_by(year) |> 
+  summarize(total_crashes = n()) |> 
+  ggplot(aes(x = year, y = total_crashes)) + 
+  geom_line() +
+  geom_point() + 
+  labs(title = "Airplane Crashes per Year")
+```
+
+Seasonal trends, combining all years?
+
+```{r}
+airplane_df |> 
+  group_by(month_name) |> 
+  summarize(total_crashes = n()) |> 
+  ggplot(aes(x = month_name, y = total_crashes)) +
+  geom_col(fill = "blue") +
+  labs(title = "Airplane Crashes by Month")
+```
+
+
+Top airlines with crashes?
+
+```{r}
+airplane_df |> 
+  group_by(operator) |> 
+  summarise(total_crashes = n()) |> 
+  arrange(desc(total_crashes)) |> 
+  head(10)  # top 10 operators
+
+```
+
+Avg fatalities per year?
+
+```{r}
+airplane_df |> 
+  group_by(year) |> 
+  summarise(avg_fatalities = mean(fatalities, na.rm = TRUE)) |> 
+  ggplot(aes(x = year, y = avg_fatalities)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Average Fatalities per Crash per Year")
+
+```
+
+# Looking at seasonal and yearly tends more closely.
+
+```{r}
+crashes_per_yr = airplane_df |> 
+  group_by(year) |> 
+  summarize(total_crashes = n())
+
+# crashes per year
+ggplot(crashes_per_yr, aes(x = year, y = total_crashes)) + 
+  geom_line(color = "blue") +
+  geom_point(color = "darkblue") +
+  labs(
+    title = "Airplane Crashes per Year",
+    x     = "Year",
+    y     = "Number of Crashes")
+
+# crashes by month, combining all years
+crashes_by_month = airplane_df |> 
+  group_by(month_name) |> 
+  summarize(total_crashes = n()) |> 
+  mutate(month_name = factor(
+    month_name, levels = month.abb))
+
+ggplot(crashes_by_month, aes(x = month_name, y = total_crashes)) +
+  geom_col(fill = "darkred") +
+  labs(
+    title = "Airplane Crashes per Month",
+    x     = "Month",
+    y     = "Number of Crashes")
+
+# heatmap of crashes by year and month
+crashes_heatmap = airplane_df |> 
+  group_by(year, month_name) |> 
+  summarize(total_crashes = n(), .groups = "drop") |> 
+  mutate(month_name = factor(month_name, levels = month.abb))
+
+ggplot(crashes_heatmap, aes(x = year, y = month_name, fill = total_crashes)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "white", high = "red") +
+  labs(title = "Heatmap of Airplane Crashes by Year and Month",
+       x = "Year",
+       y = "Month",
+       fill = "Number of Crashes")
+
 ```
 
