@@ -22,40 +22,56 @@ knitr::opts_chunk$set(
 
 theme_set(theme_economist() + theme(legend.position = "bottom"))
 
-
 ```
 
 
 # Loading and cleaning the data.
 
 ```{r}
-airplane_df = read_csv("datasets/airplane_crashes.csv") |> 
+
+airplane_df = read_csv("datasets/airplane_crashes_data.csv") |> 
   janitor::clean_names() |> 
   filter(ground != "NULL", aboard != "NULL") |> 
 
   # removes an unnecessary column
-  select(-flight_number, -fatalities_passangers, -fatalities_crew, -aboard_passangers, -aboard_crew) |> 
-  drop_na(date, time, operator, route, aboard, fatalities, registration, cn_ln, ground, summary)       
+  select(-flight_number, -time) |> 
+  drop_na(date, operator, route, aboard, fatalities, registration, cn_in, ground, summary)   
+
 
 ```
 
-Creating a datetime column.
+Converting 2 digit years to four digit years.
 
 ```{r}
 airplane_df = airplane_df |> 
   mutate(
-    # remove leading/trailing spaces
-    time = str_trim(time),
+    #remove leading and trailing spaces
+    date = str_trim(date),
     
-    # replace the invalid times with NA
-    time = ifelse(time %in% c("91:5", "90:0"), NA, time),
+    # extract month, day, and year from the date string
+    m = as.numeric(sub("/.*", "", date)),                    
+    d = as.numeric(sub(".*/(.*)/.*", "\\1", date)),          
+    y = as.numeric(sub(".*/(.*)$", "\\1", date)),            
     
-    # combine the cleaned date and time columns into datetime
-    datetime = mdy_hm(paste(date, time))
-  ) |> 
-  
-  # remove any rows that could not be parsed
-  drop_na(datetime)
+    # convert 2-digit years (<100) to 4-digit (1900s)
+    y = ifelse(y < 100, y + 1900, y),
+    
+    # rebuild the string
+    date_clean = paste(m, d, y, sep = "/"),
+    
+    # Convert to Date type
+    date = mdy(date_clean),
+    
+    # extract numeric year and month
+    year = year(date),
+    month = month(date),
+    month_name = factor(month(date, 
+                              label = TRUE, 
+                              abbr = TRUE), 
+                              levels = month.abb)
+  ) |>
+  select(-m, -d, -y, -date_clean)  # remove unnecessary columns
+
 ```
 
 Converting variables to their proper variable types.
@@ -64,15 +80,10 @@ Converting variables to their proper variable types.
 
 airplane_df = airplane_df |> 
   mutate(
-    year       = year(datetime), 
-    month      = month(datetime), 
-    month_name = month(datetime, label = TRUE),
-    
     aboard     = as.numeric(aboard),
     fatalities =  as.numeric(ground),
     operator   = as.factor(operator)  # to group by operator
-    ) |> 
-  select(-date, -time)
+    )
 
 ```
 
@@ -84,7 +95,7 @@ airplane_df = airplane_df |>
     decade = floor(year / 10) * 10, 
     decade = paste0(decade, "s")
   ) |> 
-  select(datetime, year, decade, month, month_name, everything()) 
+  select(date, year, decade, month, month_name, everything()) 
 ```
 
 # Exploring the data. 
@@ -185,7 +196,7 @@ airplane_df |>
 
 ```
 
-# Looking at seasonal and yearly tends more closely.
+# Looking at seasonal and yearly trends more closely.
 
 ```{r}
 
