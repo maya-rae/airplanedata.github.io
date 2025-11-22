@@ -151,6 +151,21 @@ airplane_df |>
   )
 ```
 
+How many people were flying in planes, on average, per year??
+
+```{r}
+airplane_df |> 
+  group_by(year) |> 
+  summarize(avg_aboard = mean(aboard, na.rm = TRUE), .groups = "drop") |> 
+  ggplot(aes(x = year, y = avg_aboard)) +
+  geom_line(color = "darkorange", size = 1) +
+  geom_point(color = "orange", size = 2) +
+  labs(
+    title = "Average Number of People on Planes per Year",
+    x     = "Year",
+    y     = "Average Number of People"
+  )
+```
 
 Seasonal trends, combining all years?
 
