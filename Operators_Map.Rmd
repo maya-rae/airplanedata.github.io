@@ -13,6 +13,9 @@ library(plotly)
 library(ggthemes)
 library(dplyr)
 library(knitr)
+library(leaflet)
+library(tidygeocoder)
+
 
 
 knitr::opts_chunk$set(
@@ -98,3 +101,17 @@ operator_counts_filtered_20 |>
   )
 
 ```
+
+
+
+## Map
+
+```{r}
+airplane_df = read_csv("datasets/airplane_crashes_data.csv")
+
+unique_locations = airplane_df |>
+  distinct(Location) |>
+  rename(location_clean = Location)
+```
+
+
