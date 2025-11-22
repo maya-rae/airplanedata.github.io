@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
   out.width = "90%"
   )
 
-theme_set(theme_economist() + theme(legend.position = "bottom"))
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
 
 ```
 
@@ -33,7 +33,7 @@ airplane_df = read_csv("datasets/airplane_crashes_data.csv") |>
   janitor::clean_names() |> 
   filter(ground != "NULL", aboard != "NULL") |> 
 
-  # removes an unnecessary column
+  # removes unnecessary columns for our analyses
   select(-flight_number, -time, - registration)
 
 ```
@@ -43,7 +43,7 @@ Converting 2 digit years to four digit years.
 ```{r}
 airplane_df = airplane_df |> 
   mutate(
-    #remove leading and trailing spaces
+    # remove leading and trailing spaces
     date = str_trim(date),
     
     # extract month, day, and year from the date string
@@ -57,7 +57,7 @@ airplane_df = airplane_df |>
     # rebuild the string
     date_clean = paste(m, d, y, sep = "/"),
     
-    # Convert to Date type
+    # convert to Date type
     date = mdy(date_clean),
     
     # extract numeric year and month
@@ -126,23 +126,24 @@ airplane_df |>
   plot_ly(
     x = ~year, 
     y = ~n,
-    type = "scatter",
+    type = "bar",
     mode = "lines+markers",
     hovertemplate = "Year: %{x}<br>Crashes: %{y}<extra></extra>"
   ) |> 
   layout(
     title = list(
       text = "Airplane Crashes per Year",
+      y    = 0.98,
       font = list(size = 20)
     ),
-    xaxis = list(
-      title = list(
+      xaxis  = list(
+      title  = list(
         text = "Year",
         font = list(size = 16)
       )
       ),
-    yaxis = list(
-      title = list(
+      yaxis  = list(
+      title  = list(
         text = "Number of Crashes",
         font = list(size = 16)
       )
@@ -154,12 +155,14 @@ airplane_df |>
 Seasonal trends, combining all years?
 
 ```{r}
+
 airplane_df |> 
   group_by(month_name) |> 
   summarize(total_crashes = n()) |> 
   ggplot(aes(x = month_name, y = total_crashes)) +
   geom_col(fill = "blue") +
   labs(title = "Airplane Crashes by Month")
+
 ```
 
 
@@ -185,17 +188,24 @@ airplane_df |>
 
 ```
 
-Avg fatalities per year?
+Looking at the number of fatalities per year. I have excluded the year 2001, which was an outlier and had 5,641 fatalities, because of the 9/11 attacks.
 
 ```{r}
-airplane_df |> 
+# summarize the fatalities by year
+fatalities_per_year = airplane_df |> 
   group_by(year) |> 
-  summarise(avg_fatalities = mean(fatalities, na.rm = TRUE)) |> 
-  ggplot(aes(x = year, y = avg_fatalities)) +
-  geom_line() +
-  geom_point() +
-  labs(title = "Average Fatalities per Crash per Year")
-
+  summarize(total_fatalities = sum(fatalities, na.rm = TRUE)) |> 
+  arrange(year) |> 
+  filter(year != 2001) # removes the 2001 outlier for plotting
+  
+  # plot the values
+ggplot(fatalities_per_year, aes(x = year, y = total_fatalities)) +
+geom_col(color = "darkblue") +
+labs(
+  title = "Total Fatalities from Airplane Crashes per Year",
+  x = "Year",
+  y = "Number of Fatalities"
+  )
 ```
 
 # Looking at seasonal and yearly trends more closely.
