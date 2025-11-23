@@ -185,10 +185,8 @@ airplane_df |>
   theme(
     axis.title = element_text(size = 14)
   ) 
-  
-
-airplane_df |> 
-  count(type, sort = TRUE)
 ```
 
 The Douglas DC-3 has had by far the most crashes out of all the aircraft types. Most of the planes in this graph are Douglas aircrafts. Interestingly, the Douglas DC-3 became the most successful airliner in the formative years of air transformation, and was the first to fly profitably without government subsidy. 
+
+
