@@ -1,0 +1,147 @@
+---
+title: "Operators Analysis and Location Map"
+output: html_document
+date: "2025-11-22"
+---
+
+```{r, include=FALSE, message = FALSE, warning = FALSE}
+
+library(tidyverse)
+library(lubridate)
+library(stringr)
+library(plotly)
+library(ggthemes)
+library(dplyr)
+library(knitr)
+library(leaflet)
+library(tidygeocoder)
+
+
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+  )
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+```
+
+
+# Loading and cleaning the data.
+
+```{r}
+
+airplane_df = read_csv("datasets/airplane_crashes_data.csv") |> 
+  janitor::clean_names() |> 
+  filter(ground != "NULL", aboard != "NULL") |> 
+
+  # removes unnecessary columns for our analyses
+  select(-flight_number, -time, - registration)
+
+```
+
+## This code counts how many times each airline operator appears in the dataset (how many crashes are associated with each operator) and sorts them from most frequent to least frequent.
+```{r}
+operator_counts = airplane_df |> ## This code checks for all the operators listed in the df and counts them up 
+  count(operator, sort = TRUE) ## This lines sorts the operators 
+```
+
+## These lines count how many crashes are associated with each operator, filter the operators appearing more than five times, and extract the operator with the highest crash frequency.
+```{r}
+operator_counts = airplane_df |>
+  count(operator, sort = TRUE)
+operator_counts_filtered = operator_counts |>
+  filter(n > 5)
+top_operator = operator_counts |>
+  slice(1)
+
+```
+
+## The first chunk prints a formatted table of operators with more than five crashes.
+The second chunk extracts the most frequent operator and prints a sentence describing which operator appears most often and how many crashes are associated with it.
+
+```{r}
+kable(operator_counts_filtered,
+      caption = "operators Appearing More Than 5 Times")
+
+
+top_operator_name = top_operator$operator
+top_operator_count = top_operator$n
+
+paste(
+  "The operator that appears most often is",
+  top_operator_name,
+  "with",
+  top_operator_count,
+  "occurrences."
+)
+
+```
+
+## The plot shows a dramatic visual difference: Aeroflot experienced over 200 crashes, far exceeding all other operators. Even compared to operators with more than 20 crashes, Aeroflot’s crash count stands out as exceptionally high.
+
+```{r}
+library(ggplot2)
+
+operator_counts_filtered_20 = operator_counts |>
+  filter(n > 20)
+
+operator_counts_filtered_20 |>
+  ggplot(aes(x = reorder(operator, n), y = n)) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    title = "Frequency of Operators (More Than 20 Appearances)",
+    x = "Operator",
+    y = "Count"
+  )
+
+```
+
+
+
+## Map
+
+```{r}
+airplane_df = read_csv("datasets/airplane_crashes_data.csv")
+
+unique_locations = airplane_df |>
+  distinct(Location) |>
+  rename(location_clean = Location)
+```
+
+
+```{r}
+geocoded_locations = unique_locations |>
+  geocode(
+    address = location_clean,
+    method = "osm",
+    lat = Latitude,
+    long = Longitude
+    )
+```
+
+```{r}
+write.csv(geocoded_locations, "geocoded_cache.csv", row.names = FALSE)
+```
+
+
+```{r}
+df_geo = airplane_df |>
+  left_join(
+    geocoded_locations,
+    by = c("location" = "location_clean")
+  )
+
+df_map = df_geo |>
+  filter(!is.na(Latitude), !is.na(Longitude))
+
+```
+
+
+
+

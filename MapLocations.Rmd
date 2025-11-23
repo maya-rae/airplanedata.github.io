@@ -1,0 +1,62 @@
+---
+title: "On Map Locations"
+output: html_document
+date: "2025-11-22"
+---
+
+
+```{r setup, include=FALSE}
+library(tidyverse)   
+library(janitor)
+library(leaflet)
+library(knitr)
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+
+```
+
+
+Here, I am loading in the cache geocoded file, cause rmd with the the actual code kept freezing
+```{r}
+airplane_df = read_csv("datasets/airplane_crashes_data.csv") |>
+  janitor::clean_names()
+
+geocoded_locations = read_csv("geocoded_cache.csv")
+
+```
+
+```{r}
+df_geo = airplane_df |>
+  left_join(
+    geocoded_locations,
+    by = c("location" = "location_clean")
+)
+
+df_map = df_geo |>
+filter(!is.na(Latitude), !is.na(Longitude))
+```
+
+
+Map:
+```{r}
+leaflet(df_map) |>
+  addProviderTiles(providers$CartoDB.Positron) |>
+  addCircleMarkers(
+    lng = ~Longitude,
+    lat = ~Latitude,
+    radius = 4,
+    color = "red",
+    fillOpacity = 0.2,
+    popup = ~paste(
+      "Operator:", operator, "",
+      "Location:", location, "",
+      "Date:", date
+      )
+  )
+```
+
+
