@@ -19,13 +19,80 @@ knitr::opts_chunk$set(
 
 ```
 
+# Loading and cleaning the data.
+
+```{r}
+
+airplane_df = read_csv("datasets/airplane_crashes_data.csv") |> 
+  janitor::clean_names() |> 
+  filter(ground != "NULL", aboard != "NULL") |> 
+
+  # removes unnecessary columns for our analyses
+  select(-flight_number, -time, - registration)
+
+```
+
+Converting 2 digit years to four digit years.
+
+```{r}
+airplane_df = airplane_df |> 
+  mutate(
+    # remove leading and trailing spaces
+    date = str_trim(date),
+    
+    # extract month, day, and year from the date string
+    m = as.numeric(sub("/.*", "", date)),                    
+    d = as.numeric(sub(".*/(.*)/.*", "\\1", date)),          
+    y = as.numeric(sub(".*/(.*)$", "\\1", date)),            
+    
+    # convert 2-digit years (<100) to 4-digit (1900s)
+    y = ifelse(y < 100, y + 1900, y),
+    
+    # rebuild the string
+    date_clean = paste(m, d, y, sep = "/"),
+    
+    # convert to Date type
+    date = mdy(date_clean),
+    
+    # extract numeric year and month
+    year = year(date),
+    month = month(date),
+    month_name = factor(month(date, 
+                              label = TRUE, 
+                              abbr = TRUE), 
+                              levels = month.abb)
+  ) |>
+  select(-m, -d, -y, -date_clean)  # remove unnecessary columns
+
+```
+
+Converting variables to their proper variable types.
+
+```{r}
+
+airplane_df = airplane_df |> 
+  mutate(
+    aboard     = as.numeric(aboard),
+    fatalities =  as.numeric(ground),
+    operator   = as.factor(operator)  # to group by operator
+    )
+
+```
+
+Creating a decade column, now that year is numeric.
+
+```{r}
+airplane_df = airplane_df |> 
+  mutate(
+    decade = floor(year / 10) * 10, 
+    decade = paste0(decade, "s")
+  ) |> 
+  select(date, year, decade, month, month_name, everything()) 
+```
 
 Here, I am loading in the cache geocoded file, cause rmd with the the actual code kept freezing
 ```{r}
-airplane_df = read_csv("datasets/airplane_crashes_data.csv") |>
-  janitor::clean_names()
-
-geocoded_locations = read_csv("geocoded_cache.csv")
+geocoded_locations = read_csv("datasets/geocoded_cache.csv")
 
 ```
 
@@ -38,6 +105,7 @@ df_geo = airplane_df |>
 
 df_map = df_geo |>
 filter(!is.na(Latitude), !is.na(Longitude))
+  
 ```
 
 
@@ -58,5 +126,6 @@ leaflet(df_map) |>
       )
   )
 ```
+
 
 
