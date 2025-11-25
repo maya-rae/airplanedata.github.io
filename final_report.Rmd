@@ -8,8 +8,13 @@ output: html_document
 # Report 
 
 ## Scientific Title
+Data Analysis of Aviation Crashes. 
+## Group Members:
 
-## Group Members 
+  + Maya Arnott  
+  + Karolina Wiesiolek  
+  + Casandra Laney  
+  + Zichen Fan 
 
 ## Motivation 
 Provide an overview of the project goals and motivation.
