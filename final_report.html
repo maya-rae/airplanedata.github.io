@@ -9,10 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Casandra Laney" />
 
-<meta name="date" content="2025-11-22" />
+<meta name="date" content="2025-11-25" />
 
-<title>Descriptive Statistics</title>
+<title>final_report</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -272,166 +273,27 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Descriptive Statistics</h1>
-<h4 class="date">2025-11-22</h4>
+<h1 class="title toc-ignore">final_report</h1>
+<h4 class="author">Casandra Laney</h4>
+<h4 class="date">2025-11-25</h4>
 
 </div>
 
 
-<p>This file contains the final drafts of the plots we want to use in
-our website and the trends noted in each.</p>
-<div id="loading-and-cleaning-the-data." class="section level1">
-<h1>Loading and cleaning the data.</h1>
-<pre class="r"><code>airplane_df = read_csv(&quot;datasets/airplane_crashes_data.csv&quot;) |&gt; 
-  janitor::clean_names() |&gt; 
-  filter(ground != &quot;NULL&quot;, aboard != &quot;NULL&quot;) |&gt; 
-
-  # removes unnecessary columns for our analyses
-  select(-flight_number, -time, - registration)</code></pre>
-<pre><code>## Rows: 5268 Columns: 13
-## ── Column specification ─────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (10): Date, Time, Location, Operator, Flight #, Route, Type, Registratio...
-## dbl  (3): Aboard, Fatalities, Ground
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<p>Converting 2 digit years to four digit years.</p>
-<pre class="r"><code>airplane_df = airplane_df |&gt; 
-  mutate(
-    # remove leading and trailing spaces
-    date = str_trim(date),
-    
-    # extract month, day, and year from the date string
-    m = as.numeric(sub(&quot;/.*&quot;, &quot;&quot;, date)),                    
-    d = as.numeric(sub(&quot;.*/(.*)/.*&quot;, &quot;\\1&quot;, date)),          
-    y = as.numeric(sub(&quot;.*/(.*)$&quot;, &quot;\\1&quot;, date)),            
-    
-    # convert 2-digit years (&lt;100) to 4-digit (1900s)
-    y = ifelse(y &lt; 100, y + 1900, y),
-    
-    # rebuild the string
-    date_clean = paste(m, d, y, sep = &quot;/&quot;),
-    
-    # convert to Date type
-    date = mdy(date_clean),
-    
-    # extract numeric year and month
-    year = year(date),
-    month = month(date),
-    month_name = factor(month(date, 
-                              label = TRUE, 
-                              abbr = TRUE), 
-                              levels = month.abb)
-  ) |&gt;
-  select(-m, -d, -y, -date_clean)  # remove unnecessary columns</code></pre>
-<p>Converting variables to their proper variable types.</p>
-<pre class="r"><code>airplane_df = airplane_df |&gt; 
-  mutate(
-    aboard     = as.numeric(aboard),
-    fatalities =  as.numeric(ground),
-    operator   = as.factor(operator)  # to group by operator
-    )</code></pre>
-<p>Creating a decade column, now that year is numeric.</p>
-<pre class="r"><code>airplane_df = airplane_df |&gt; 
-  mutate(
-    decade = floor(year / 10) * 10, 
-    decade = paste0(decade, &quot;s&quot;)
-  ) |&gt; 
-  select(date, year, decade, month, month_name, everything()) </code></pre>
-</div>
-<div id="final-plots" class="section level1">
-<h1>Final Plots</h1>
-<pre class="r"><code>airplane_df |&gt; 
-  group_by(year) |&gt; 
-  summarize(total_crashes = n()) |&gt; 
-  ggplot(aes(x = year, y = total_crashes)) + 
-  geom_line(color = &quot;blue&quot;) +
-  geom_point(color = &quot;darkblue&quot;) + 
-  labs(
-    title = &quot;Airplane Crashes per Year&quot;,
-       x  = &quot;Year&quot;,
-       y  = &quot;Number of Crashes&quot;
-    ) +
-  theme_fivethirtyeight() +
- theme(
-    axis.title = element_text(size = 14),  # keep axis titles
-    axis.text  = element_text(size = 12)   # keep axis tick labels
-  )</code></pre>
-<p><img src="descriptive_stats_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
-<p>In the early years of flight, there were not as many airplanes in the
-sky, so the relatively low number of crashes from the early 1900s to
-1940 make sense. Beginning in the late 1940s to early 50’s, more people
-started flying, which coincides with an increase in crashes. The
-commercial jet service was introduced in 1952, which is where we see a
-steady increase in crashes after that.</p>
-<pre class="r"><code>airplane_df |&gt; 
-  group_by(year) |&gt; 
-  summarize(avg_aboard = mean(aboard, na.rm = TRUE), .groups = &quot;drop&quot;) |&gt; 
-  ggplot(aes(x = year, y = avg_aboard)) +
-  geom_line(color = &quot;darkorange&quot;, size = 1) +
-  geom_point(color = &quot;orange&quot;, size = 2) +
-  labs(
-    title = &quot;Average Number of People on Planes per Year&quot;,
-    x     = &quot;Year&quot;,
-    y     = &quot;Average Number of People&quot;
-  ) +
-  theme_fivethirtyeight() +
-  theme(
-    axis.title = element_text(size = 14),  # keep axis titles
-    axis.text  = element_text(size = 12)   # keep axis tick labels
-  )</code></pre>
-<p><img src="descriptive_stats_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
-<p>It is useful to see the general trends in the number of people on
-planes per year. Overall, there is a steady upward trend in the number
-of people on planes as air travel became more widely tested and
-popularity grew.</p>
-<pre class="r"><code>airplane_df |&gt; 
-  group_by(operator) |&gt; 
-  summarise(total_crashes = n(), .groups = &quot;drop&quot;) |&gt; 
-  slice_max(total_crashes, n = 15) |&gt;  # select the top 15 operators
-  ggplot(aes(x = reorder(operator, total_crashes), y = total_crashes )) +
-  geom_col(fill = &quot;blue&quot;) +
-  coord_flip() +
-  labs(
-    title = &quot;Top 15 Airline Operators with the Most Crashes&quot;,
-    x     = &quot;Airline Operators&quot;,
-    y     = &quot;Number of Crashes&quot;
-  )  + 
-  theme_fivethirtyeight() +
-  theme(
-    axis.title = element_text(size = 14)
-  ) </code></pre>
-<p><img src="descriptive_stats_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
-<p>Aeroflot, the largest airline in Russia, is by far the commercial
-airline with the greatest crashes at 187 total crashes. The U.S. Air
-Force, a military airline, comes in close second at 182 total
-crashes.</p>
-<pre class="r"><code>airplane_df |&gt; 
-  filter(!is.na(type)) |&gt; 
-  group_by(type) |&gt; 
-  summarize(total_crashes = n(), .groups = &quot;drop&quot;) |&gt; 
-  slice_max(total_crashes, n = 15) |&gt; 
-  ggplot(aes(x = reorder(type, total_crashes), y = total_crashes)) +
-  geom_col(fill = &quot;darkgreen&quot;) + 
-  coord_flip() +
-  labs(
-    title = &quot;Aircrafts with the Most Crashes&quot;,
-    x     = &quot;Number of Crashes&quot;,
-    y     = &quot;Aircraft Type&quot;
-  ) +  
-  theme_fivethirtyeight() +
-  theme(
-    axis.title = element_text(size = 14)
-  ) </code></pre>
-<p><img src="descriptive_stats_files/figure-html/unnamed-chunk-9-1.png" width="90%" /></p>
-<p>The Douglas DC-3 has had by far the most crashes out of all the
-aircraft types. Most of the planes in this graph are Douglas aircrafts.
-Interestingly, the Douglas DC-3 became the most successful airliner in
-the formative years of air transformation, and was the first to fly
-profitably without government subsidy.</p>
-<p>Is there a certain place in the world that has the most crashes?</p>
-</div>
+<p>Motivation: Provide an overview of the project goals and
+motivation.</p>
+<p>Related work: Anything that inspired you, such as a paper, a web
+site, or something we discussed in class.</p>
+<p>Initial questions: What questions are you trying to answer? How did
+these questions evolve over the course of the project? What new
+questions did you consider in the course of your analysis?</p>
+<p>Data: Source, scraping method, cleaning, etc.</p>
+<p>Exploratory analysis: Visualizations, summaries, and exploratory
+statistical analyses. Justify the steps you took, and show any major
+changes to your ideas.</p>
+<p>Additional analysis: If you undertake formal statistical analyses,
+describe these in detail Discussion: What were your findings? Are they
+what you expect? What insights into the data can you make?</p>
 
 
 
