@@ -4,15 +4,16 @@ author: "Casandra Laney"
 date: "2025-11-25"
 output: html_document
 ---
-Motivation: Provide an overview of the project goals and motivation.
+Motivation: Provide an overview of the project goals and motivation. (Karolina)
 
-Related work: Anything that inspired you, such as a paper, a web site, or something we discussed in class.
+Related work: Anything that inspired you, such as a paper, a web site, or something we discussed in class. (Karolina)
 
-Initial questions: What questions are you trying to answer? How did these questions evolve over the course of the project? What new questions did you consider in the course of your analysis?
+Initial questions: What questions are you trying to answer? How did these questions evolve over the course of the project? What new questions did you consider in the course of your analysis? (Karolina)
 
 Data: Source, scraping method, cleaning, etc.
+(Maya can explain the data cleaning method)
 
 Exploratory analysis: Visualizations, summaries, and exploratory statistical analyses. Justify the steps you took, and show any major changes to your ideas.
 
-Additional analysis: If you undertake formal statistical analyses, describe these in detail
+Additional analysis: If you undertake formal statistical analyses, describe these in detail (Zichen can explain the ANOVA/any other stats)
 Discussion: What were your findings? Are they what you expect? What insights into the data can you make?
