@@ -142,7 +142,7 @@ airplane_df |>
   )
 ```
 
-It is useful to see the general trends in the number of people on planes per year. Overall, there is a steady upward trend in the number of people on planes as air travel becomes widely tested and more popular.
+It is useful to see the general trends in the number of people on planes per year. Overall, there is a steady upward trend in the number of people on planes as air travel became more widely tested and popularity grew.
 
 ```{r}
 
@@ -164,5 +164,32 @@ airplane_df |>
   ) 
 ```
 
-Aeroflot, the largest airline of Russia, is by far the commercial airline with the greatest crashes. The U.S. Air Force, a military airline, comes in at a close second.
+Aeroflot, the largest airline in Russia, is by far the commercial airline with the greatest crashes at `r airplane_df |>  filter(grepl("Aeroflot", operator, ignore.case = TRUE)) |> nrow()` total crashes. The U.S. Air Force, a military airline, comes in close second at `r airplane_df |> filter(grepl("Military - U.S. Air Force", operator, ignore.case = TRUE)) |> nrow()` total crashes.
+
+
+```{r}
+airplane_df |> 
+  filter(!is.na(type)) |> 
+  group_by(type) |> 
+  summarize(total_crashes = n(), .groups = "drop") |> 
+  slice_max(total_crashes, n = 15) |> 
+  ggplot(aes(x = reorder(type, total_crashes), y = total_crashes)) +
+  geom_col(fill = "darkgreen") + 
+  coord_flip() +
+  labs(
+    title = "Aircrafts with the Most Crashes",
+    x     = "Number of Crashes",
+    y     = "Aircraft Type"
+  ) +  
+  theme_fivethirtyeight() +
+  theme(
+    axis.title = element_text(size = 14)
+  ) 
+```
+
+The Douglas DC-3 has had by far the most crashes out of all the aircraft types. Most of the planes in this graph are Douglas aircrafts. Interestingly, the Douglas DC-3 became the most successful airliner in the formative years of air transformation, and was the first to fly profitably without government subsidy. 
+
+
+
+Is there a certain place in the world that has the most crashes? 
 
