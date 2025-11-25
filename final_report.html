@@ -343,14 +343,44 @@ with transparent code and clear graphics.</li>
 on:</p>
 <ul>
 <li>Long-term temporal trends in crash frequency,</li>
-<li>Operator and aircraft-type differences, and</li>
+<li>Operator and aircraft-type differences.</li>
 </ul>
 </div>
 <div id="initial-questions" class="section level2">
 <h2>Initial questions</h2>
-<p>What questions are you trying to answer? How did these questions
-evolve over the course of the project? What new questions did you
-consider in the course of your analysis?</p>
+<p>Core Questions</p>
+<p>As we started the project, our main questions were:</p>
+<ol style="list-style-type: decimal">
+<li><p>Temporal trends</p>
+<ul>
+<li>How has the number of aviation crashes changed over time (e.g., by
+decade or year)?</li>
+<li>How has the severity of crashes (e.g., number of fatalities per
+crash) changed over time?</li>
+</ul></li>
+<li><p>Aircraft and operators</p>
+<ul>
+<li>Which aircraft types/models are most frequently involved in
+crashes?</li>
+<li>Which operators/airlines experience the highest number of
+crashes?</li>
+<li>Are some operators associated with more severe outcomes (e.g.,
+higher fatality counts per crash)?</li>
+</ul></li>
+<li><p>Seasonality and environment</p>
+<ul>
+<li>Are crashes more common in certain seasons or months of the
+year?</li>
+<li>Is there evidence that weather or climate conditions (from NOAA) are
+associated with crash frequency or severity?</li>
+</ul></li>
+</ol>
+<p>As data exploration contiuued over following weeks, additional
+questions were developed:</p>
+<pre><code>* What is the best way to present the fatalities that occured around the world? 
+* Are there notable geographic clusters of crushes? 
+* * If certain aircraft or operators have very few crashes, we may shift toward grouping them            into broader categories (e.g., commercial vs military, or regional vs major carriers).
+* If to construct a linear regression model for aircraft crashes, what would it look like? </code></pre>
 </div>
 </div>
 <div id="data-summary" class="section level1">

@@ -40,11 +40,37 @@ Several sources inspired this project:
 We are building on this existing landscape by focusing specifically on:
 
   + Long-term temporal trends in crash frequency,
-  + Operator and aircraft-type differences, and
+  + Operator and aircraft-type differences.
   
 
 ## Initial questions
-What questions are you trying to answer? How did these questions evolve over the course of the project? What new questions did you consider in the course of your analysis?
+
+Core Questions
+
+As we started the project, our main questions were:
+
+1. Temporal trends
+
+    * How has the number of aviation crashes changed over time (e.g., by decade or year)?
+    * How has the severity of crashes (e.g., number of fatalities per crash) changed over time?
+    
+2. Aircraft and operators
+
+    * Which aircraft types/models are most frequently involved in crashes?
+    * Which operators/airlines experience the highest number of crashes?
+    * Are some operators associated with more severe outcomes (e.g., higher fatality counts per crash)?
+    
+3. Seasonality and environment
+
+    * Are crashes more common in certain seasons or months of the year?
+    * Is there evidence that weather or climate conditions (from NOAA) are associated with crash frequency or severity?
+
+As data exploration contiuued over following weeks, additional questions were developed:
+
+    * What is the best way to present the fatalities that occured around the world? 
+    * Are there notable geographic clusters of crushes? 
+    * * If certain aircraft or operators have very few crashes, we may shift toward grouping them            into broader categories (e.g., commercial vs military, or regional vs major carriers).
+    * If to construct a linear regression model for aircraft crashes, what would it look like? 
 
 # Data Summary 
 
