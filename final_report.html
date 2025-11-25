@@ -9,11 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Casandra Laney" />
 
 <meta name="date" content="2025-11-25" />
 
-<title>final_report</title>
+<title>Fly High Project - Final Report</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -273,27 +272,158 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">final_report</h1>
-<h4 class="author">Casandra Laney</h4>
+<h1 class="title toc-ignore">Fly High Project - Final Report</h1>
 <h4 class="date">2025-11-25</h4>
 
 </div>
 
 
-<p>Motivation: Provide an overview of the project goals and
-motivation.</p>
-<p>Related work: Anything that inspired you, such as a paper, a web
-site, or something we discussed in class.</p>
-<p>Initial questions: What questions are you trying to answer? How did
-these questions evolve over the course of the project? What new
-questions did you consider in the course of your analysis?</p>
-<p>Data: Source, scraping method, cleaning, etc.</p>
-<p>Exploratory analysis: Visualizations, summaries, and exploratory
-statistical analyses. Justify the steps you took, and show any major
-changes to your ideas.</p>
-<p>Additional analysis: If you undertake formal statistical analyses,
-describe these in detail Discussion: What were your findings? Are they
-what you expect? What insights into the data can you make?</p>
+<div id="scientific-title" class="section level3">
+<h3>Scientific Title</h3>
+<p>Data Analysis of Aviation Crashes.</p>
+</div>
+<div id="group-members" class="section level3">
+<h3>Group Members:</h3>
+<ul>
+<li>Maya Arnott<br />
+</li>
+<li>Karolina Wiesiolek<br />
+</li>
+<li>Casandra Laney<br />
+</li>
+<li>Zichen Fan</li>
+</ul>
+</div>
+<div id="motivation" class="section level1">
+<h1>Motivation</h1>
+<p>In recent years, airplane crashes seem to receive intense media
+attention, often framed as sensational “click-bait” headlines. This can
+create the impression that commercial air travel is increasingly
+dangerous, even though aviation is widely regarded as one of the safest
+modes of transportation.</p>
+<p>Our project is motivated by two main goals:</p>
+<ol style="list-style-type: decimal">
+<li>Put aviation risk into context over time:</li>
+</ol>
+<ul>
+<li>We want to examine how the frequency and severity of airplane
+crashes have changed across decades. Are crashes actually becoming more
+or less common? Have fatality rates per crash changed with improvements
+in technology and safety regulations?</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li>Understand patterns across aircraft, operators, and seasons:</li>
+</ol>
+<ul>
+<li>We are interested in which aircraft types, operators, and seasons
+are associated with more frequent or more severe crashes. We also plan
+to explore whether climate or seasonal patterns might be related to the
+timing or characteristics of crashes.</li>
+<li>By combining historical crash records with external data (e.g.,
+climate data), we hope to create a clearer, data-driven picture of
+aviation safety trends that goes beyond anecdotal media coverage.</li>
+</ul>
+</div>
+<div id="related-work" class="section level1">
+<h1>Related work</h1>
+<p>Several sources inspired this project:</p>
+<ul>
+<li>News coverage of recent crashes, which often emphasizes rare
+catastrophic events without context, raising questions about perceived
+vs actual risk.</li>
+<li>Course materials on data visualization and reproducible analysis,
+which emphasized using public datasets to answer real-world questions
+with transparent code and clear graphics.</li>
+</ul>
+<p>We are building on this existing landscape by focusing specifically
+on:</p>
+<ul>
+<li>Long-term temporal trends in crash frequency,</li>
+<li>Operator and aircraft-type differences.</li>
+</ul>
+</div>
+<div id="initial-questions" class="section level1">
+<h1>Initial questions</h1>
+<p>Core Questions</p>
+<p>As we started the project, our main questions were:</p>
+<ol style="list-style-type: decimal">
+<li><p>Temporal trends</p>
+<ul>
+<li>How has the number of aviation crashes changed over time (e.g., by
+decade or year)?</li>
+<li>How has the severity of crashes (e.g., number of fatalities per
+crash) changed over time?</li>
+</ul></li>
+<li><p>Aircraft and operators</p>
+<ul>
+<li>Which aircraft types/models are most frequently involved in
+crashes?</li>
+<li>Which operators/airlines experience the highest number of
+crashes?</li>
+<li>Are some operators associated with more severe outcomes (e.g.,
+higher fatality counts per crash)?</li>
+</ul></li>
+<li><p>Seasonality and environment</p>
+<ul>
+<li>Are crashes more common in certain seasons or months of the
+year?</li>
+<li>Is there evidence that weather or climate conditions (from NOAA) are
+associated with crash frequency or severity?</li>
+</ul></li>
+</ol>
+<p>As data exploration contiuued over following weeks, additional
+questions were developed:</p>
+<ul>
+<li>What is the best way to present the fatalities that occured around
+the world?</li>
+<li>Are there notable geographic clusters of crushes?</li>
+<li>If certain aircraft or operators have very few crashes, we may shift
+toward grouping them into broader categories (e.g., commercial vs
+military, or regional vs major carriers).</li>
+<li>If to construct a linear regression model for aircraft crashes, what
+would it look like?</li>
+</ul>
+</div>
+<div id="data-summary" class="section level1">
+<h1>Data Summary</h1>
+<div id="data-source" class="section level3">
+<h3>Data Source:</h3>
+<p>The dataset was sourced as a CSV file from Kaggle and stored in a
+datasets/ folder within our project directory. We read it into R using
+read_csv() and maintain all code in an R Project linked to a public
+GitHub repository for reproducibility.</p>
+</div>
+<div id="data" class="section level3">
+<h3>Data:</h3>
+</div>
+<div id="exploratory-analysis" class="section level3">
+<h3>Exploratory analysis</h3>
+<p>(Visualizations, summaries, and exploratory statistical analyses.
+Justify the steps you took, and show any major changes to your
+ideas.)</p>
+</div>
+<div id="additional-analysis" class="section level3">
+<h3>Additional analysis</h3>
+<p>(If you undertake formal statistical analyses, describe these in
+detail)</p>
+</div>
+</div>
+<div id="discussion" class="section level1">
+<h1>Discussion:</h1>
+<p>In this final stage of the project, we returned to the questions from
+our Motivation and Initial Questions sections to reflect on what we
+learned.</p>
+<p>The data and knowledge of the world demonstrates that as the total
+number of flights and passangers has increased over the decades, the
+aviation industry has become significantly safer due to stringent
+standards, advanced technology, and well-trained professionals. The
+absolute number of crashes has not risen in proportion to the volume of
+air traffic, meaning that the rate of accidents has fallen to
+historically low levels.</p>
+<p>Though the number of sudden fatalities due to aircraft crash is high
+and therefore is always highly covered by media outlets, commuting by
+air is considered one of the safest ways to commute.</p>
+</div>
 
 
 
