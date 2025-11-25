@@ -1,0 +1,49 @@
+---
+title: "Report"
+output: html_document
+date: "2025-11-25"
+---
+
+## Scientific Title
+
+
+
+## Group Members
+
+
+
+
+## Motivation
+
+
+
+## Related Work
+
+
+
+
+## Initial Questions
+
+
+
+
+
+## Data Summary
+
+
+
+
+## Data Cleaning
+
+
+
+
+## Exploratory Data 
+
+
+
+## CONCLUSIONS 
+
+# Discussion
+
+# Limitations 
