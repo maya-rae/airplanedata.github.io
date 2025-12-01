@@ -9,7 +9,7 @@ runtime: shiny
 
 
 
-```{r}
+```{r, echo=FALSE}
 library(tidyverse)
 library(janitor)
 library(lubridate)
@@ -20,15 +20,28 @@ library(flexdashboard)
 ```
 
 
-```{r}
-# Load airplane dataset
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  echo = FALSE
+)
+options(readr.show_col_types = FALSE)
+
+```
+
+
+
+
+```{r, echo=FALSE}
+# Loading in the data set:
 
 airplane_df = read_csv("datasets/airplane_crashes_data.csv") |>
   clean_names() |>
   filter(ground != "NULL", aboard != "NULL") |>
   select(-flight_number, -time, -registration)
 
-# Fix date
 
 airplane_df = airplane_df |>
   mutate(
@@ -50,11 +63,11 @@ airplane_df = airplane_df |>
 ) |>
   select(-m, -d, -y, -date_clean)
 
-# Load geocoded cache
+# Loading the geocoded cache
 
 geocoded_locations = read_csv("datasets/geocoded_cache.csv")
 
-# Merge coordinates
+# Merging all of the coordinates
 
 df_map = airplane_df |>
   left_join(geocoded_locations, by = c("location" = "location_clean")) |>
@@ -63,8 +76,8 @@ df_map = airplane_df |>
 ```
 
 
-global map:
-```{r}
+Global Map - ability to zoom in / zoom out from area of interest:
+```{r, echo=FALSE}
 renderLeaflet({
   leaflet(df_map) |>
     addProviderTiles(providers$CartoDB.Positron) |>
@@ -84,18 +97,27 @@ renderLeaflet({
 
 ```
 
-ROW 2:
-```{r}
-selectInput(
-  "operator_choice",
-  "Choose Operator:",
-  choices = sort(unique(df_map$operator)),
-  selected = "Aeroflot"
-  )
+```{r, echo=FALSE}
+renderUI({
+  h3(paste("Crash Locations for Operator:", input$operator_choice))
+})
 
 ```
 
-```{r}
+
+```{r, echo=FALSE}
+selectizeInput(
+  "operator_choice",
+  "Choose Operator:",
+  choices = sort(unique(df_map$operator)),
+  selected = "Aeroflot",
+  options = list(maxOptions = 10000)
+)
+
+
+```
+
+```{r, echo=FALSE}
 renderLeaflet({
   req(input$operator_choice)
 
@@ -119,3 +141,4 @@ leaflet(filtered) |>
 })
 
 ```
+
