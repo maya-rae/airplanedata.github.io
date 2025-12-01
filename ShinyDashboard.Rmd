@@ -144,6 +144,41 @@ leaflet(filtered) |>
 
 ```
 
+Airplane Crashes with # of Fatalities: 
 
+```{r}
+numericInput(
+  "min_fatalities",
+  "Show crashes with at least this many fatalities:",
+  value = 50,
+  min = 0,
+  max = max(df_map$fatalities, na.rm = TRUE)
+  )
+
+```
+
+```{r}
+renderLeaflet({
+  req(input$min_fatalities)
+
+filtered <- df_map |>
+  filter(!is.na(fatalities), fatalities >= input$min_fatalities)
+
+leaflet(filtered) |>
+  addProviderTiles(providers$CartoDB.Positron) |>
+  addMarkers(
+    lng = ~Longitude,
+    lat = ~Latitude,
+    clusterOptions = markerClusterOptions(),
+    popup = ~paste0(
+      "<b>Operator:</b> ", operator, "<br>",
+      "<b>Location:</b> ", location, "<br>",
+      "<b>Date:</b> ", date, "<br>",
+      "<b>Fatalities:</b> ", fatalities
+      )
+    )
+})
+
+```
 
 
