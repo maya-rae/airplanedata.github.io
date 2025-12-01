@@ -17,11 +17,13 @@ library(leaflet)
 library(shiny)
 library(flexdashboard)
 
+# Libraries
+
 ```
 
 
-
 ```{r setup, include=FALSE}
+# This code removes all king of error / warning messages 
 knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE,
