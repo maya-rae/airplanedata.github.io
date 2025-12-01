@@ -1,51 +1,121 @@
 ---
-title: "Shiny Dashboard"
+title: "Airplane Crash Locations Dashboard"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
+    orientation: rows
     vertical_layout: fill
 runtime: shiny
 ---
 
-```{r setup, include=FALSE}
-library(flexdashboard)
-```
+
 
 ```{r}
 library(tidyverse)
-library(viridis)
-
-library(plotly)
-```
-
-
-Column {.sidebar}
------------------------------------------------------------------------
-
-```{r}
+library(janitor)
+library(lubridate)
+library(leaflet)
+library(shiny)
+library(flexdashboard)
 
 ```
 
-Column {data-width=650}
------------------------------------------------------------------------
-
-### Chart A
 
 ```{r}
+# Load airplane dataset
+
+airplane_df = read_csv("datasets/airplane_crashes_data.csv") |>
+  clean_names() |>
+  filter(ground != "NULL", aboard != "NULL") |>
+  select(-flight_number, -time, -registration)
+
+# Fix date
+
+airplane_df = airplane_df |>
+  mutate(
+    date = str_trim(date),
+    m = as.numeric(sub("/.*", "", date)),
+    d = as.numeric(sub(".*/(.*)/.*", "\1", date)),
+    y = as.numeric(sub(".*/(.*)$", "\1", date)),
+    y = ifelse(y < 100, y + 1900, y),
+    date_clean = paste(m, d, y, sep = "/"),
+    date = mdy(date_clean),
+    year = year(date),
+    month = month(date),
+    month_name = factor(month(date, label = TRUE, abbr = TRUE),
+                        levels = month.abb),
+    aboard = as.numeric(aboard),
+    fatalities = as.numeric(ground),
+    operator = as.factor(operator),
+    decade = paste0(floor(year / 10) * 10, "s")
+) |>
+  select(-m, -d, -y, -date_clean)
+
+# Load geocoded cache
+
+geocoded_locations = read_csv("datasets/geocoded_cache.csv")
+
+# Merge coordinates
+
+df_map = airplane_df |>
+  left_join(geocoded_locations, by = c("location" = "location_clean")) |>
+  filter(!is.na(Latitude), !is.na(Longitude))
 
 ```
 
-Column {data-width=350}
------------------------------------------------------------------------
 
-### Chart B
-
+global map:
 ```{r}
+renderLeaflet({
+  leaflet(df_map) |>
+    addProviderTiles(providers$CartoDB.Positron) |>
+    addCircleMarkers(
+      lng = ~Longitude,
+      lat = ~Latitude,
+      radius = 5,
+      color = "red",
+      fillOpacity = 0.5,
+      popup = ~paste0(
+        "<b>Operator:</b> ", operator, "<br>",
+        "<b>Location:</b> ", location, "<br>",
+        "<b>Date:</b> ", date
+        )
+      )
+  })
 
 ```
 
-### Chart C
+ROW 2:
+```{r}
+selectInput(
+  "operator_choice",
+  "Choose Operator:",
+  choices = sort(unique(df_map$operator)),
+  selected = "Aeroflot"
+  )
+
+```
 
 ```{r}
+renderLeaflet({
+  req(input$operator_choice)
+
+filtered = df_map |>
+  filter(operator == input$operator_choice)
+
+leaflet(filtered) |>
+  addProviderTiles(providers$CartoDB.Positron) |>
+  addCircleMarkers(
+    lng = ~Longitude,
+    lat = ~Latitude,
+    radius = 6,
+    color = "blue",
+    fillOpacity = 0.6,
+    popup = ~paste0(
+      "<b>Operator:</b> ", operator, "<br>",
+      "<b>Location:</b> ", location, "<br>",
+      "<b>Date:</b> ", date
+      )
+    )
+})
 
 ```
