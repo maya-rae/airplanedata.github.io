@@ -1,5 +1,5 @@
 ---
-title: "Airplane Crash Locations Dashboard"
+title: "Airplane Crashes - Visualizaed Data with Pinned Locations"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -70,10 +70,8 @@ fatal_max <- max(df_map$fatalities, na.rm = TRUE)
 
 ```
 
-Page 1
 =======================================================================
 
-Row {data-height=350}
 -----------------------------------------------------------------------
 
 ### 🌎 Global Crash Map
@@ -97,10 +95,9 @@ renderLeaflet({
 })
 ``` 
 
-Row {data-height=450}
-Column {data-width=350}
 
-🎛️ Operator Filter
+
+## Operator Filter
 
 ```{r}
 selectizeInput(
@@ -114,19 +111,9 @@ selectizeInput(
 ```
 
 
-```{r}
-numericInput(
-  "min_fatalities",
-  "Show crashes with at least this many fatalities:",
-  value = 50,
-  min   = 0,
-  max   = fatal_max
-  )
 
-```
 
-Column
-✈️ Crash Locations for Selected Operator
+### Crash Locations for Selected Operator
 
 ```{r}
 renderLeaflet({
@@ -153,7 +140,7 @@ leaflet(filtered) |>
 
 ```
 
-🔥 Crashes by Minimum Fatalities
+### Crashes by Minimum Fatalities
 
 ```{r}
 numericInput(
@@ -193,9 +180,6 @@ leaflet(filtered) |>
 ```
 
 
-Page 2
-Row {data-height=150}
-Choose a Year
 
 ```{r}
 sliderInput(
@@ -216,7 +200,7 @@ Row {data-height=700}
 
 ### Map of Crashes for Selected Year
 
-Map of Crashes for Selected Year
+
 
 ```{r}
 renderLeaflet({
