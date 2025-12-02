@@ -78,7 +78,7 @@ As we started the project, our main questions were:
     * Are crashes more common in certain seasons or months of the year?
     * Is there evidence that weather or climate conditions (from NOAA) are associated with crash frequency or severity?
 
-As data exploration contiuued over following weeks, additional questions were developed:
+As data exploration contiued over following weeks, additional questions were developed:
 
   * What is the best way to present the fatalities that occured around the world? 
   * Are there notable geographic clusters of crushes? 
