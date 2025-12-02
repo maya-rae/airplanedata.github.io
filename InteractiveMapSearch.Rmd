@@ -61,6 +61,8 @@ df_map <- airplane_df |>
 
 ## Interactive Filters + Map and Table
 
+This interactive dashboard displays airplane crash locations using a linked map and data table. A filter panel allows users to dynamically select crashes by year, operator, and number of fatalities. Selecting a filter instantly updates both the map and the table through Crosstalk, without requiring Shiny. Each marker represents a crash event and includes detailed information in a popup.
+
 ```{r, echo=FALSE}
 # crosstalk dataset
 df_display = df_map |>
@@ -128,6 +130,8 @@ bscols(
 
 ## Heatmap -- Crash Intensity Heat Layer 
 
+This map displays all airplane crash locations in the dataset using marker clustering. Each marker represents an individual crash, showing the crash date and airline operator in a popup. Clustering helps visualize dense regions by grouping nearby crashes together, expanding into individual points as the user zooms in.
+
 ```{r}
 leaflet(df_map) |>
   addProviderTiles(providers$CartoDB.Positron) |>
@@ -156,6 +160,9 @@ airplane_df = airplane_df |>
 
 
 ## Color-coded operator map
+
+This map visualizes the top five airline operators with the highest number of airplane crashes in the dataset. Each point represents a crash site, positioned according to its recorded latitude and longitude. Operators are color-coded, allowing easy comparison of where different airlines have experienced accidents worldwide. Pop-ups display the airline name, crash date, and location for additional context. The legend identifies the five airlines included in the visualization.
+
 ```{r}
 # Top 5 operators by number of crashes
 top_ops = df_map |>
