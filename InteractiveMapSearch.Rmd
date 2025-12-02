@@ -59,7 +59,7 @@ df_map <- airplane_df |>
 
 ---
 
-## Interactive Filters + Map + Table
+## Interactive Filters + Map and Table
 
 ```{r, echo=FALSE}
 # Prepare Crosstalk dataset
