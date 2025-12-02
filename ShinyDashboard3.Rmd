@@ -1,193 +1,103 @@
 ---
-title: "Airplane Crashes - Visualized Data with Pinned Locations"
+title: "Airplane Crash Map"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
-    vertical_layout: scroll
+    orientation: rows
+    vertical_layout: fill
 runtime: shiny
 ---
 
 ```{r}
-library(flexdashboard)
-library(shiny)
 library(tidyverse)
 library(janitor)
 library(lubridate)
 library(leaflet)
+library(flexdashboard)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
-knitr::opts_chunk$set(
-warning = FALSE,
-message = FALSE,
-echo = FALSE
-)
+```
 
-options(readr.show_col_types = FALSE)
-
-# -----------------------------
-
-# Load and prepare data
-
-# -----------------------------
-
-airplane_df <- read_csv("datasets/airplane_crashes_data.csv") |>
-clean_names() |>
-filter(ground != "NULL", aboard != "NULL") |>
-select(-flight_number, -time, -registration) |>
+```{r}
+airplane_df <- read_csv("datasets/airplane_crashes_data.csv") %>%
+clean_names() %>%
+filter(ground != "NULL", aboard != "NULL") %>%
+select(-flight_number, -time, -registration) %>%
 mutate(
-date       = mdy(str_trim(date)),
-year       = year(date),
-month      = month(date),
-aboard     = as.numeric(aboard),
+date = str_trim(date),
+m = as.numeric(sub("/.*", "", date)),
+d = as.numeric(sub(".*/(.*)/.*", "\1", date)),
+y = as.numeric(sub(".*/(.*)$", "\1", date)),
+y = ifelse(y < 100, y + 1900, y),
+date_clean = paste(m, d, y, sep = "/"),
+date = mdy(date_clean),
+year = year(date),
+aboard = as.numeric(aboard),
 fatalities = as.numeric(fatalities),
-operator   = as.factor(operator)
+ground = as.numeric(ground),
+operator = as.factor(operator),
+location_clean = location %>%
+str_to_lower() %>% str_replace_all("[^a-z0-9 ]", " ") %>% str_squish()
+) %>%
+select(-m, -d, -y, -date_clean)
+
+geocoded <- read_csv("datasets/geocoded_cache.csv") %>%
+mutate(
+location_clean2 = location_clean %>%
+str_to_lower() %>% str_replace_all("[^a-z0-9 ]", " ") %>% str_squish()
 )
 
-# Load geocoded cache
-
-geocoded_locations <- read_csv("datasets/geocoded_cache.csv")
-
-# Merge coordinates
-
-df_map <- airplane_df |>
-left_join(geocoded_locations,
-by = c("location" = "location_clean")) |>
+df_map <- airplane_df %>%
+left_join(geocoded, by = c("location_clean" = "location_clean2")) %>%
 filter(!is.na(Latitude), !is.na(Longitude))
 
-# Precompute ranges for UI inputs
-
-year_min  <- min(df_map$year, na.rm = TRUE)
-year_max  <- max(df_map$year, na.rm = TRUE)
-fatal_max <- max(df_map$fatalities, na.rm = TRUE)
-
-```
-
-Column {.sidebar}
-🎛 Operator Filter
-
-```{r}
-selectizeInput(
-"operator_choice",
-"Choose Operator:",
-choices  = sort(unique(df_map$operator)),
-selected = "Aeroflot",
-options  = list(maxOptions = 2000)
-)
-
-```
-
-💀 Minimum Fatalities
-```{r}
-numericInput(
-"min_fatalities",
-"Show crashes with at least this many fatalities:",
-value = 50,
-min   = 0,
-max   = fatal_max
-)
+year_min <- min(df_map$year, na.rm = TRUE)
+year_max <- max(df_map$year, na.rm = TRUE)
 
 ```
 
 
-📅 Select Year
 ```{r}
 sliderInput(
 "year_choice",
 "Select Year:",
-min   = year_min,
-max   = year_max,
+min = year_min,
+max = year_max,
 value = year_min,
-step  = 1,
-sep   = ""
+step = 1
 )
 
 ```
 
-Column {data-width=800}
-🌎 Global Crash Map
+```{r}
+leafletOutput("map", height = "700px")
+
+```
 
 ```{r}
 renderLeaflet({
-leaflet(df_map) |>
-addProviderTiles(providers$CartoDB.Positron) |>
+leaflet() %>%
+addProviderTiles(providers$CartoDB.Positron)
+})
+
+```
+
+```{r}
+observe({
+leafletProxy("map", data = df_map %>% filter(year == input$year_choice)) %>%
+clearMarkers() %>%
 addCircleMarkers(
-lng = ~Longitude, lat = ~Latitude,
-radius = 5, color = "red", fillOpacity = 0.6,
-popup = ~paste0(
-"<b>Operator:</b> ", operator, "<br>",
-"<b>Location:</b> ", location, "<br>",
-"<b>Date:</b> ", date
+lng = ~Longitude,
+lat = ~Latitude,
+radius = 4,
+color = "red",
+fillOpacity = 0.3,
+popup = ~paste(
+"<b>Operator:</b>", operator, "<br>",
+"<b>Location:</b>", location, "<br>",
+"<b>Date:</b>", date
 )
 )
 })
 
 ```
-
-✈️ Crash Locations — Selected Operator
-```{r}
-renderLeaflet({
-req(input$operator_choice)
-
-filtered <- df_map |> filter(operator == input$operator_choice)
-
-leaflet(filtered) |>
-addProviderTiles(providers$CartoDB.Positron) |>
-addCircleMarkers(
-lng = ~Longitude, lat = ~Latitude,
-radius = 6, color = "blue", fillOpacity = 0.6,
-popup = ~paste0(
-"<b>Operator:</b> ", operator, "<br>",
-"<b>Location:</b> ", location, "<br>",
-"<b>Date:</b> ", date
-)
-)
-})
-
-```
-
-
-🔥 Crashes by Minimum Fatalities
-```{r}
-renderLeaflet({
-req(input$min_fatalities)
-
-filtered <- df_map |>
-filter(!is.na(fatalities), fatalities >= input$min_fatalities)
-
-leaflet(filtered) |>
-addProviderTiles(providers$CartoDB.Positron) |>
-addMarkers(
-lng = ~Longitude, lat = ~Latitude,
-clusterOptions = markerClusterOptions(),
-popup = ~paste0(
-"<b>Operator:</b> ", operator, "<br>",
-"<b>Location:</b> ", location, "<br>",
-"<b>Date:</b> ", date, "<br>",
-"<b>Fatalities:</b> ", fatalities
-)
-)
-})
-
-```
-🗓 Crashes in Selected Year
-```{r}
-renderLeaflet({
-req(input$year_choice)
-
-filtered <- df_map |> filter(year == input$year_choice)
-
-leaflet(filtered) |>
-addProviderTiles(providers$CartoDB.Positron) |>
-addCircleMarkers(
-lng = ~Longitude, lat = ~Latitude,
-radius = 5, color = "darkred", fillOpacity = 0.6,
-popup = ~paste0(
-"<b>Operator:</b> ", operator, "<br>",
-"<b>Location:</b> ", location, "<br>",
-"<b>Date:</b> ", date
-)
-)
-})
-
-```
-
 
