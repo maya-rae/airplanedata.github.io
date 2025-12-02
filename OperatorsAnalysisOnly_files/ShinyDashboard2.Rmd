@@ -1,0 +1,196 @@
+---
+title: "Airplane Crashes - Visualized Data with Pinned Locations"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(shiny)
+library(tidyverse)
+library(janitor)
+library(lubridate)
+library(leaflet)
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = FALSE)
+options(readr.show_col_types = FALSE)
+
+# -----------------------------
+# Load and prepare data
+# -----------------------------
+
+airplane_df <- read_csv("datasets/airplane_crashes_data.csv") |>
+  clean_names() |>
+  filter(ground != "NULL", aboard != "NULL") |>
+  select(-flight_number, -time, -registration) |>
+  mutate(
+    date       = mdy(str_trim(date)),
+    year       = year(date),
+    month      = month(date),
+    aboard     = as.numeric(aboard),
+    fatalities = as.numeric(fatalities),
+    operator   = as.factor(operator)
+  )
+
+geocoded_locations <- read_csv("datasets/geocoded_cache.csv")
+
+df_map <- airplane_df |>
+  left_join(geocoded_locations, by = c("location" = "location_clean")) |>
+  filter(!is.na(Latitude), !is.na(Longitude))
+
+year_min  <- min(df_map$year, na.rm = TRUE)
+year_max  <- max(df_map$year, na.rm = TRUE)
+fatal_max <- max(df_map$fatalities, na.rm = TRUE)
+```
+
+====================================================================
+
+SIDEBAR PANEL
+
+====================================================================
+
+Column {.sidebar}
+🎛 Operator Filter
+
+```{r}
+selectizeInput(
+"operator_choice",
+"Choose Operator:",
+choices = sort(unique(df_map$operator)),
+selected = "Aeroflot"
+)
+
+```
+
+💀 Minimum Fatalities
+```{r}
+numericInput(
+"min_fatalities",
+"Minimum Fatalities:",
+value = 50,
+min   = 0,
+max   = fatal_max
+)
+
+```
+
+
+📅 Select Year
+```{r}
+sliderInput(
+"year_choice",
+"Select Year:",
+min = year_min,
+max = year_max,
+value = year_min,
+step = 1
+)
+
+```
+====================================================================
+
+ROW 1 — GLOBAL MAP
+
+====================================================================
+
+Row
+🌎 Global Crash Map
+
+```{r}
+renderLeaflet({
+leaflet(df_map) |>
+addProviderTiles(providers$CartoDB.Positron) |>
+addCircleMarkers(
+lng = ~Longitude, lat = ~Latitude,
+radius = 5, color = "red", fillOpacity = 0.6,
+popup = ~paste0("<b>Operator:</b> ", operator,
+"<br><b>Location:</b> ", location,
+"<br><b>Date:</b> ", date)
+)
+})
+
+```
+====================================================================
+
+ROW 2 — OPERATOR + FATALITIES
+
+====================================================================
+
+Row
+
+Column {data-width=50%}
+
+✈️ Crash Locations — Selected Operator
+
+```{r}
+renderLeaflet({
+req(input$operator_choice)
+filtered <- df_map |> filter(operator == input$operator_choice)
+
+leaflet(filtered) |>
+addProviderTiles(providers$CartoDB.Positron) |>
+addCircleMarkers(
+lng = ~Longitude, lat = ~Latitude,
+radius = 6, color = "blue", fillOpacity = 0.6,
+popup = ~paste0("<b>Operator:</b> ", operator,
+"<br><b>Location:</b> ", location,
+"<br><b>Date:</b> ", date)
+)
+})
+
+```
+
+Column {data-width=50%}
+
+🔥 Crashes by Minimum Fatalities
+```{r}
+renderLeaflet({
+req(input$min_fatalities)
+filtered <- df_map |> filter(fatalities >= input$min_fatalities)
+
+leaflet(filtered) |>
+addProviderTiles(providers$CartoDB.Positron) |>
+addMarkers(
+lng = ~Longitude, lat = ~Latitude,
+clusterOptions = markerClusterOptions(),
+popup = ~paste0("<b>Operator:</b> ", operator,
+"<br><b>Location:</b> ", location,
+"<br><b>Date:</b> ", date,
+"<br><b>Fatalities:</b> ", fatalities)
+)
+})
+
+```
+
+
+====================================================================
+
+ROW 3 — YEAR MAP
+
+====================================================================
+
+Row
+🗓 Crashes in Selected Year
+```{r}
+renderLeaflet({
+req(input$year_choice)
+
+filtered <- df_map |> filter(year == input$year_choice)
+
+leaflet(filtered) |>
+addProviderTiles(providers$CartoDB.Positron) |>
+addCircleMarkers(
+lng = ~Longitude, lat = ~Latitude,
+radius = 5, color = "darkred", fillOpacity = 0.6,
+popup = ~paste0("<b>Operator:</b> ", operator,
+"<br><b>Location:</b> ", location,
+"<br><b>Date:</b> ", date)
+)
+})
+
+```
+
+

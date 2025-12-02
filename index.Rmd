@@ -1,7 +1,15 @@
 ---
-title: "Holy cow!"
+title: "Fly High"
 ---
 
-### I have a webpage!
+### Aviation Crash Data Analysis
 
-And I can put all kinds of stuff on it!
+authors:
+
+- Maya Arnott
+
+- Karolina Wiesiolek
+
+- Casandra Laney
+
+- Zichen Fan

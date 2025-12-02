@@ -2,6 +2,8 @@
 title: "Fly High Project - Final Report"
 date: "2025-11-25"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 <<<<<<< HEAD
 Motivation: Provide an overview of the project goals and motivation. (Karolina)
@@ -78,7 +80,11 @@ As we started the project, our main questions were:
     * Are crashes more common in certain seasons or months of the year?
     * Is there evidence that weather or climate conditions (from NOAA) are associated with crash frequency or severity?
 
+<<<<<<< HEAD
 As data exploration continued over the following weeks, additional questions were developed:
+=======
+As data exploration contiued over following weeks, additional questions were developed:
+>>>>>>> 82d1f090f4957af9415c20a275eceee706bb7935
 
   * What is the best way to present the fatalities that occurred around the world? 
   * Are there notable geographic clusters of crashes? 

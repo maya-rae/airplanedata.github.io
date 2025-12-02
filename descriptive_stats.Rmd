@@ -2,6 +2,8 @@
 title: "Descriptive Statistics"
 date: "2025-11-22"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 This file contains the final drafts of the plots we want to use in our website and the trends noted in each. 
