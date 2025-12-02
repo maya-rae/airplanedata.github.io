@@ -37,7 +37,7 @@ Our project is motivated by two main goals:
 
 1. Put aviation risk into context over time:
 
-  + We want to examine how the frequency and severity of airplane crashes have changed across   decades. Are crashes actually becoming more or less common? Have fatality rates per crash changed with improvements in technology and safety regulations?
+  + We want to examine how the frequency and severity of airplane crashes have changed across decades. Are crashes actually becoming more or less common? Have fatality rates per crash changed with improvements in technology and safety regulations?
   
 2. Understand patterns across aircraft, operators, and seasons:
 
@@ -78,17 +78,17 @@ As we started the project, our main questions were:
     * Are crashes more common in certain seasons or months of the year?
     * Is there evidence that weather or climate conditions (from NOAA) are associated with crash frequency or severity?
 
-As data exploration contiuued over following weeks, additional questions were developed:
+As data exploration continued over the following weeks, additional questions were developed:
 
-  * What is the best way to present the fatalities that occured around the world? 
-  * Are there notable geographic clusters of crushes? 
-  * If certain aircraft or operators have very few crashes, we may shift toward grouping them            into broader categories (e.g., commercial vs military, or regional vs major carriers).
-  * If to construct a linear regression model for aircraft crashes, what would it look like? 
+  * What is the best way to present the fatalities that occurred around the world? 
+  * Are there notable geographic clusters of crashes? 
+  * If certain aircraft or operators have very few crashes, we may shift toward grouping them into broader categories (e.g., commercial vs military, or regional vs major carriers).
+  * What would a linear regression model for aircraft crashes look like? 
 
 # Data Summary 
 
 ### Data Source:
-The dataset was sourced as a CSV file from Kaggle and stored in a datasets/ folder within our project directory. We read it into R using read_csv() and maintain all code in an R Project linked to a public GitHub repository for reproducibility. 
+The dataset was sourced as a CSV file from Kaggle and stored in a datasets folder within our project directory. We read it into R using read_csv() and maintain all code in an R Project linked to a public GitHub repository for reproducibility. 
 
 ### Data: 
 
@@ -101,7 +101,7 @@ The dataset was sourced as a CSV file from Kaggle and stored in a datasets/ fold
 # Discussion:
 In this final stage of the project, we returned to the questions from our Motivation and Initial Questions sections to reflect on what we learned. 
 
-The data and knowledge of the world demonstrates that as the total number of flights and passangers has increased over the decades, the aviation industry has become significantly safer due to stringent standards, advanced technology, and well-trained professionals. The absolute number of crashes has not risen in proportion to the volume of air traffic, meaning that the rate of accidents has fallen to historically low levels. 
+The data and knowledge of the world demonstrates that as the total number of flights and passengers has increased over the decades, the aviation industry has become significantly safer due to stringent standards, advanced technology, and well-trained professionals. The absolute number of crashes has not risen in proportion to the volume of air traffic, meaning that the rate of accidents has fallen to historically low levels. 
 
 Though the number of sudden fatalities due to aircraft crash is high and therefore is always highly covered by media outlets, commuting by air is considered one of the safest ways to commute. 
 
