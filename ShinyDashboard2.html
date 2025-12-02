@@ -1,0 +1,3777 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Airplane Crashes - Visualizaed Data with Pinned Locations</title>
+
+<meta property="og:title" content="Airplane Crashes - Visualizaed Data with Pinned Locations" />
+
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+
+<link rel="icon" href="data:image/x-icon;" type="image/x-icon">
+
+
+<script type="text/javascript">
+window.FlexDashboardComponents = [];
+</script>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/stickytableheaders-0.1.19/jquery.stickytableheaders.min.js"></script>
+<link href="site_libs/value-box-accent-static-0.6.2/theme-cosmo-value-box.css" rel="stylesheet" />
+<link href="site_libs/flexdashboard-css-0.6.2/flexdashboard.min.css" rel="stylesheet" />
+<link href="site_libs/flexdashboard-css-0.6.2/theme-cosmo.css" rel="stylesheet" />
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="site_libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="site_libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="site_libs/leaflet-binding-2.2.2/leaflet.js"></script>
+<link href="site_libs/selectize-0.15.2/css/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="site_libs/selectize-0.15.2/js/selectize.min.js"></script>
+<script src="site_libs/selectize-0.15.2/accessibility/js/selectize-plugin-a11y.min.js"></script>
+<script src="site_libs/ionrangeslider-javascript-2.3.1/js/ion.rangeSlider.min.js"></script>
+<script src="site_libs/strftime-0.9.2/strftime-min.js"></script>
+<link href="site_libs/ionrangeslider-css-2.3.1/css/ion.rangeSlider.css" rel="stylesheet" />
+<style type="text/css">
+/*
+  CSS for flexdashboard.js' use of Sly(). The sizing/position of this CSS needs to be
+  applied _before_ flexdashboard.js initializes, which is why this CSS has been pulled
+  out from flexdashboard.scss and inlined in the document's head.
+*/
+
+.storyboard-nav button {
+  background: transparent;
+  border: 0;
+  opacity: .3;
+  outline: none;
+  padding: 0;
+}
+
+.storyboard-nav button:hover,
+.storyboard-nav button:hover {
+  opacity: .5;
+}
+
+.storyboard-nav button:disabled,
+.storyboard-nav button:disabled {
+  opacity: .1;
+}
+
+.storyboard-nav .sbnext,
+.storyboard-nav .sbprev {
+  float: left;
+  width: 2%;
+  height: 120px;
+}
+
+.storyboard-nav .sbprev {
+  text-align: left;
+  width: 2%;
+}
+
+.storyboard-nav .sbnext {
+  float: right;
+  text-align: right;
+  margin-right: 8px;
+}
+
+.storyboard-nav .sbframelist {
+  margin: 0 auto;
+  width: 94%;
+  height: 120px;
+  overflow: hidden;
+  text-shadow: none;
+  margin-bottom: 8px;
+}
+
+.storyboard-nav .sbframelist ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.storyboard-nav .sbframelist ul li {
+  float: left;
+  width: 270px;
+  height: 100%;
+  padding: 10px 10px 10px 10px;
+  margin-right: 8px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.storyboard-nav .sbframelist ul li:last-child {
+  margin-right: 0px;
+}
+
+.sbframe-commentary {
+  width: 300px;
+}
+
+.sbframe-commentary ul {
+  padding-left: 22px;
+}
+
+.sbframe.active {
+  display: flex;
+}
+
+.sbframe:not(.active) {
+  display: none;
+}
+@media only screen and (min-width: 768px) {
+html, body {
+  height: 100%;
+}
+
+#dashboard-container {
+  height: 100%;
+}
+}
+</style>
+
+
+
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="container-fluid">
+<div class="navbar-header">
+
+<span class="navbar-logo pull-left">
+  
+</span>
+<span class="navbar-brand">
+  Airplane Crashes - Visualizaed Data with Pinned Locations
+  <span class="navbar-author">
+        </span>
+</span>
+
+<button id="navbar-button" type="button" class="navbar-toggle collapsed pull-right" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+
+</div>
+<div id="navbar" class="navbar-collapse collapse">
+<ul class="nav navbar-nav navbar-left">
+</ul>
+<ul class="nav navbar-nav navbar-right">
+</ul>
+</div><!--/.nav-collapse-->
+</div><!--/.container-->
+</div><!--/.navbar-->
+
+<script type="text/javascript">
+
+
+var FlexDashboard = (function () {
+
+  // initialize options
+  var _options = {};
+
+  var FlexDashboard = function() {
+
+    // default options
+    _options = $.extend(_options, {
+      theme: "cosmo",
+      fillPage: false,
+      orientation: 'columns',
+      storyboard: false,
+      defaultFigWidth: 576,
+      defaultFigHeight: 461,
+      defaultFigWidthMobile: 360,
+      defaultFigHeightMobile: 461,
+      isMobile: false,
+      isPortrait: false,
+      resize_reload: true
+    });
+  };
+
+  function init(options) {
+
+    // extend default options
+    $.extend(true, _options, options);
+
+    // add ids to sections that don't have them (pandoc won't assign ids
+    // to e.g. sections with titles consisting of only chinese characters)
+    var nextId = 1;
+    $('.level1:not([id]),.level2:not([id]),.level3:not([id])').each(function() {
+      $(this).attr('id', 'dashboard-' + nextId++);
+    });
+
+    // find navbar items
+    var navbarItems = $('#flexdashboard-navbar');
+    if (navbarItems.length)
+      navbarItems = JSON.parse(navbarItems.html());
+    addNavbarItems(navbarItems);
+
+    // find the main dashboard container
+    var dashboardContainer = $('#dashboard-container');
+
+    // resolve mobile classes
+    resolveMobileClasses(dashboardContainer);
+
+    // one time global initialization for components
+    componentsInit(dashboardContainer);
+
+    // look for a global sidebar
+    var globalSidebar = dashboardContainer.find(".section.level1.sidebar");
+    if (globalSidebar.length > 0) {
+
+      // global layout for fullscreen displays
+      if (!isMobilePhone()) {
+
+         // hoist it up to the top level
+         globalSidebar.insertBefore(dashboardContainer);
+
+         // lay it out (set width/positions)
+         layoutSidebar(globalSidebar, dashboardContainer);
+
+      // tuck sidebar into first page for mobile phones
+      } else {
+
+        // convert it into a level3 section
+        globalSidebar.removeClass('sidebar');
+        globalSidebar.removeClass('level1');
+        globalSidebar.addClass('level3');
+        var h1 = globalSidebar.children('h1');
+        var h3 = $('<h3></h3>');
+        h3.append(h1.contents());
+        h3.insertBefore(h1);
+        h1.detach();
+
+        // move it into the first page
+        var page = dashboardContainer.find('.section.level1').first();
+        if (page.length > 0)
+          page.prepend(globalSidebar);
+      }
+    }
+
+    // look for pages to layout
+    var pages = $('div.section.level1');
+    if (pages.length > 0) {
+
+        // find the navbar and collapse on clicked
+        var navbar = $('#navbar');
+        navbar.on("click", "a[data-toggle!=dropdown]", null, function () {
+           navbar.collapse('hide');
+        });
+
+        // envelop the dashboard container in a tab content div
+        dashboardContainer.wrapInner('<div class="tab-content"></div>');
+
+        pages.each(function(index) {
+
+          // lay it out
+          layoutDashboardPage($(this));
+
+          // add it to the navbar
+          addToNavbar($(this), index === 0);
+
+        });
+
+    } else {
+
+      // remove the navbar and navbar button if we don't
+      // have any navbuttons
+      if (navbarItems.length === 0) {
+        $('#navbar').remove();
+        $('#navbar-button').remove();
+      }
+
+      // add the storyboard class if requested
+      if (_options.storyboard)
+        dashboardContainer.addClass('storyboard');
+
+      // layout the entire page
+      layoutDashboardPage(dashboardContainer);
+    }
+
+    // if we are in shiny we need to trigger a window resize event to
+    // force correct layout of shiny-bound-output elements
+    if (isShinyDoc())
+      $(window).trigger('resize');
+
+    // make main components visible
+    $('.section.sidebar').css('visibility', 'visible');
+    dashboardContainer.css('visibility', 'visible');
+
+    // handle location hash
+    handleLocationHash();
+
+    // intialize prism highlighting
+    initPrismHighlighting();
+
+    // record mobile and orientation state then register a handler
+    // to refresh if resize_reload is set to true and it changes
+    _options.isMobile = isMobilePhone();
+    _options.isPortrait = isPortrait();
+    if (_options.resize_reload) {
+      $(window).on('resize', function() {
+        if (_options.isMobile !== isMobilePhone() ||
+            _options.isPortrait !== isPortrait()) {
+          window.location.reload();
+        }
+      });
+    } else {
+      // if in desktop mode and resizing to mobile, make sure the heights are 100%
+      // This enforces what `fillpage.css` does for "wider" pages.
+      // Since we are not reloading once the page becomes small, we need to force the height to 100%
+      // This is a new situation introduced when `_options.resize_reload` is `false`
+      if (! _options.isMobile) {
+        // only add if `fillpage.css` was added in the first place
+        if (_options.fillPage) {
+          // fillpage.css
+          $("html,body,#dashboard").css("height", "100%");
+        }
+      }
+    }
+    // trigger layoutcomplete event
+    dashboardContainer.trigger('flexdashboard:layoutcomplete');
+  }
+
+  function resolveMobileClasses(dashboardContainer) {
+     // add top level layout class
+    dashboardContainer.addClass(isMobilePhone() ? 'mobile-layout' :
+                                                  'desktop-layout');
+
+    // look for .mobile sections and add .no-mobile to their peers
+    var mobileSections = $('.section.mobile');
+    mobileSections.each(function() {
+       var id = $(this).attr('id');
+       var nomobileId = id.replace(/-\d+$/, '');
+       $('#' + nomobileId).addClass('no-mobile');
+    });
+  }
+
+  function addNavbarItems(navbarItems) {
+
+    var navbarLeft = $('ul.navbar-left');
+    var navbarRight = $('ul.navbar-right');
+
+    for (var i = 0; i<navbarItems.length; i++) {
+
+      // get the item
+      var item = navbarItems[i];
+
+      // determine the container
+      var container = null;
+      if (item.align === "left")
+        container = navbarLeft;
+      else
+        container = navbarRight;
+
+      // navbar menu if we have multiple items
+      if (item.items) {
+        var menu = navbarMenu(null, item.icon, item.title, container);
+        for (var j = 0; j<item.items.length; j++) {
+          var subItem = item.items[j];
+          var li = $('<li></li>');
+          var a = navbarLink(subItem.icon, subItem.title, subItem.href, subItem.target);
+          a.removeClass("nav-link").addClass("dropdown-item");
+          li.append(a);
+          menu.append(li);
+        }
+      } else {
+        var li = $('<li class="nav-item"></li>');
+        li.append(navbarLink(item.icon, item.title, item.href, item.target));
+        container.append(li);
+      }
+    }
+  }
+
+  // create or get a reference to an existing dropdown menu
+  function navbarMenu(id, icon, title, container) {
+    var existingMenu = [];
+    if (id)
+      existingMenu = container.children('#' + id);
+    if (existingMenu.length > 0) {
+      return existingMenu.children('ul');
+    } else {
+      var li = $('<li class="nav-item"></li>');
+      if (id)
+        li.attr('id', id);
+      li.addClass('dropdown');
+      // auto add "Share" title on mobile if necessary
+      if (!title && icon && (icon === "fa-share-alt") && isMobilePhone())
+        title = "Share";
+      if (title) {
+        title = title + ' <span class="caret"></span>';
+      }
+      var a = navbarLink(icon, title, "#");
+      a.addClass('dropdown-toggle');
+      a.attr('data-toggle', 'dropdown');
+      a.attr('data-bs-toggle', 'dropdown');
+      a.attr('role', 'button');
+      a.attr('aria-expanded', 'false');
+      li.append(a);
+      var ul = $('<ul class="dropdown-menu"></ul>');
+      ul.attr('role', 'menu');
+      li.append(ul);
+      container.append(li);
+      return ul;
+    }
+  }
+
+  function addToNavbar(page, active) {
+
+    // capture the id and data-icon attribute (if any)
+    var id = page.attr('id');
+    var icon = page.attr('data-icon');
+    var navmenu = page.attr('data-navmenu');
+    var navmenuIcon = page.attr('data-navmenu-icon');
+
+    // get hidden state (transfer this to navbar)
+    var hidden = page.hasClass('hidden');
+    page.removeClass('hidden');
+
+    // sanitize the id for use with bootstrap tabs
+    id = id.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_');
+    page.attr('id', id);
+
+    // get the wrapper
+    var wrapper = page.closest('.dashboard-page-wrapper');
+
+    // move the id to the wrapper
+    page.removeAttr('id');
+    wrapper.attr('id', id);
+
+    // add the tab-pane class to the wrapper
+    wrapper.addClass('tab-pane');
+
+    // get a reference to the h1, discover its inner contens, then detach it
+    var h1 = wrapper.find('h1').first();
+    var title = h1.contents();
+    h1.detach();
+
+    // create a navbar item
+    var li = $('<li></li>');
+    var a = navbarLink(icon, title, '#' + id);
+    a.attr('data-toggle', 'tab');
+    a.attr('data-bs-toggle', 'tab');
+    li.append(a);
+
+    // add it to the navbar (or navbar menu if specified)
+    var container = $('ul.navbar-left');
+    if (navmenu) {
+      var menuId = navmenu.replace(/\s+/g, '');
+      var menu = navbarMenu(menuId, navmenuIcon, navmenu, container);
+      li.find("> a").removeClass("nav-link").addClass("dropdown-item");
+      menu.append(li);
+    } else {
+      li.addClass("nav-item")
+      container.append(li);
+    }
+
+    // mark active tab and corresponding nav menu item
+    if (active)
+      $(a).tab("show");
+
+    // hide it if requested
+    if (hidden)
+      li.addClass('hidden');
+  }
+
+  function navbarLink(icon, title, href, target) {
+
+    var a = $('<a class="nav-link"></a>');
+    if (icon) {
+
+      // get the name of the icon set and icon
+      var dashPos = icon.indexOf("-");
+      var iconSet = null;
+      var iconSplit = icon.split(" ");
+      if (iconSplit.length > 1) {
+        iconSet = iconSplit[0];
+        icon = iconSplit.slice(1).join(" ");
+      } else {
+        iconSet = icon.substring(0, dashPos);
+      }
+      var iconName = icon.substring(dashPos + 1);
+
+      // create the icon
+      var iconElement = $('<span class="' + iconSet + ' ' + icon + '"></span>');
+      if (title)
+        iconElement.css('margin-right', '7px');
+      a.append(iconElement);
+      // if href is null see if we can auto-generate based on icon (e.g. social)
+      if (!href)
+        maybeGenerateLinkFromIcon(iconName, a);
+    }
+    if (title)
+      a.append(title);
+
+    // add the href.
+    if (href) {
+      if (href === "source_embed") {
+        a.attr('href', '#');
+        a.attr('data-featherlight', "#flexdashboard-source-code");
+        a.featherlight({
+            beforeOpen: function(event){
+              $('body').addClass('unselectable');
+            },
+            afterClose: function(event){
+              $('body').removeClass('unselectable');
+            }
+        });
+      } else {
+        a.attr('href', href);
+      }
+    }
+
+    // add the arget
+    if (target)
+      a.attr('target', target);
+
+    return a;
+  }
+
+  // auto generate a link from an icon name (e.g. twitter) when possible
+  function maybeGenerateLinkFromIcon(iconName, a) {
+
+     var serviceLinks = {
+      "twitter": "https://twitter.com/share?text=" + encodeURIComponent(document.title) + "&url="+encodeURIComponent(location.href),
+      "facebook": "https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(location.href),
+      "linkedin": "https://www.linkedin.com/shareArticle?mini=true&url="+encodeURIComponent(location.href) + "&title=" + encodeURIComponent(document.title),
+      "pinterest": "https://pinterest.com/pin/create/link/?url="+encodeURIComponent(location.href) + "&description=" + encodeURIComponent(document.title)
+    };
+
+    var makeSocialLink = function(a, href) {
+      a.attr('href', '#');
+      a.on('click', function(e) {
+        e.preventDefault();
+        window.open(href);
+      });
+    };
+
+    $.each(serviceLinks, function(key, value) {
+      if (iconName.indexOf(key) !== -1)
+        makeSocialLink(a, value);
+    });
+  }
+
+  // layout a dashboard page
+  function layoutDashboardPage(page) {
+
+    // use a page wrapper so that free form content above the
+    // dashboard appears at the top rather than the side (as it
+    // would without the wrapper in a column orientation)
+    var wrapper = $('<div class="dashboard-page-wrapper"></div>');
+    page.wrap(wrapper);
+
+    // if there are no level2 or level3 headers synthesize a level3
+    // header to contain the (e.g. frame it, scroll container, etc.)
+    var headers = page.find('h2,h3');
+    if (headers.length === 0)
+      page.wrapInner('<div class="section level3"></div>');
+
+    // hoist up any content before level 2 or level 3 headers
+    var children = page.children();
+    children.each(function(index) {
+      if ($(this).hasClass('level2') || $(this).hasClass('level3'))
+        return false;
+      $(this).insertBefore(page);
+    });
+
+    // determine orientation and fillPage behavior for distinct media
+    var orientation, fillPage, storyboard;
+
+    // media: mobile phone
+    if (isMobilePhone()) {
+
+      // if there is a sidebar we need to ensure it's content
+      // is properly framed as an h3
+      var sidebar = page.find('.section.sidebar');
+      sidebar.removeClass('sidebar');
+      sidebar.wrapInner('<div class="section level3"></div>');
+      var h2 = sidebar.find('h2');
+      var h3 = $('<h3></h3>');
+      h3.append(h2.contents());
+      h3.insertBefore(h2);
+      h2.detach();
+
+      // wipeout h2 elements then enclose them in a single h2
+      var level2 = page.find('div.section.level2');
+      level2.each(function() {
+        level2.children('h2').remove();
+        level2.children().unwrap();
+      });
+      page.wrapInner('<div class="section level2"></div>');
+
+      // substitute mobile images
+      if (isPortrait()) {
+        var mobileFigures = $('img.mobile-figure');
+        mobileFigures.each(function() {
+          // get the src (might be base64 encoded)
+          var src = $(this).attr('src');
+
+          // find it's peer
+          var id = $(this).attr('data-mobile-figure-id');
+          var img = $('img[data-figure-id=' + id + "]");
+          img.attr('src', src)
+             .attr('width', _options.defaultFigWidthMobile)
+             .attr('height', _options.defaultFigHeightMobile);
+        });
+      }
+
+      // hoist storyboard commentary into it's own section
+      if (page.hasClass('storyboard')) {
+        var commentaryHR = page.find('div.section.level3 hr');
+        commentaryHR.each(function() {
+          var commentary = $(this).nextAll().detach();
+          var commentarySection = $('<div class="section level3"></div>');
+          commentarySection.append(commentary);
+          commentarySection.insertAfter($(this).closest('div.section.level3'));
+          $(this).remove();
+        });
+      }
+
+      // force a non full screen layout by columns
+      orientation = _options.orientation = 'columns';
+      fillPage = _options.fillPage = false;
+      storyboard = _options.storyboard = false;
+
+    // media: desktop
+    } else {
+
+      // determine orientation
+      orientation = page.attr('data-orientation');
+      if (orientation !== 'rows' && orientation != 'columns')
+        orientation = _options.orientation;
+
+      // determine storyboard mode
+      storyboard = page.hasClass('storyboard');
+
+      // fillPage based on options (force for storyboard)
+      fillPage = _options.fillPage || storyboard;
+
+      // handle sidebar
+      var sidebar = page.find('.section.level2.sidebar');
+      if (sidebar.length > 0)
+        layoutSidebar(sidebar, page);
+    }
+
+    // give it and it's parent divs height: 100% if we are in fillPage mode
+    if (fillPage) {
+      page.addClass('vertical-layout-fill');
+      page.css('height', '100%');
+      page.parents('div').css('height', '100%');
+    } else {
+      page.addClass('vertical-layout-scroll');
+    }
+
+    // perform the layout
+    if (storyboard)
+      layoutPageAsStoryboard(page);
+    else if (orientation === 'rows')
+      layoutPageByRows(page, fillPage);
+    else if (orientation === 'columns')
+      layoutPageByColumns(page, fillPage);
+  }
+
+  function layoutSidebar(sidebar, content) {
+
+    // get it out of the header hierarchy
+    sidebar = sidebar.first();
+    if (sidebar.hasClass('level1')) {
+      sidebar.removeClass('level1');
+      sidebar.children('h1').remove();
+    } else if (sidebar.hasClass('level2')) {
+      sidebar.removeClass('level2');
+      sidebar.children('h2').remove();
+    }
+
+    // determine width
+    var sidebarWidth = isTablet() ? 220 : 250;
+    var dataWidth = parseInt(sidebar.attr('data-width'));
+    if (dataWidth)
+      sidebarWidth = dataWidth;
+
+    // set the width and shift the page right to accomodate the sidebar
+    sidebar.css('width', sidebarWidth + 'px');
+    content.css('padding-left', sidebarWidth + 'px');
+
+    // wrap it's contents in a form
+    sidebar.wrapInner($('<form></form>'));
+  }
+
+  function layoutPageAsStoryboard(page) {
+
+    // create storyboard navigation
+    var nav = $('<div class="storyboard-nav"></div>');
+
+    // add navigation buttons
+    var prev = $('<button class="sbprev"><i class="fa fa-angle-left"></i></button>');
+    nav.append(prev);
+    var next= $('<button class="sbnext"><i class="fa fa-angle-right"></i></button>');
+    nav.append(next);
+
+    // add navigation frame
+    var frameList = $('<div class="sbframelist"></div>');
+    nav.append(frameList);
+    var ul = $('<ul></ul>');
+    frameList.append(ul);
+
+     // find all the level3 sections (those are the storyboard frames)
+    var frames = page.find('div.section.level3');
+    frames.each(function() {
+
+      // mark it
+      $(this).addClass('sbframe');
+
+      // divide it into chart content and (optional) commentary
+      $(this).addClass('dashboard-column-orientation');
+
+      // stuff the chart into it's own div w/ flex
+      $(this).wrapInner('<div class="sbframe-component"></div>');
+      setFlex($(this), 1);
+      var frame = $(this).children('.sbframe-component');
+
+      // extract the title from the h3
+      var li = $('<li></li>');
+      var h3 = frame.children('h3');
+      li.append(h3.contents());
+      h3.detach();
+      ul.append(li);
+
+      // extract commentary
+      var hr = frame.children('hr');
+      if (hr.length) {
+        var commentary = hr.nextAll().detach();
+        hr.remove();
+        var commentaryFrame = $('<div class="sbframe-commentary"></div>');
+        commentaryFrame.addClass('flowing-content-shim');
+        commentaryFrame.addClass('flowing-content-container');
+        commentaryFrame.append(commentary);
+        $(this).append(commentaryFrame);
+
+        // look for a data-commentary-width attribute
+        var commentaryWidth = $(this).attr('data-commentary-width');
+        if (commentaryWidth)
+          commentaryFrame.css('width', commentaryWidth + 'px');
+      }
+
+      // layout the chart (force flex)
+      var result = layoutChart(frame, true);
+
+      // ice the notes if there are none
+      if (!result.notes)
+        frame.find('.chart-notes').remove();
+
+      // set flex on chart
+      setFlex(frame, 1);
+    });
+
+    // create a div to hold all the frames
+    var frameContent = $('<div class="sbframe-content"></div>');
+    frameContent.addClass('dashboard-row-orientation');
+    frameContent.append(frames.detach());
+
+    // row orientation to stack nav and frame content
+    page.addClass('dashboard-row-orientation');
+    page.append(nav);
+    page.append(frameContent);
+    setFlex(frameContent, 1);
+
+    // initialize sly
+    var sly = new Sly(frameList, {
+    		horizontal: true,
+    		itemNav: 'basic',
+    		smart: true,
+    		activateOn: 'click',
+    		startAt: 0,
+    		scrollBy: 1,
+    		activatePageOn: 'click',
+    		speed: 200,
+    		moveBy: 600,
+    		dragHandle: true,
+    		dynamicHandle: true,
+    		clickBar: true,
+    		keyboardNavBy: 'items',
+    		next: next,
+    		prev: prev
+    	}).init();
+
+    // make first frame active
+    frames.removeClass('active');
+    frames.first().addClass('active');
+
+    // subscribe to frame changed events
+    sly.on('active', function (eventName, itemIndex) {
+      frames.removeClass('active');
+      frames.eq(itemIndex).addClass('active')
+                          .trigger('shown');
+    });
+  }
+
+  function layoutPageByRows(page, fillPage) {
+
+    // row orientation
+    page.addClass('dashboard-row-orientation');
+
+    // find all the level2 sections (those are the rows)
+    var rows = page.find('div.section.level2');
+
+    // if there are no level2 sections then treat the
+    // entire page as if it's a level 2 section
+    if (rows.length === 0) {
+      page.wrapInner('<div class="section level2"></div>');
+      rows = page.find('div.section.level2');
+    }
+
+    rows.each(function () {
+
+      // flags
+      var haveNotes = false;
+      var haveFlexHeight = true;
+
+      // remove the h2
+      $(this).children('h2').remove();
+
+      // check for a tabset
+      var isTabset = $(this).hasClass('tabset');
+      if (isTabset)
+        layoutTabset($(this));
+
+      // give it row layout semantics if it's not a tabset
+      if (!isTabset)
+        $(this).addClass('dashboard-row');
+
+      // find all of the level 3 subheads
+      var columns = $(this).find('div.section.level3');
+
+      // determine figureSizes sizes
+      var figureSizes = chartFigureSizes(columns);
+
+      // fixup the columns
+      columns.each(function(index) {
+
+        // layout the chart (force flex if we are in a tabset)
+        var result = layoutChart($(this), isTabset);
+
+        // update flexHeight state
+        if (!result.flex)
+          haveFlexHeight = false;
+
+        // update state
+        if (result.notes)
+          haveNotes = true;
+
+        // set the column flex based on the figure width
+        // (value boxes will just get the default figure width)
+        var chartWidth = figureSizes[index].width;
+        setFlex($(this), chartWidth + ' ' + chartWidth + ' 0px');
+
+      });
+
+      // remove empty chart note divs
+      if (isTabset)
+        $(this).find('.chart-notes').filter(function() {
+            return $(this).html() === "&nbsp;";
+        }).remove();
+      if (!haveNotes)
+        $(this).find('.chart-notes').remove();
+
+       // make it a flexbox row
+      if (haveFlexHeight)
+        $(this).addClass('dashboard-row-flex');
+
+      // now we can set the height on all the wrappers (based on maximum
+      // figure height + room for title and notes, or data-height on the
+      // container if specified). However, don't do this if there is
+      // no flex on any of the constituent columns
+      var flexHeight = null;
+      var dataHeight = parseInt($(this).attr('data-height'));
+      if (dataHeight)
+        flexHeight = adjustedHeight(dataHeight, columns.first());
+      else if (haveFlexHeight)
+        flexHeight = maxChartHeight(figureSizes, columns);
+      if (flexHeight) {
+        if (fillPage)
+          setFlex($(this), flexHeight + ' ' + flexHeight + ' 0px');
+        else {
+          $(this).css('height', flexHeight + 'px');
+          setFlex($(this), '0 0 ' + flexHeight + 'px');
+        }
+      }
+
+    });
+  }
+
+  function layoutPageByColumns(page, fillPage) {
+
+    // column orientation
+    page.addClass('dashboard-column-orientation');
+
+    // find all the level2 sections (those are the columns)
+    var columns = page.find('div.section.level2');
+
+    // if there are no level2 sections then treat the
+    // entire page as if it's a level 2 section
+    if (columns.length === 0) {
+      page.wrapInner('<div class="section level2"></div>');
+      columns = page.find('div.section.level2');
+    }
+
+    // layout each column
+    columns.each(function (index) {
+
+      // remove the h2
+      $(this).children('h2').remove();
+
+      // make it a flexbox column
+      $(this).addClass('dashboard-column');
+
+      // check for a tabset
+      var isTabset = $(this).hasClass('tabset');
+      if (isTabset)
+        layoutTabset($(this));
+
+      // find all the h3 elements
+      var rows = $(this).find('div.section.level3');
+
+      // get the figure sizes for the rows
+      var figureSizes = chartFigureSizes(rows);
+
+      // column flex is the max row width (or data-width if specified)
+      var flexWidth;
+      var dataWidth = parseInt($(this).attr('data-width'));
+      if (dataWidth)
+        flexWidth = dataWidth;
+      else
+        flexWidth = maxChartWidth(figureSizes);
+      setFlex($(this), flexWidth + ' ' + flexWidth + ' 0px');
+
+      // layout each chart
+      rows.each(function(index) {
+
+        // perform the layout
+        var result = layoutChart($(this), false);
+
+        // ice the notes if there are none
+        if (!result.notes)
+          $(this).find('.chart-notes').remove();
+
+        // set flex height based on figHeight, then adjust
+        if (result.flex) {
+          var chartHeight = figureSizes[index].height;
+          chartHeight = adjustedHeight(chartHeight, $(this));
+          if (fillPage)
+            setFlex($(this), chartHeight + ' ' + chartHeight + ' 0px');
+          else {
+            $(this).css('height', chartHeight + 'px');
+            setFlex($(this), chartHeight + ' ' + chartHeight + ' ' + chartHeight + 'px');
+          }
+        }
+      });
+    });
+  }
+
+  function chartFigureSizes(charts) {
+
+    // sizes
+    var figureSizes = new Array(charts.length);
+
+    // check each chart
+    charts.each(function(index) {
+
+      // start with default
+      figureSizes[index] = {
+        width: _options.defaultFigWidth,
+        height: _options.defaultFigHeight
+      };
+
+      // look for data-height or data-width then knit options
+      var dataWidth = parseInt($(this).attr('data-width'));
+      var dataHeight = parseInt($(this).attr('data-height'));
+      var knitrOptions = $(this).find('.knitr-options:first');
+      var knitrWidth, knitrHeight;
+      if (knitrOptions) {
+        knitrWidth = parseInt(knitrOptions.attr('data-fig-width'));
+        knitrHeight =  parseInt(knitrOptions.attr('data-fig-height'));
+      }
+
+      // width
+      if (dataWidth)
+        figureSizes[index].width = dataWidth;
+      else if (knitrWidth)
+        figureSizes[index].width = knitrWidth;
+
+      // height
+      if (dataHeight)
+        figureSizes[index].height = dataHeight;
+      else if (knitrHeight)
+        figureSizes[index].height = knitrHeight;
+    });
+
+    // return sizes
+    return figureSizes;
+  }
+
+  function maxChartHeight(figureSizes, charts) {
+
+    // first compute the maximum height
+    var maxHeight = _options.defaultFigHeight;
+    for (var i = 0; i<figureSizes.length; i++)
+      if (figureSizes[i].height > maxHeight)
+        maxHeight = figureSizes[i].height;
+
+    // now add offests for chart title and chart notes
+    if (charts.length)
+      maxHeight = adjustedHeight(maxHeight, charts.first());
+
+    return maxHeight;
+  }
+
+  function adjustedHeight(height, chart) {
+    if (chart.length > 0) {
+      var chartTitle = chart.find('.chart-title');
+      if (chartTitle.length)
+        height += chartTitle.first().outerHeight();
+      var chartNotes = chart.find('.chart-notes');
+      if (chartNotes.length)
+        height += chartNotes.first().outerHeight();
+    }
+    return height;
+  }
+
+  function maxChartWidth(figureSizes) {
+    var maxWidth = _options.defaultFigWidth;
+    for (var i = 0; i<figureSizes.length; i++)
+      if (figureSizes[i].width > maxWidth)
+        maxWidth = figureSizes[i].width;
+    return maxWidth;
+  }
+
+  // layout a chart
+  function layoutChart(chart, forceFlex) {
+
+    // state to return
+    var result = {
+      notes: false,
+      flex: false
+    };
+
+    // extract the title
+    var title = extractTitle(chart);
+
+    // find components that apply to this container
+    var components = componentsFind(chart);
+
+    // if it's a custom component then call it and return
+    var customComponents = componentsCustom(components);
+    if (customComponents.length) {
+      componentsLayout(customComponents, title, chart);
+      result.notes = false;
+      result.flex = forceFlex || componentsFlex(customComponents);
+      return result;
+    }
+
+    // put all the content in a chart wrapper div
+    chart.addClass('chart-wrapper');
+    chart.wrapInner('<div class="chart-stage"></div>');
+    var chartContent = chart.children('.chart-stage');
+
+    // flex the content if appropriate
+    result.flex = forceFlex || componentsFlex(components);
+    if (result.flex) {
+      // add flex classes
+      chart.addClass('chart-wrapper-flex');
+      chartContent.addClass('chart-stage-flex');
+
+      // additional shim to break out of flexbox sizing
+      chartContent.wrapInner('<div class="chart-shim"></div>');
+      chartContent = chartContent.children('.chart-shim');
+    }
+
+    // set custom data-padding attribute
+    var pad = chart.attr('data-padding');
+    if (pad) {
+      if (pad === "0")
+        chart.addClass('no-padding');
+      else {
+        pad = pad + 'px';
+        chartContent.css('left', pad)
+                    .css('top', pad)
+                    .css('right', pad)
+                    .css('bottom', pad)
+      }
+    }
+
+    // call compoents
+    componentsLayout(components, title, chartContent);
+
+    // also activate components on shiny output
+    findShinyOutput(chartContent).on('shiny:value',
+      function(event) {
+        var element = $(event.target);
+        setTimeout(function() {
+
+          // see if we opted out of flex based on our output (for shiny
+          // we can't tell what type of output we have until after the
+          // value is bound)
+          var components = componentsFind(element);
+          var flex = forceFlex || componentsFlex(components);
+          if (!flex) {
+            chart.css('height', "");
+            setFlex(chart, "");
+            chart.removeClass('chart-wrapper-flex');
+            chartContent.removeClass('chart-stage-flex');
+            chartContent.children().unwrap();
+          }
+
+          // perform layout
+          componentsLayout(components, title, element.parent());
+        }, 10);
+      });
+
+    // add the title
+    var chartTitle = $('<div class="chart-title"></div>');
+    chartTitle.append(title);
+    chart.prepend(chartTitle);
+
+    // add the notes section
+    var chartNotes = $('<div class="chart-notes"></div>');
+    chartNotes.html('&nbsp;');
+    chart.append(chartNotes);
+
+    // attempt to extract notes if we have a component
+    if (components.length)
+      result.notes = extractChartNotes(chartContent, chartNotes);
+
+    // return result
+    return result;
+  }
+
+  // build a tabset from a section div with the .tabset class
+  function layoutTabset(tabset) {
+
+    // check for fade option
+    var fade = tabset.hasClass("tabset-fade");
+    var pills = tabset.hasClass("tabset-pills");
+    var navClass = pills ? "nav-pills" : "nav-tabs";
+
+    // determine the heading level of the tabset and tabs
+    var match = tabset.attr('class').match(/level(\d) /);
+    if (match === null)
+      return;
+    var tabsetLevel = Number(match[1]);
+    var tabLevel = tabsetLevel + 1;
+
+    // find all subheadings immediately below
+    var tabs = tabset.find("div.section.level" + tabLevel);
+    if (!tabs.length)
+      return;
+
+    // create tablist and tab-content elements
+    var tabList = $('<ul class="nav ' + navClass + '" role="tablist"></ul>');
+    $(tabs[0]).before(tabList);
+    var tabContent = $('<div class="tab-content"></div>');
+    $(tabs[0]).before(tabContent);
+
+    // build the tabset
+    var activeTab = 0;
+    tabs.each(function(i) {
+
+      // get the tab div
+      var tab = $(tabs[i]);
+
+      // get the id then sanitize it for use with bootstrap tabs
+      var id = tab.attr('id');
+
+      // see if this is marked as the active tab
+      if (tab.hasClass('active'))
+        activeTab = i;
+
+      // sanitize the id for use with bootstrap tabs
+      id = id.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_');
+      tab.attr('id', id);
+
+      // get the heading element within it and grab it's text
+      var heading = tab.find('h' + tabLevel + ':first');
+      var headingDom = heading.contents();
+
+      // build and append the tab list item
+      var a = $('<a role="tab" data-toggle="tab" data-bs-toggle="tab" class="nav-link"></a>');
+      a.append(headingDom);
+      a.attr('href', '#' + id);
+      a.attr('aria-controls', id);
+      var li = $('<li role="presentation" class="nav-item"></li>');
+      li.append(a);
+      tabList.append(li);
+
+      // set it's attributes
+      tab.attr('role', 'tabpanel');
+      tab.addClass('tab-pane');
+      tab.addClass('tabbed-pane');
+      tab.addClass('no-title');
+      if (fade)
+        tab.addClass('fade');
+
+      // move it into the tab content div
+      tab.detach().appendTo(tabContent);
+    });
+
+    // set active tab
+    $(tabList.children()[activeTab]).tab("show");
+    var active = $(tabContent.children('div.section')[activeTab]);
+    active.addClass('active');
+    if (fade)
+      active.addClass('in');
+
+    // add nav-tabs-custom
+    tabset.addClass('nav-tabs-custom');
+
+    // internal layout is dashboard-column with tab-content flexing
+    tabset.addClass('dashboard-column');
+    setFlex(tabContent, 1);
+  }
+
+  // one time global initialization for components
+  function componentsInit(dashboardContainer) {
+    for (var i=0; i<window.FlexDashboardComponents.length; i++) {
+      var component = window.FlexDashboardComponents[i];
+      if (component.init)
+        component.init(dashboardContainer);
+    }
+  }
+
+  // find components that apply within a container
+  function componentsFind(container) {
+
+    // look for components
+    var components = [];
+    for (var i=0; i<window.FlexDashboardComponents.length; i++) {
+      var component = window.FlexDashboardComponents[i];
+      if (component.find(container).length)
+        components.push(component);
+    }
+
+    // if there were none then use a special flowing content component
+    // that just adds a scrollbar in fillPage mode
+    if (components.length == 0) {
+      components.push({
+        find: function(container) {
+          return container;
+        },
+
+        flex: function(fillPage) {
+          return fillPage;
+        },
+
+        layout: function(title, container, element, fillPage) {
+          if (fillPage) {
+            container.addClass('flowing-content-shim');
+            container.addClass('flowing-content-container');
+          }
+        }
+      });
+    }
+
+    return components;
+  }
+
+  // if there is a custom component then pick it out
+  function componentsCustom(components) {
+    var customComponent = [];
+    for (var i=0; i<components.length; i++)
+      if (components[i].type === "custom") {
+        customComponent.push(components[i]);
+        break;
+      }
+    return customComponent;
+  }
+
+  // query all components for flex
+  function componentsFlex(components) {
+
+    // no components at all means no flex
+    if (components.length === 0)
+      return false;
+
+    // otherwise query components (assume true unless we see false)
+    var isMobile = isMobilePhone();
+    for (var i=0; i<components.length; i++)
+      if (components[i].flex && !components[i].flex(_options.fillPage))
+        return false;
+    return true;
+  }
+
+  // layout all components
+  function componentsLayout(components, title, container) {
+    var isMobile = isMobilePhone();
+    for (var i=0; i<components.length; i++) {
+      var element = components[i].find(container);
+      if (components[i].layout) {
+        // call layout (don't call other components if it returns false)
+        var result = components[i].layout(title, container, element, _options.fillPage);
+        if (result === false)
+          return;
+      }
+    }
+  }
+
+  // get a reference to the h3, discover it's inner html, and remove it
+  function extractTitle(container) {
+    var h3 = container.children('h3').first();
+    var title = '';
+    if (!container.hasClass('no-title'))
+      title = h3.contents();
+    h3.detach();
+    return title;
+  }
+
+  // extract chart notes
+  function extractChartNotes(chartContent, chartNotes) {
+    // look for a terminating blockquote or image caption
+    var blockquote = chartContent.children('blockquote:last-child');
+    var caption = chartContent.children('div.image-container')
+                              .children('p.caption');
+    if (blockquote.length) {
+      chartNotes.empty().append(blockquote.children('p:first-child').contents());
+      blockquote.remove();
+      return true;
+    } else if (caption.length) {
+      chartNotes.empty().append(caption.contents());
+      caption.remove();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function findShinyOutput(chartContent) {
+    return chartContent.find('.shiny-text-output, .shiny-html-output');
+  }
+
+  // safely detect rendering on a mobile phone
+  function isMobilePhone() {
+    try
+    {
+      return ! window.matchMedia("only screen and (min-width: 768px)").matches;
+    }
+    catch(e) {
+      return false;
+    }
+  }
+
+  function isFillPage() {
+    return _options.fillPage;
+  }
+
+  // detect portrait mode
+  function isPortrait() {
+    return ($(window).width() < $(window).height());
+  }
+
+  // safely detect rendering on a tablet
+  function isTablet() {
+    try
+    {
+      return window.matchMedia("only screen and (min-width: 769px) and (max-width: 992px)").matches;
+    }
+    catch(e) {
+      return false;
+    }
+  }
+
+  // test whether this is a shiny doc
+  function isShinyDoc() {
+    return (typeof(window.Shiny) !== "undefined" && !!window.Shiny.outputBindings);
+  }
+
+  // set flex using vendor specific prefixes
+  function setFlex(el, flex) {
+    el.css('-webkit-box-flex', flex)
+      .css('-webkit-flex', flex)
+      .css('-ms-flex', flex)
+      .css('flex', flex);
+  }
+
+  // support bookmarking of pages
+  function handleLocationHash() {
+
+    // restore tab/page from bookmark
+    var hash = window.decodeURIComponent(window.location.hash);
+    if (hash.length > 0) {
+      // Update the tab without .showPage() so that we don't change page history
+      $('ul.nav a[href="' + hash + '"]').tab('show');
+    }
+
+    // navigate to a tab when the history changes
+    window.addEventListener("popstate", function(e) {
+      var hash = window.decodeURIComponent(window.location.hash);
+      var activeTab = $('ul.nav a[href="' + hash + '"]');
+      if (activeTab.length) {
+        activeTab.tab('show');
+      } else {
+        // returning to the base page URL without a hash activates first tab
+        $('ul.nav a:first').tab('show');
+      }
+    });
+
+    // add a hash to the URL when the user clicks on a tab/page
+    $('.navbar-nav a[data-toggle="tab"]').on('click', function(e) {
+      var baseUrl = FlexDashboardUtils.urlWithoutHash(window.location.href);
+      var hash = FlexDashboardUtils.urlHash($(this).attr('href'));
+      var href = baseUrl + hash;
+      FlexDashboardUtils.setLocation(href);
+    });
+
+    // handle clicks of other links that should activate pages
+    var navPages = $('ul.navbar-nav li a[data-toggle=tab]');
+    navPages.each(function() {
+      var href =  $(this).attr('href');
+      var links = $('a[href="' + href + '"][data-toggle!=tab]');
+      links.each(function() {
+        $(this).on('click', function(e) {
+          window.FlexDashboardUtils.showPage(href);
+        });
+      });
+    });
+  }
+
+  // tweak Prism highlighting
+  function initPrismHighlighting() {
+
+    if (window.Prism) {
+      Prism.languages.insertBefore('r', 'comment', {
+        'heading': [
+          {
+            // title 1
+        	  // =======
+
+        	  // title 2
+        	  // -------
+        	  pattern: /\w+.*(?:\r?\n|\r)(?:====+|----+)/,
+            alias: 'operator'
+          },
+          {
+            // ### title 3
+            pattern: /(^\s*)###[^#].+/m,
+            lookbehind: true,
+            alias: 'operator'
+          }
+        ]
+      });
+
+      // prism highlight
+      Prism.highlightAll();
+    }
+  }
+
+  FlexDashboard.prototype = {
+    constructor: FlexDashboard,
+    init: init,
+    isMobilePhone: isMobilePhone,
+    isFillPage: isFillPage
+  };
+
+  return FlexDashboard;
+
+})();
+
+// utils
+window.FlexDashboardUtils = {
+  resizableImage: function(img) {
+    var src = img.attr('src');
+    var url = 'url("' + src + '")';
+    img.parent().css('background', url)
+                .css('background-size', 'contain')
+                .css('background-repeat', 'no-repeat')
+                .css('background-position', 'center')
+                .addClass('image-container');
+  },
+  setLocation: function(href) {
+    if (history && history.pushState) {
+      history.pushState(null, null, href);
+    } else {
+      window.location.replace(href);
+    }
+    setTimeout(function() {
+        window.scrollTo(0, 0);
+    }, 10);
+  },
+  showPage: function(href) {
+    $('ul.navbar-nav li a[href="' + href + '"]').tab('show');
+    var baseUrl = this.urlWithoutHash(window.location.href);
+    var loc = baseUrl + href;
+    this.setLocation(loc);
+  },
+  showLinkedValue: function(href) {
+    // check for a page link
+    if ($('ul.navbar-nav li a[data-toggle=tab][href="' + href + '"]').length > 0)
+      this.showPage(href);
+    else
+      window.open(href);
+  },
+  urlWithoutHash: function(url) {
+    var hashLoc = url.indexOf('#');
+    if (hashLoc != -1)
+      return url.substring(0, hashLoc);
+    else
+      return url;
+  },
+  urlHash: function(url) {
+    var hashLoc = url.indexOf('#');
+    if (hashLoc != -1)
+      return url.substring(hashLoc);
+    else
+      return "";
+  }
+};
+
+window.FlexDashboard = new FlexDashboard();
+
+// empty content
+window.FlexDashboardComponents.push({
+  find: function(container) {
+    if (container.find('p').length == 0)
+      return container;
+    else
+      return $();
+  }
+})
+
+// plot image
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('p')
+                    .children('img:only-child');
+  },
+
+  layout: function(title, container, element, fillPage) {
+    FlexDashboardUtils.resizableImage(element);
+  }
+});
+
+// plot image (figure style)
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('div.figure').children('img');
+  },
+
+  layout: function(title, container, element, fillPage) {
+    FlexDashboardUtils.resizableImage(element);
+  }
+});
+
+// htmlwidget
+window.FlexDashboardComponents.push({
+
+  init: function(dashboardContainer) {
+    // trigger "shown" after initial layout to force static htmlwidgets
+    // in runtime: shiny to be resized after the dom has been transformed
+    dashboardContainer.on('flexdashboard:layoutcomplete', function(event) {
+      setTimeout(function() {
+        dashboardContainer.trigger('shown');
+      }, 200);
+    });
+  },
+
+  find: function(container) {
+    return container.children('div[id^="htmlwidget-"],div.html-widget');
+  }
+});
+
+// gauge
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('div.html-widget.gauge');
+  },
+
+  flex: function(fillPage) {
+    return false;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+
+  }
+
+});
+
+// shiny output
+window.FlexDashboardComponents.push({
+  find: function(container) {
+    return container.children('div[class^="shiny-"]');
+  }
+});
+
+// bootstrap table
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    var bsTable = container.find('table.table');
+    if (bsTable.length !== 0)
+      return bsTable;
+    else
+      return container.find('tr.header').parent('thead').parent('table');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+    // alias variables
+    var bsTable = element;
+
+    // fixup xtable generated tables with a proper thead
+    var headerRow = bsTable.find('tbody > tr:first-child > th').parent();
+    if (headerRow.length > 0) {
+      var thead = $('<thead></thead>');
+      bsTable.prepend(thead);
+      headerRow.detach().appendTo(thead);
+    }
+
+    // improve appearance
+    container.addClass('bootstrap-table');
+
+    // for fill page provide scrolling w/ sticky headers
+    if (fillPage) {
+      // force scrollbar on overflow
+      container.addClass('flowing-content-shim');
+
+      // stable table headers when scrolling
+      bsTable.stickyTableHeaders({
+        scrollableArea: container
+      });
+    }
+  }
+});
+
+// embedded shiny app
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.find('iframe.shiny-frame');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+    if (fillPage) {
+      element.attr('height', '100%');
+    } else {
+      // provide default height if necessary
+      var height = element.get(0).style.height;
+      if (!height)
+        height = element.attr('height');
+      if (!height)
+        element.attr('height', 500);
+    }
+  }
+});
+
+// shiny fillRow or fillCol
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.find('.flexfill-container');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+    if (fillPage)
+      element.css('height', '100%');
+    else {
+      // provide default height if necessary
+      var height = element.get(0).style.height;
+      if (height === "100%" || height === "auto" || height === "initial" ||
+          height === "inherit" || !height) {
+        element.css('height', 500);
+      }
+    }
+  }
+});
+
+// valueBox
+window.FlexDashboardComponents.push({
+
+  type: "custom",
+
+  find: function(container) {
+    if (container.find('span.value-output, .shiny-valuebox-output').length)
+      return container;
+    else
+      return $();
+  },
+
+  flex: function(fillPage) {
+    return false;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+    // alias variables
+    var chartTitle = title;
+    var valueBox = element;
+
+    // add value-box class to container
+    container.addClass('value-box');
+
+    // value paragraph
+    var value = $('<p class="value"></p>');
+
+    // if we have shiny-text-output then just move it in
+    var valueOutputSpan = [];
+    var shinyOutput = valueBox.find('.shiny-valuebox-output').detach();
+    if (shinyOutput.length) {
+      valueBox.children().remove();
+      shinyOutput.html("&mdash;");
+      value.append(shinyOutput);
+    } else {
+      // extract the value (remove leading vector index)
+      var chartValue = valueBox.text().trim();
+      chartValue = chartValue.replace("[1] ", "");
+      valueOutputSpan = valueBox.find('span.value-output').detach();
+      valueBox.children().remove();
+      value.text(chartValue);
+    }
+
+    // caption
+    var caption = $('<p class="caption"></p>');
+    caption.append(chartTitle);
+
+    // build inner div for value box and add it
+    var inner = $('<div class="inner"></div>');
+    inner.append(value);
+    inner.append(caption);
+    valueBox.append(inner);
+
+    // add icon if specified
+    var icon = $('<div class="icon"><i></i></div>');
+    valueBox.append(icon);
+    function setIcon(chartIcon) {
+      var iconLib = "";
+      var iconSplit = chartIcon.split(" ");
+      if (iconSplit.length > 1) {
+        iconLib = iconSplit[0];
+        chartIcon = iconSplit.slice(1).join(" ");
+      } else {
+        var components = chartIcon.split("-");
+        if (components.length > 1)
+          iconLib = components[0];
+      }
+      icon.children('i').attr('class', iconLib + ' ' + chartIcon);
+    }
+    var chartIcon = valueBox.attr('data-icon');
+    if (chartIcon)
+      setIcon(chartIcon);
+
+    // handle data attributes in valueOutputSpan
+    function handleValueOutput(valueOutput) {
+
+      // caption
+      var dataCaption = valueOutput.attr('data-caption');
+      if (dataCaption)
+        caption.html(dataCaption);
+
+      // icon
+      var dataIcon = valueOutput.attr('data-icon');
+      if (dataIcon)
+        setIcon(dataIcon);
+
+      // If valueBox(color=) was an accent color, this attr should
+      // be populated with the accent color and the relevant CSS comes
+      // in through HTML dependencies
+      var dataColorAccent = valueOutput.attr('data-color-accent');
+      var valueBoxClasses = "value-box-" + (["primary", "info", "danger", "warning", "success"].join(" value-box-"));
+      if (dataColorAccent) {
+        valueBox.removeClass(valueBoxClasses);
+        valueBox.addClass('value-box-' + dataColorAccent);
+      }
+
+      // If valueBox(color=) was a CSS color, these other data-color-*
+      // attrs will be populated
+      var dataColor = valueOutput.attr('data-color');
+      if (dataColor) {
+        valueBox.removeClass(valueBoxClasses);
+        valueBox.css('background-color', dataColor);
+      }
+      var dataColorText = valueOutput.attr('data-color-text');
+      if (dataColorText) {
+        valueBox.find(".inner").css('color', dataColorText);
+      }
+      var dataColorIcon = valueOutput.attr('data-color-icon');
+      if (dataColorIcon) {
+        valueBox.find(".icon").css('color', dataColorIcon);
+      }
+
+      // url
+      var dataHref = valueOutput.attr('data-href');
+      if (dataHref) {
+        valueBox.addClass('linked-value');
+        valueBox.off('click.value-box');
+        valueBox.on('click.value-box', function(e) {
+          window.FlexDashboardUtils.showLinkedValue(dataHref);
+        });
+      }
+    }
+
+    // check for a valueOutputSpan
+    if (valueOutputSpan.length > 0) {
+      handleValueOutput(valueOutputSpan);
+    }
+
+    // if we have a shinyOutput then bind a listener to handle
+    // new valueOutputSpan values
+    shinyOutput.on('shiny:value',
+      function(event) {
+        var element = $(event.target);
+        setTimeout(function() {
+          var valueOutputSpan = element.find('span.value-output');
+          if (valueOutputSpan.length > 0)
+            handleValueOutput(valueOutputSpan);
+        }, 10);
+      }
+    );
+  }
+});
+</script>
+
+<div id="dashboard-container">
+
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p>=======================================================================</p>
+<hr />
+<div id="section-global-crash-map" class="section level3">
+<h3>🌎 Global Crash Map</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div class="leaflet html-widget html-widget-output shiny-report-size html-fill-item" id="outc0b8f65ced2efd75" style="width:100%;height:400px;"></div>
+</div>
+<div id="section-operator-filter" class="section level2">
+<h2>Operator Filter</h2>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div class="form-group shiny-input-container">
+<label class="control-label" id="operator_choice-label" for="operator_choice">Choose Operator:</label>
+<div>
+<select class="shiny-input-select form-control" id="operator_choice"><option value="A B Aerotransport">A B Aerotransport</option>
+<option value="Aaxico Airlines">Aaxico Airlines</option>
+<option value="AB Aerotransport">AB Aerotransport</option>
+<option value="Ace Flying Service">Ace Flying Service</option>
+<option value="ACES Colombia">ACES Colombia</option>
+<option value="Acme Air">Acme Air</option>
+<option value="Action Air Express Inc. - Air Taxi">Action Air Express Inc. - Air Taxi</option>
+<option value="Action Airlines">Action Airlines</option>
+<option value="ADC Airlines">ADC Airlines</option>
+<option value="Aden Airways">Aden Airways</option>
+<option value="ADES Colombia">ADES Colombia</option>
+<option value="Advance Airlines">Advance Airlines</option>
+<option value="Adventure Airlines">Adventure Airlines</option>
+<option value="AECA Cargo">AECA Cargo</option>
+<option value="Aegler Stuart Flying Service  / Private">Aegler Stuart Flying Service  / Private</option>
+<option value="Aer Lingus">Aer Lingus</option>
+<option value="Aer Turas">Aer Turas</option>
+<option value="Aerevias Centrales Air Service">Aerevias Centrales Air Service</option>
+<option value="Aerial Transit Company">Aerial Transit Company</option>
+<option value="Aero-Tropics">Aero-Tropics</option>
+<option value="Aero Air">Aero Air</option>
+<option value="Aero Cargo">Aero Cargo</option>
+<option value="Aero Clube de Volta Redonda">Aero Clube de Volta Redonda</option>
+<option value="Aero Condor">Aero Condor</option>
+<option value="Aero Jet Express">Aero Jet Express</option>
+<option value="Aero Lloyd">Aero Lloyd</option>
+<option value="Aero National - Air Taxi">Aero National - Air Taxi</option>
+<option value="Aero O-Y">Aero O-Y</option>
+<option value="Aero PaLease - Air Taxi">Aero PaLease - Air Taxi</option>
+<option value="Aero Pantanal - Air Taxi">Aero Pantanal - Air Taxi</option>
+<option value="Aero Peru">Aero Peru</option>
+<option value="Aero Sudpacifico">Aero Sudpacifico</option>
+<option value="Aero Taxis Equatorianos">Aero Taxis Equatorianos</option>
+<option value="Aero Transportes">Aero Transportes</option>
+<option value="Aero Transporti Italiani">Aero Transporti Italiani</option>
+<option value="Aerocalifornia">Aerocalifornia</option>
+<option value="Aerocaribe">Aerocaribe</option>
+<option value="Aerochasqui">Aerochasqui</option>
+<option value="Aerocondor">Aerocondor</option>
+<option value="Aerocondor de Colombia">Aerocondor de Colombia</option>
+<option value="Aerocord">Aerocord</option>
+<option value="Aerocosta Colombia">Aerocosta Colombia</option>
+<option value="Aeroejecutivos Colombia">Aeroejecutivos Colombia</option>
+<option value="Aeroextra">Aeroextra</option>
+<option value="Aeroflite Services">Aeroflite Services</option>
+<option value="Aeroflot" selected>Aeroflot</option>
+<option value="Aeroflot /Military - Russian">Aeroflot /Military - Russian</option>
+<option value="Aerogulf">Aerogulf</option>
+<option value="Aeroleasing - Air Taxi">Aeroleasing - Air Taxi</option>
+<option value="Aerolift">Aerolift</option>
+<option value="Aerolift Philippines">Aerolift Philippines</option>
+<option value="Aerolineas Argentinas">Aerolineas Argentinas</option>
+<option value="Aerolineas Argo">Aerolineas Argo</option>
+<option value="Aerolineas Centrales de Colombia">Aerolineas Centrales de Colombia</option>
+<option value="Aerolineas El Salvador">Aerolineas El Salvador</option>
+<option value="Aerolineas Flecha Austral">Aerolineas Flecha Austral</option>
+<option value="Aerolineas La Gaviola">Aerolineas La Gaviola</option>
+<option value="Aerolineas La Paz">Aerolineas La Paz</option>
+<option value="Aerolineas Litoral Argentina">Aerolineas Litoral Argentina</option>
+<option value="Aerolineas Nacionales">Aerolineas Nacionales</option>
+<option value="Aerolineas TAO">Aerolineas TAO</option>
+<option value="Aeromexico">Aeromexico</option>
+<option value="Aeromexico / Private">Aeromexico / Private</option>
+<option value="Aeronautical Services - Air Taxi">Aeronautical Services - Air Taxi</option>
+<option value="Aeronaves de Mexico">Aeronaves de Mexico</option>
+<option value="Aeronica">Aeronica</option>
+<option value="Aeronor Chile">Aeronor Chile</option>
+<option value="Aeronorte">Aeronorte</option>
+<option value="Aeronorte Colombia">Aeronorte Colombia</option>
+<option value="Aeropesca Colombia">Aeropesca Colombia</option>
+<option value="Aeropol">Aeropol</option>
+<option value="Aeropostale">Aeropostale</option>
+<option value="Aeropostale - La Tecoere Company">Aeropostale - La Tecoere Company</option>
+<option value="Aeroservice International">Aeroservice International</option>
+<option value="Aeroservicios Empresariales de Durango">Aeroservicios Empresariales de Durango</option>
+<option value="Aerosucre Colombia">Aerosucre Colombia</option>
+<option value="Aerosweet Airlines (LVOV)">Aerosweet Airlines (LVOV)</option>
+<option value="Aerotaca">Aerotaca</option>
+<option value="Aérotaxi Cachanilla">Aérotaxi Cachanilla</option>
+<option value="Aerotaxi Manaus">Aerotaxi Manaus</option>
+<option value="Aerotechnia">Aerotechnia</option>
+<option value="Aerotransportes Petroleros">Aerotransportes Petroleros</option>
+<option value="Aerotuy airline">Aerotuy airline</option>
+<option value="Aerovalles">Aerovalles</option>
+<option value="Aerovanguardia">Aerovanguardia</option>
+<option value="Aerovias Brasil">Aerovias Brasil</option>
+<option value="Aerovias Condor">Aerovias Condor</option>
+<option value="Aerovias Contreras">Aerovias Contreras</option>
+<option value="Aerovias Cuba International">Aerovias Cuba International</option>
+<option value="Aerovias del Valle">Aerovias del Valle</option>
+<option value="Aerovias Urraca">Aerovias Urraca</option>
+<option value="Aerovias Venezolanas SA (Venezuela)">Aerovias Venezolanas SA (Venezuela)</option>
+<option value="Africa One Congo">Africa One Congo</option>
+<option value="African Air">African Air</option>
+<option value="African Commuter Services">African Commuter Services</option>
+<option value="Agco Corp">Agco Corp</option>
+<option value="Agee Flying Service - Air Taxi">Agee Flying Service - Air Taxi</option>
+<option value="Agencia Interamericana de Aviada">Agencia Interamericana de Aviada</option>
+<option value="AIDA">AIDA</option>
+<option value="Aigle Azur">Aigle Azur</option>
+<option value="Air-Lift Commuter">Air-Lift Commuter</option>
+<option value="Air 70">Air 70</option>
+<option value="Air Afrique">Air Afrique</option>
+<option value="Air Algerie">Air Algerie</option>
+<option value="Air Ambulance - Med-Trans Corp.">Air Ambulance - Med-Trans Corp.</option>
+<option value="Air ambulance - Mercy Air Services">Air ambulance - Mercy Air Services</option>
+<option value="Air America">Air America</option>
+<option value="Air Angles Inc.">Air Angles Inc.</option>
+<option value="Air Anguilla">Air Anguilla</option>
+<option value="Air Atlas">Air Atlas</option>
+<option value="Air Bleu">Air Bleu</option>
+<option value="Air Cameroon">Air Cameroon</option>
+<option value="Air Canada">Air Canada</option>
+<option value="Air Cargo Express">Air Cargo Express</option>
+<option value="Air Carriers">Air Carriers</option>
+<option value="Air Carriers Express Services Inc">Air Carriers Express Services Inc</option>
+<option value="Air Central">Air Central</option>
+<option value="Air Chaparral - Air Taxi">Air Chaparral - Air Taxi</option>
+<option value="Air Charter">Air Charter</option>
+<option value="Air Charter - Tanzanian Air Services">Air Charter - Tanzanian Air Services</option>
+<option value="Air China">Air China</option>
+<option value="Air Congo">Air Congo</option>
+<option value="Air Continental">Air Continental</option>
+<option value="Air East">Air East</option>
+<option value="Air Express">Air Express</option>
+<option value="Air Ferry">Air Ferry</option>
+<option value="Air Fiji">Air Fiji</option>
+<option value="Air Fiordland">Air Fiordland</option>
+<option value="Air Florida">Air Florida</option>
+<option value="Air France">Air France</option>
+<option value="Air Freight New Zealand">Air Freight New Zealand</option>
+<option value="Air Georgian">Air Georgian</option>
+<option value="Air Guinee">Air Guinee</option>
+<option value="Air Haiti International">Air Haiti International</option>
+<option value="Air Hawaii">Air Hawaii</option>
+<option value="Air Illinois">Air Illinois</option>
+<option value="Air India">Air India</option>
+<option value="Air Inter">Air Inter</option>
+<option value="Air Iowa">Air Iowa</option>
+<option value="Air Ivorie">Air Ivorie</option>
+<option value="Air Lanka">Air Lanka</option>
+<option value="Air Littoral">Air Littoral</option>
+<option value="Air Logistics">Air Logistics</option>
+<option value="Air Luxor">Air Luxor</option>
+<option value="Air Madagascar">Air Madagascar</option>
+<option value="Air Mali">Air Mali</option>
+<option value="Air Manila">Air Manila</option>
+<option value="Air Manitoba">Air Manitoba</option>
+<option value="Air Melanesie">Air Melanesie</option>
+<option value="Air Memphis">Air Memphis</option>
+<option value="Air Methods / ClassiHelicopters">Air Methods / ClassiHelicopters</option>
+<option value="Air Nautic">Air Nautic</option>
+<option value="Air New England">Air New England</option>
+<option value="Air New Zealand">Air New Zealand</option>
+<option value="Air Ohio - Air Taxi">Air Ohio - Air Taxi</option>
+<option value="Air One Executive">Air One Executive</option>
+<option value="Air Ontario">Air Ontario</option>
+<option value="Air Orient">Air Orient</option>
+<option value="Air Outremer">Air Outremer</option>
+<option value="Air Pennsylvania - Air Taxi">Air Pennsylvania - Air Taxi</option>
+<option value="Air Pereira">Air Pereira</option>
+<option value="Air Philippines">Air Philippines</option>
+<option value="Air Rainbow">Air Rainbow</option>
+<option value="Air Rouergue">Air Rouergue</option>
+<option value="Air Satellite">Air Satellite</option>
+<option value="Air Senegal">Air Senegal</option>
+<option value="Air Sinai">Air Sinai</option>
+<option value="Air South">Air South</option>
+<option value="Air Tahoma">Air Tahoma</option>
+<option value="Air Taroma">Air Taroma</option>
+<option value="Air taxi">Air taxi</option>
+<option value="Air Taxi">Air Taxi</option>
+<option value="Air Taxi- Hermans Air Inc.">Air Taxi- Hermans Air Inc.</option>
+<option value="Air taxi - Aero Air Taxi">Air taxi - Aero Air Taxi</option>
+<option value="Air Taxi - Aero West Aviation Inc.">Air Taxi - Aero West Aviation Inc.</option>
+<option value="Air Taxi - Air Medical Leasing">Air Taxi - Air Medical Leasing</option>
+<option value="Air taxi - Air Safaris Inc.">Air taxi - Air Safaris Inc.</option>
+<option value="Air Taxi - Air Taxi Inc.">Air Taxi - Air Taxi Inc.</option>
+<option value="Air Taxi - Air Trends Inc.">Air Taxi - Air Trends Inc.</option>
+<option value="Air Taxi - Air Vegas Inc.">Air Taxi - Air Vegas Inc.</option>
+<option value="Air Taxi - Airis Helicopters Inc.">Air Taxi - Airis Helicopters Inc.</option>
+<option value="Air Taxi - Alpine Aviation">Air Taxi - Alpine Aviation</option>
+<option value="Air Taxi - Baker Aviation Inc.">Air Taxi - Baker Aviation Inc.</option>
+<option value="Air Taxi - Basco Flying Service Inc.">Air Taxi - Basco Flying Service Inc.</option>
+<option value="Air Taxi - Bigfoot Air of Alaska, LLC">Air Taxi - Bigfoot Air of Alaska, LLC</option>
+<option value="Air Taxi - Bohemia Inc.">Air Taxi - Bohemia Inc.</option>
+<option value="Air Taxi - Centre Airlines Inc.">Air Taxi - Centre Airlines Inc.</option>
+<option value="Air Taxi - Coastal Airways Inc.">Air Taxi - Coastal Airways Inc.</option>
+<option value="Air Taxi - Coastal Helicopters Inc.">Air Taxi - Coastal Helicopters Inc.</option>
+<option value="Air taxi - Cuiaba Air Taxi">Air taxi - Cuiaba Air Taxi</option>
+<option value="Air Taxi - Custom Air Transport Inc.">Air Taxi - Custom Air Transport Inc.</option>
+<option value="Air Taxi - Delaware Aviation LLC">Air Taxi - Delaware Aviation LLC</option>
+<option value="Air Taxi - Durango Air Service">Air Taxi - Durango Air Service</option>
+<option value="Air Taxi - Eidoarie Inc.">Air Taxi - Eidoarie Inc.</option>
+<option value="Air Taxi - El Aero Services Inc.">Air Taxi - El Aero Services Inc.</option>
+<option value="Air Taxi - Flying School of the Cascades Inc.">Air Taxi - Flying School of the Cascades Inc.</option>
+<option value="Air Taxi - Four Corners Aviation Inc.">Air Taxi - Four Corners Aviation Inc.</option>
+<option value="Air Taxi - Grant Aviation Inc.">Air Taxi - Grant Aviation Inc.</option>
+<option value="Air Taxi - Great Northern Aircraft Co.">Air Taxi - Great Northern Aircraft Co.</option>
+<option value="Air Taxi - Guinn Flying Service">Air Taxi - Guinn Flying Service</option>
+<option value="Air Taxi - Haines Airways Inc.">Air Taxi - Haines Airways Inc.</option>
+<option value="Air Taxi - Hawaii Helicopters Inc.">Air Taxi - Hawaii Helicopters Inc.</option>
+<option value="Air Taxi - Iliamna, Air Taxi Inc.">Air Taxi - Iliamna, Air Taxi Inc.</option>
+<option value="Air Taxi - Island Air Service">Air Taxi - Island Air Service</option>
+<option value="Air Taxi - Island Airlines">Air Taxi - Island Airlines</option>
+<option value="Air taxi - Jao Air Taxi">Air taxi - Jao Air Taxi</option>
+<option value="Air Taxi - Jet Alaska">Air Taxi - Jet Alaska</option>
+<option value="Air Taxi - Lab Flying Service Inc.">Air Taxi - Lab Flying Service Inc.</option>
+<option value="Air Taxi - Lake Clark Air Inc.">Air Taxi - Lake Clark Air Inc.</option>
+<option value="Air Taxi - Las Vegas Flyers Inc.">Air Taxi - Las Vegas Flyers Inc.</option>
+<option value="Air taxi - Lider Air Taxi">Air taxi - Lider Air Taxi</option>
+<option value="Air Taxi - MajestiAlliance">Air Taxi - MajestiAlliance</option>
+<option value="Air Taxi - Martin Aviation LP">Air Taxi - Martin Aviation LP</option>
+<option value="Air Taxi - Mercy Flights Inc.">Air Taxi - Mercy Flights Inc.</option>
+<option value="Air Taxi - Minuteman Aviation Inc.">Air Taxi - Minuteman Aviation Inc.</option>
+<option value="Air Taxi - Monument Valley Air Service">Air Taxi - Monument Valley Air Service</option>
+<option value="Air Taxi - National Helicopters">Air Taxi - National Helicopters</option>
+<option value="Air Taxi - New England Airlines">Air Taxi - New England Airlines</option>
+<option value="Air Taxi - New London Flying Services Inc.">Air Taxi - New London Flying Services Inc.</option>
+<option value="Air Taxi - Northern Air Services Inc.">Air Taxi - Northern Air Services Inc.</option>
+<option value="Air Taxi - Northern Arizona Aircraft Inc.">Air Taxi - Northern Arizona Aircraft Inc.</option>
+<option value="Air Taxi - Ohana Helicopter Tours">Air Taxi - Ohana Helicopter Tours</option>
+<option value="Air Taxi - Oklahoma Airways Inc.">Air Taxi - Oklahoma Airways Inc.</option>
+<option value="Air Taxi - Ozark Skyways Inc.">Air Taxi - Ozark Skyways Inc.</option>
+<option value="Air Taxi - Papillion Helicopters Ltd.">Air Taxi - Papillion Helicopters Ltd.</option>
+<option value="Air Taxi - Paramount Aviation Corp.">Air Taxi - Paramount Aviation Corp.</option>
+<option value="Air Taxi - Peninsula Airways">Air Taxi - Peninsula Airways</option>
+<option value="Air Taxi - Petroleum Helicopters Inc.">Air Taxi - Petroleum Helicopters Inc.</option>
+<option value="Air Taxi - Raco Helicopters Corp.">Air Taxi - Raco Helicopters Corp.</option>
+<option value="Air Taxi - Richards Aviation Inc.">Air Taxi - Richards Aviation Inc.</option>
+<option value="Air Taxi - Richmor Aviation">Air Taxi - Richmor Aviation</option>
+<option value="Air Taxi - Sea PacifiInc.">Air Taxi - Sea PacifiInc.</option>
+<option value="Air Taxi - Seaside Air Service">Air Taxi - Seaside Air Service</option>
+<option value="Air Taxi - Stearns Air Alaska">Air Taxi - Stearns Air Alaska</option>
+<option value="Air Taxi - TAJ FBO Co.">Air Taxi - TAJ FBO Co.</option>
+<option value="Air Taxi - Talon Air Services Inc.">Air Taxi - Talon Air Services Inc.</option>
+<option value="Air taxi - TAM">Air taxi - TAM</option>
+<option value="Air Taxi - Transamerica">Air Taxi - Transamerica</option>
+<option value="Air Taxi - US Helicopters Inc.">Air Taxi - US Helicopters Inc.</option>
+<option value="Air Taxi - Uyak Air Services Inc.">Air Taxi - Uyak Air Services Inc.</option>
+<option value="Air Taxi - Western Helicopter Inc.">Air Taxi - Western Helicopter Inc.</option>
+<option value="Air Taxi - Wilderness Aviation Inc.">Air Taxi - Wilderness Aviation Inc.</option>
+<option value="Air Taxi - Wolfe Air Aviation Ltd.">Air Taxi - Wolfe Air Aviation Ltd.</option>
+<option value="Air Taxi -Wilderness Aviation Inc.">Air Taxi -Wilderness Aviation Inc.</option>
+<option value="Air Transit - Air Taxi">Air Transit - Air Taxi</option>
+<option value="Air Transport">Air Transport</option>
+<option value="Air Transport Associates">Air Transport Associates</option>
+<option value="Air Trek">Air Trek</option>
+<option value="Air Union">Air Union</option>
+<option value="Air US / Private">Air US / Private</option>
+<option value="Air Vietnam (South Vietnam)">Air Vietnam (South Vietnam)</option>
+<option value="Air Wisconsin">Air Wisconsin</option>
+<option value="Airborne Express">Airborne Express</option>
+<option value="Airbus Industrie">Airbus Industrie</option>
+<option value="Aircraft Charter Group Inc">Aircraft Charter Group Inc</option>
+<option value="Aircraft Transport and Travel">Aircraft Transport and Travel</option>
+<option value="Airfast Indonesia">Airfast Indonesia</option>
+<option value="Airfast Services">Airfast Services</option>
+<option value="Airline Transport">Airline Transport</option>
+<option value="Airlines of PNG">Airlines of PNG</option>
+<option value="Airlink">Airlink</option>
+<option value="AirNow">AirNow</option>
+<option value="Airquarius Aviation - Charter">Airquarius Aviation - Charter</option>
+<option value="Airtech Rajawaldi Udara">Airtech Rajawaldi Udara</option>
+<option value="Airwave Transport">Airwave Transport</option>
+<option value="Airways">Airways</option>
+<option value="AirWest Airlines">AirWest Airlines</option>
+<option value="Airwork">Airwork</option>
+<option value="Aitalia">Aitalia</option>
+<option value="Aktiebolaget Aerotransport">Aktiebolaget Aerotransport</option>
+<option value="Ala Littoria">Ala Littoria</option>
+<option value="Alada">Alada</option>
+<option value="ALADA">ALADA</option>
+<option value="Alamo Airways">Alamo Airways</option>
+<option value="Alas Chiricanas">Alas Chiricanas</option>
+<option value="Alas del Sur">Alas del Sur</option>
+<option value="Alaska-Washington Airways">Alaska-Washington Airways</option>
+<option value="Alaska Aeronautical Industries">Alaska Aeronautical Industries</option>
+<option value="Alaska Airlines">Alaska Airlines</option>
+<option value="Alaska Helicopter - Air Taxi">Alaska Helicopter - Air Taxi</option>
+<option value="Alaska Travel">Alaska Travel</option>
+<option value="Albancion Circulo">Albancion Circulo</option>
+<option value="ALFA">ALFA</option>
+<option value="Alia Royal Jordanian Airlines">Alia Royal Jordanian Airlines</option>
+<option value="Alii Air Hawaii - Air Taxi">Alii Air Hawaii - Air Taxi</option>
+<option value="Alitalia">Alitalia</option>
+<option value="All Nippon Airways">All Nippon Airways</option>
+<option value="Allegheny Airlines">Allegheny Airlines</option>
+<option value="Alliance Airlines">Alliance Airlines</option>
+<option value="Allied Air Freight">Allied Air Freight</option>
+<option value="Aloha Airlines">Aloha Airlines</option>
+<option value="Alpa Servicios Aéreos">Alpa Servicios Aéreos</option>
+<option value="Alpena Flying Service - Air Taxi">Alpena Flying Service - Air Taxi</option>
+<option value="Alpha Airways">Alpha Airways</option>
+<option value="Alpine Air Express">Alpine Air Express</option>
+<option value="Alpine Aviation ">Alpine Aviation </option>
+<option value="AltusFlying Service - Air Taxi">AltusFlying Service - Air Taxi</option>
+<option value="Alyemda Airlines">Alyemda Airlines</option>
+<option value="Amazonese Importacao e Exportacao">Amazonese Importacao e Exportacao</option>
+<option value="Ambler Air Service">Ambler Air Service</option>
+<option value="Amee de l&#39;Air">Amee de l'Air</option>
+<option value="American Airlines">American Airlines</option>
+<option value="American Airlines / Military - USAF">American Airlines / Military - USAF</option>
+<option value="American Airlines / Private">American Airlines / Private</option>
+<option value="American Airways">American Airways</option>
+<option value="American Eagle">American Eagle</option>
+<option value="American Export Airlines">American Export Airlines</option>
+<option value="American Express Leasing">American Express Leasing</option>
+<option value="American Jet">American Jet</option>
+<option value="American Overseas Airlines">American Overseas Airlines</option>
+<option value="American Virginia">American Virginia</option>
+<option value="Ameriflight">Ameriflight</option>
+<option value="Ameristar Jet Charter">Ameristar Jet Charter</option>
+<option value="Amphibians">Amphibians</option>
+<option value="Anchorage Helicopter - Air Taxi">Anchorage Helicopter - Air Taxi</option>
+<option value="ANDESA">ANDESA</option>
+<option value="Ansett ANA">Ansett ANA</option>
+<option value="ANT Air Taxi">ANT Air Taxi</option>
+<option value="Antilles Air">Antilles Air</option>
+<option value="Apache Airlines - Air Taxi">Apache Airlines - Air Taxi</option>
+<option value="APRL">APRL</option>
+<option value="Arall">Arall</option>
+<option value="Aramar">Aramar</option>
+<option value="Aramco Associated Company">Aramco Associated Company</option>
+<option value="Ararat Avia">Ararat Avia</option>
+<option value="Arax Airlines">Arax Airlines</option>
+<option value="ArctiCircle Air Service">ArctiCircle Air Service</option>
+<option value="ArctiPacific">ArctiPacific</option>
+<option value="ArctiTransportation Services">ArctiTransportation Services</option>
+<option value="AREA">AREA</option>
+<option value="Argentina CAA">Argentina CAA</option>
+<option value="Ariana Afghan Airlines">Ariana Afghan Airlines</option>
+<option value="Aroostook Air - Air Taxi">Aroostook Air - Air Taxi</option>
+<option value="Arrow Airlines">Arrow Airlines</option>
+<option value="Arrow Airways">Arrow Airways</option>
+<option value="Asiana Airlines">Asiana Airlines</option>
+<option value="Associated Air Transport">Associated Air Transport</option>
+<option value="Associated Airways">Associated Airways</option>
+<option value="Associated Aviators">Associated Aviators</option>
+<option value="Astro Air Taxi">Astro Air Taxi</option>
+<option value="ATESA">ATESA</option>
+<option value="ATI">ATI</option>
+<option value="AtlantiAirlines">AtlantiAirlines</option>
+<option value="AtlantiAirways">AtlantiAirways</option>
+<option value="AtlantiCentral Airlines">AtlantiCentral Airlines</option>
+<option value="AtlantiCity Airlines">AtlantiCity Airlines</option>
+<option value="AtlantiCoast Airlines (United Express)">AtlantiCoast Airlines (United Express)</option>
+<option value="AtlantiSoutheast Airlines">AtlantiSoutheast Airlines</option>
+<option value="Atran">Atran</option>
+<option value="Augusta Aviaiton - Air Taxi">Augusta Aviaiton - Air Taxi</option>
+<option value="Aurukun Air Services">Aurukun Air Services</option>
+<option value="Austin Airways">Austin Airways</option>
+<option value="Austral Lineas Aeras (Argentina)">Austral Lineas Aeras (Argentina)</option>
+<option value="Australian Aerial Services">Australian Aerial Services</option>
+<option value="Australian National Airways">Australian National Airways</option>
+<option value="Austria-Flugdienst">Austria-Flugdienst</option>
+<option value="Austrian Airlines">Austrian Airlines</option>
+<option value="Autrex">Autrex</option>
+<option value="AV Air / American Eagle">AV Air / American Eagle</option>
+<option value="Avalki Air">Avalki Air</option>
+<option value="Avanti Aviation -Air Taxi">Avanti Aviation -Air Taxi</option>
+<option value="AVCOM">AVCOM</option>
+<option value="Avensa">Avensa</option>
+<option value="Avesca Colombia">Avesca Colombia</option>
+<option value="Avia-Taxi">Avia-Taxi</option>
+<option value="Aviaco">Aviaco</option>
+<option value="Avianca">Avianca</option>
+<option value="AVIANCA">AVIANCA</option>
+<option value="AVIANCA / AVIANCA">AVIANCA / AVIANCA</option>
+<option value="Aviateca">Aviateca</option>
+<option value="Aviation Charter - Air Taxi">Aviation Charter - Air Taxi</option>
+<option value="Aviation Development Corporation">Aviation Development Corporation</option>
+<option value="Aviation Enterprises">Aviation Enterprises</option>
+<option value="Avicsa">Avicsa</option>
+<option value="Avio Linee Italiane">Avio Linee Italiane</option>
+<option value="Avion Airways">Avion Airways</option>
+<option value="Avionas  Banamex">Avionas  Banamex</option>
+<option value="Avirex">Avirex</option>
+<option value="Avtex Air Services">Avtex Air Services</option>
+<option value="AZAL Cargo Company">AZAL Cargo Company</option>
+<option value="Azerbaijan Airlines">Azerbaijan Airlines</option>
+<option value="Baker Aero Inc. - Taxi">Baker Aero Inc. - Taxi</option>
+<option value="Bakhtar Afghan Airlines">Bakhtar Afghan Airlines</option>
+<option value="BAL Bremerhaven Airline">BAL Bremerhaven Airline</option>
+<option value="Balair">Balair</option>
+<option value="Bali International Air Service">Bali International Air Service</option>
+<option value="Balkan Bulgarian Airlines">Balkan Bulgarian Airlines</option>
+<option value="Bangkok Airways">Bangkok Airways</option>
+<option value="Bangladesh Biman">Bangladesh Biman</option>
+<option value="Bankair">Bankair</option>
+<option value="Bankair Inc. - Air Taxi">Bankair Inc. - Air Taxi</option>
+<option value="Bar Harbor Airlines">Bar Harbor Airlines</option>
+<option value="Barrow Air Service - Air Taxi">Barrow Air Service - Air Taxi</option>
+<option value="Bashkirian Airlines / DHL Worldwide Express">Bashkirian Airlines / DHL Worldwide Express</option>
+<option value="Bassett Complany - Taxi">Bassett Complany - Taxi</option>
+<option value="Bavaria Flug">Bavaria Flug</option>
+<option value="Bay Land Aviation">Bay Land Aviation</option>
+<option value="Bearskin Airlines / Air Sandy">Bearskin Airlines / Air Sandy</option>
+<option value="Beatty Flying Service - Taxi">Beatty Flying Service - Taxi</option>
+<option value="Belgian International Air Services">Belgian International Air Services</option>
+<option value="Belize Air International Ltd.">Belize Air International Ltd.</option>
+<option value="Bellview Airlines">Bellview Airlines</option>
+<option value="Berkshire Aviation - Air Taxi">Berkshire Aviation - Air Taxi</option>
+<option value="BHS - Brazilian Helicopter Services">BHS - Brazilian Helicopter Services</option>
+<option value="Big Island Airlines">Big Island Airlines</option>
+<option value="Bimini Air Charter Inc.">Bimini Air Charter Inc.</option>
+<option value="Bimini Airways">Bimini Airways</option>
+<option value="Binter Mediterráneo">Binter Mediterráneo</option>
+<option value="BKS Air Transport">BKS Air Transport</option>
+<option value="Blackhawk Int. Airways  - Private charter">Blackhawk Int. Airways  - Private charter</option>
+<option value="Blue Bird Aviation">Blue Bird Aviation</option>
+<option value="Blue Hawaiian Helicopters">Blue Hawaiian Helicopters</option>
+<option value="Blue Wing Airlines">Blue Wing Airlines</option>
+<option value="BOAC">BOAC</option>
+<option value="Boeing Air Transport">Boeing Air Transport</option>
+<option value="Boeing KC-135E">Boeing KC-135E</option>
+<option value="Boise Air Service">Boise Air Service</option>
+<option value="Bombardier Aerospace">Bombardier Aerospace</option>
+<option value="Bonanza Airlines">Bonanza Airlines</option>
+<option value="Bouraq Indonesia Airlines">Bouraq Indonesia Airlines</option>
+<option value="Braathens">Braathens</option>
+<option value="Bradley Air Services">Bradley Air Services</option>
+<option value="Braniff Airlines">Braniff Airlines</option>
+<option value="Braniff Airways">Braniff Airways</option>
+<option value="Bristol 170 Freighter 31M">Bristol 170 Freighter 31M</option>
+<option value="Bristol Aeroplane Co.">Bristol Aeroplane Co.</option>
+<option value="Bristow Helicopters">Bristow Helicopters</option>
+<option value="Britavia">Britavia</option>
+<option value="British Airtours">British Airtours</option>
+<option value="British Airways">British Airways</option>
+<option value="British Eagle International Airlines">British Eagle International Airlines</option>
+<option value="British European Airways">British European Airways</option>
+<option value="British European Airways / Military - Soviet Air Force">British European Airways / Military - Soviet Air Force</option>
+<option value="British Midland Airways">British Midland Airways</option>
+<option value="British Overseas Airways">British Overseas Airways</option>
+<option value="British South American Airways">British South American Airways</option>
+<option value="British United Airways">British United Airways</option>
+<option value="British World Airways">British World Airways</option>
+<option value="Britt Airways">Britt Airways</option>
+<option value="Broward Aviation Services - Air Taxi">Broward Aviation Services - Air Taxi</option>
+<option value="Bruning Aviation">Bruning Aviation</option>
+<option value="Bruno Air">Bruno Air</option>
+<option value="Bruns Air Service - Air Taxi">Bruns Air Service - Air Taxi</option>
+<option value="Buckeye Air Service - Air Taxi">Buckeye Air Service - Air Taxi</option>
+<option value="Bulair TABSO">Bulair TABSO</option>
+<option value="Burke Air Transport">Burke Air Transport</option>
+<option value="Burlington Air - Air Taxi">Burlington Air - Air Taxi</option>
+<option value="Burlington Air Express">Burlington Air Express</option>
+<option value="Burma Airways">Burma Airways</option>
+<option value="Business Air Connection">Business Air Connection</option>
+<option value="Business Aircraft - Air Taxi">Business Aircraft - Air Taxi</option>
+<option value="Business Jet Services">Business Jet Services</option>
+<option value="By Air">By Air</option>
+<option value="C and C Aviaiton - Air Taxi">C and C Aviaiton - Air Taxi</option>
+<option value="CAAC">CAAC</option>
+<option value="CAAK">CAAK</option>
+<option value="Cable Commuter">Cable Commuter</option>
+<option value="Cabo Verde Airlines">Cabo Verde Airlines</option>
+<option value="Calair">Calair</option>
+<option value="Caledonian Airways">Caledonian Airways</option>
+<option value="California Air Charter">California Air Charter</option>
+<option value="California Air Freight">California Air Freight</option>
+<option value="California Aircraft">California Aircraft</option>
+<option value="CAMBA">CAMBA</option>
+<option value="Cambodia Air">Cambodia Air</option>
+<option value="Cameroon Airlines">Cameroon Airlines</option>
+<option value="Campagnie France Roumaine">Campagnie France Roumaine</option>
+<option value="Canada Jet Charters">Canada Jet Charters</option>
+<option value="Canadian Air Transat">Canadian Air Transat</option>
+<option value="Canadian Colonial Airways">Canadian Colonial Airways</option>
+<option value="Canadian PacifiAir Lines">Canadian PacifiAir Lines</option>
+<option value="Canair Corp. - Air Taxi">Canair Corp. - Air Taxi</option>
+<option value="Canairelief Air">Canairelief Air</option>
+<option value="Cape Smythe Air Service">Cape Smythe Air Service</option>
+<option value="Capital Airlines">Capital Airlines</option>
+<option value="Capital Airlines / Military - Air National Guard">Capital Airlines / Military - Air National Guard</option>
+<option value="Capital Airlines Inc.">Capital Airlines Inc.</option>
+<option value="Capital Taxi Aereo">Capital Taxi Aereo</option>
+<option value="Capitol Air Service - Air Taxi">Capitol Air Service - Air Taxi</option>
+<option value="Capitol Airways">Capitol Airways</option>
+<option value="Care Flight International">Care Flight International</option>
+<option value="Carga Aereo Transportada">Carga Aereo Transportada</option>
+<option value="Cargo Three Panama">Cargo Three Panama</option>
+<option value="Cargolux">Cargolux</option>
+<option value="Carib Air Transport">Carib Air Transport</option>
+<option value="Caribbean Air Carrier - Air Taxi">Caribbean Air Carrier - Air Taxi</option>
+<option value="Caribbean Airlines">Caribbean Airlines</option>
+<option value="Caribbean International Airways">Caribbean International Airways</option>
+<option value="Carvair ATL-98">Carvair ATL-98</option>
+<option value="Cascade Airways">Cascade Airways</option>
+<option value="Casino Air - Air Taxi">Casino Air - Air Taxi</option>
+<option value="Castle Aviation">Castle Aviation</option>
+<option value="CATA">CATA</option>
+<option value="CATA Linea Aerea">CATA Linea Aerea</option>
+<option value="Catalina - Vega - Air Taxi">Catalina - Vega - Air Taxi</option>
+<option value="Cathay PacifiAirways">Cathay PacifiAirways</option>
+<option value="CCCP">CCCP</option>
+<option value="Cebu PacifiAir">Cebu PacifiAir</option>
+<option value="Central  Airlines">Central  Airlines</option>
+<option value="Central African Airways">Central African Airways</option>
+<option value="Central Air Services">Central Air Services</option>
+<option value="Central Air Transport">Central Air Transport</option>
+<option value="Central Airlines">Central Airlines</option>
+<option value="Central Mountain Air Services">Central Mountain Air Services</option>
+<option value="Century Air Lines">Century Air Lines</option>
+<option value="Century PacifiLines">Century PacifiLines</option>
+<option value="Ceskoslovenske Aerolinie">Ceskoslovenske Aerolinie</option>
+<option value="Ceskoslovenské Aerolinie">Ceskoslovenské Aerolinie</option>
+<option value="Chaillotine Air Service">Chaillotine Air Service</option>
+<option value="Chalk&#39;s International Airlines">Chalk's International Airlines</option>
+<option value="Chamberlin Flying Service">Chamberlin Flying Service</option>
+<option value="Channel Air Lift">Channel Air Lift</option>
+<option value="Channel Flying Service - Air Taxi">Channel Flying Service - Air Taxi</option>
+<option value="Chartair - Air Taxi">Chartair - Air Taxi</option>
+<option value="Charter">Charter</option>
+<option value="Charter - Air Adventures New Zealand Ltd">Charter - Air Adventures New Zealand Ltd</option>
+<option value="Charter - Flightline Charter Services">Charter - Flightline Charter Services</option>
+<option value="Charter - IRS Aero">Charter - IRS Aero</option>
+<option value="Charter - Maniema Union (owner Victoria Air)">Charter - Maniema Union (owner Victoria Air)</option>
+<option value="Charter - Private">Charter - Private</option>
+<option value="Chelan Air Service">Chelan Air Service</option>
+<option value="Chester Airport">Chester Airport</option>
+<option value="Chicago-Detroit Airways">Chicago-Detroit Airways</option>
+<option value="Chicago and Southern Airlines">Chicago and Southern Airlines</option>
+<option value="Chicago Helicopter Airways">Chicago Helicopter Airways</option>
+<option value="Chicago Southern Airlines">Chicago Southern Airlines</option>
+<option value="China Airlines (Taiwan)">China Airlines (Taiwan)</option>
+<option value="China Eastern Airlines">China Eastern Airlines</option>
+<option value="China Flying Dragon Aviation (Feilong Airlines)">China Flying Dragon Aviation (Feilong Airlines)</option>
+<option value="China General Aviation Corporation">China General Aviation Corporation</option>
+<option value="China National Aviation Corporation">China National Aviation Corporation</option>
+<option value="China Northern Airlines">China Northern Airlines</option>
+<option value="China Northwest Airlines">China Northwest Airlines</option>
+<option value="China Southern Airlines">China Southern Airlines</option>
+<option value="China Southwest Airlines">China Southwest Airlines</option>
+<option value="China Southwest Airlines / Xiamen Airlines">China Southwest Airlines / Xiamen Airlines</option>
+<option value="Chugiak Aviation - Air Taxi">Chugiak Aviation - Air Taxi</option>
+<option value="Churchill Falls Co.">Churchill Falls Co.</option>
+<option value="Cia Brasiliera de Tratores">Cia Brasiliera de Tratores</option>
+<option value="CIDNA">CIDNA</option>
+<option value="Cie des Messageries Aeriennes">Cie des Messageries Aeriennes</option>
+<option value="Circuit City Stores - Charter">Circuit City Stores - Charter</option>
+<option value="City-Jet">City-Jet</option>
+<option value="Civil Air Transport">Civil Air Transport</option>
+<option value="ClassiWings">ClassiWings</option>
+<option value="Coastal Cargo">Coastal Cargo</option>
+<option value="COHATA">COHATA</option>
+<option value="College of the Ozarks">College of the Ozarks</option>
+<option value="Colonial Air Transport">Colonial Air Transport</option>
+<option value="Colonial Western Airlines">Colonial Western Airlines</option>
+<option value="Columbia Air Cargo">Columbia Air Cargo</option>
+<option value="Columbia PacifiAirlines">Columbia PacifiAirlines</option>
+<option value="Comair">Comair</option>
+<option value="Commercial Air Taxi">Commercial Air Taxi</option>
+<option value="Commercial Airways">Commercial Airways</option>
+<option value="Commutair">Commutair</option>
+<option value="Commuter Airline - Air Taxi">Commuter Airline - Air Taxi</option>
+<option value="Compagnie Air Transport">Compagnie Air Transport</option>
+<option value="Compagnie Sila">Compagnie Sila</option>
+<option value="Compania de Aviacion Faucett SA (Peru)">Compania de Aviacion Faucett SA (Peru)</option>
+<option value="Condor Flugdienst">Condor Flugdienst</option>
+<option value="Connair">Connair</option>
+<option value="Connie Kalitta Services">Connie Kalitta Services</option>
+<option value="Conquest Airways - Air Taxi">Conquest Airways - Air Taxi</option>
+<option value="Continental Air Lines">Continental Air Lines</option>
+<option value="Continental Air Services">Continental Air Services</option>
+<option value="Continental Airlines">Continental Airlines</option>
+<option value="Continental Connection/Colgan Air">Continental Connection/Colgan Air</option>
+<option value="COPA (Panama)">COPA (Panama)</option>
+<option value="CORAL Colombia">CORAL Colombia</option>
+<option value="Cordova Airlines">Cordova Airlines</option>
+<option value="Corp. Aeronautica de Transportes">Corp. Aeronautica de Transportes</option>
+<option value="Corporacion Boliviano de Fomento">Corporacion Boliviano de Fomento</option>
+<option value="Corporate Air">Corporate Air</option>
+<option value="Corporate Air - Air Taxi">Corporate Air - Air Taxi</option>
+<option value="Corporate Mobility Inc. - Private">Corporate Mobility Inc. - Private</option>
+<option value="Costal Airway">Costal Airway</option>
+<option value="Coval Air">Coval Air</option>
+<option value="Crasa - Air Taxi">Crasa - Air Taxi</option>
+<option value="Crest Airlines - Air Taxi">Crest Airlines - Air Taxi</option>
+<option value="Cross Airways">Cross Airways</option>
+<option value="Crossair">Crossair</option>
+<option value="Cruzeiro">Cruzeiro</option>
+<option value="Cruzeiro Do Sud">Cruzeiro Do Sud</option>
+<option value="Cruzeiro do Sul">Cruzeiro do Sul</option>
+<option value="CSA Czech Airlines">CSA Czech Airlines</option>
+<option value="CTA LanguedoRoussillon">CTA LanguedoRoussillon</option>
+<option value="Cubana de Aviacion">Cubana de Aviacion</option>
+<option value="Cubana de Aviacion / Military -  US Navy">Cubana de Aviacion / Military -  US Navy</option>
+<option value="Cubana de Aviacon">Cubana de Aviacon</option>
+<option value="Cunard Eagle Airways">Cunard Eagle Airways</option>
+<option value="Currey Air Transport">Currey Air Transport</option>
+<option value="Custom Air Service">Custom Air Service</option>
+<option value="Dai Nippon">Dai Nippon</option>
+<option value="Daimler Airways">Daimler Airways</option>
+<option value="Daimler Airways / Grands Express Aeriens">Daimler Airways / Grands Express Aeriens</option>
+<option value="Dan-Air Services">Dan-Air Services</option>
+<option value="Dan Air Services">Dan Air Services</option>
+<option value="Darbhanga Aviation">Darbhanga Aviation</option>
+<option value="Deccan Airways">Deccan Airways</option>
+<option value="Del Rio Flying Service - Air Taxi">Del Rio Flying Service - Air Taxi</option>
+<option value="Delaware Aviation - Air Taxi">Delaware Aviation - Air Taxi</option>
+<option value="Delta Air Lines">Delta Air Lines</option>
+<option value="Delta Air Lines/ North Central Airlines">Delta Air Lines/ North Central Airlines</option>
+<option value="Deming Flying Service - Air Taxi">Deming Flying Service - Air Taxi</option>
+<option value="Denver Air Center">Denver Air Center</option>
+<option value="Deraya Air Taxi">Deraya Air Taxi</option>
+<option value="Derby Aviation">Derby Aviation</option>
+<option value="Deruluft">Deruluft</option>
+<option value="Deutche Lufthansa">Deutche Lufthansa</option>
+<option value="Deutsche Lufthansa">Deutsche Lufthansa</option>
+<option value="Deutsche Zeppelin Reederei">Deutsche Zeppelin Reederei</option>
+<option value="Devener Flying Service - Taxi">Devener Flying Service - Taxi</option>
+<option value="Devlet Hava Yollairi">Devlet Hava Yollairi</option>
+<option value="Devlet Hava Yollari">Devlet Hava Yollari</option>
+<option value="DHL">DHL</option>
+<option value="DHL Aviation Africa">DHL Aviation Africa</option>
+<option value="Dirgantara Air Services">Dirgantara Air Services</option>
+<option value="DLL">DLL</option>
+<option value="DNL">DNL</option>
+<option value="Dominion Air Lines">Dominion Air Lines</option>
+<option value="Don Zimmerman - Air Taxi">Don Zimmerman - Air Taxi</option>
+<option value="Douglas Aircraft Company">Douglas Aircraft Company</option>
+<option value="Douglas Airways">Douglas Airways</option>
+<option value="Downeast Airlines">Downeast Airlines</option>
+<option value="DTA Angola Airlines">DTA Angola Airlines</option>
+<option value="Duncan Aircraft Sales">Duncan Aircraft Sales</option>
+<option value="Dunlap Aviation - Air Taxi">Dunlap Aviation - Air Taxi</option>
+<option value="Dutch Continental Airways">Dutch Continental Airways</option>
+<option value="Dutch Dakota Association">Dutch Dakota Association</option>
+<option value="Dwyer Flying Service - Private Charter">Dwyer Flying Service - Private Charter</option>
+<option value="E.A.S. Aeroservizi">E.A.S. Aeroservizi</option>
+<option value="Eagle Air">Eagle Air</option>
+<option value="Eagle Airways">Eagle Airways</option>
+<option value="Eagle Cap Leasing">Eagle Cap Leasing</option>
+<option value="Eagle Commuter">Eagle Commuter</option>
+<option value="Eagle Flight - Air Taxi">Eagle Flight - Air Taxi</option>
+<option value="EAS Airlines (Executive Airline Services)">EAS Airlines (Executive Airline Services)</option>
+<option value="East African Airways">East African Airways</option>
+<option value="East Anglian Flying Services">East Anglian Flying Services</option>
+<option value="East Coast Air - Air Taxi">East Coast Air - Air Taxi</option>
+<option value="East Coast Jets">East Coast Jets</option>
+<option value="Eastern Air Lines">Eastern Air Lines</option>
+<option value="Eastern Air Lines / Military - Bolivian Air Force">Eastern Air Lines / Military - Bolivian Air Force</option>
+<option value="Eastern Air Lines / Military - USN">Eastern Air Lines / Military - USN</option>
+<option value="Eastern Air Transport">Eastern Air Transport</option>
+<option value="Eastern Provincial Airways">Eastern Provincial Airways</option>
+<option value="Ecuatair">Ecuatair</option>
+<option value="Edde Airlines">Edde Airlines</option>
+<option value="Edinburgh Air Charter">Edinburgh Air Charter</option>
+<option value="EgyptAir">EgyptAir</option>
+<option value="Eitos">Eitos</option>
+<option value="Ejercito del Aire">Ejercito del Aire</option>
+<option value="El Al">El Al</option>
+<option value="El Magal Aviation">El Magal Aviation</option>
+<option value="Elbee Airlines">Elbee Airlines</option>
+<option value="ELK Aviation Co. (leased from Eminex)">ELK Aviation Co. (leased from Eminex)</option>
+<option value="Embry Riddle Company">Embry Riddle Company</option>
+<option value="Emery Worldwide">Emery Worldwide</option>
+<option value="Emirates Air Transport">Emirates Air Transport</option>
+<option value="Empire Airlines">Empire Airlines</option>
+<option value="Empresa Nacional de Transp.  Trabalho Aereo">Empresa Nacional de Transp.  Trabalho Aereo</option>
+<option value="Enimex">Enimex</option>
+<option value="ERA Aviation - Air Taxi">ERA Aviation - Air Taxi</option>
+<option value="ERA Helicopter">ERA Helicopter</option>
+<option value="Era Helicopter - Air Taxi">Era Helicopter - Air Taxi</option>
+<option value="ETA - Empresa Transportes Aéreos">ETA - Empresa Transportes Aéreos</option>
+<option value="Ethiopian Airlines">Ethiopian Airlines</option>
+<option value="Eurasia">Eurasia</option>
+<option value="Eureka Aero Inc. - Air Taxi">Eureka Aero Inc. - Air Taxi</option>
+<option value="Euro Asia Aviation">Euro Asia Aviation</option>
+<option value="Euroair">Euroair</option>
+<option value="Eurojet Italila">Eurojet Italila</option>
+<option value="Europe Aero Service EAS">Europe Aero Service EAS</option>
+<option value="Everest Air">Everest Air</option>
+<option value="Evergreen Helicopter - Air Taxi">Evergreen Helicopter - Air Taxi</option>
+<option value="EXA Inc.">EXA Inc.</option>
+<option value="Executive Air - Air Taxi">Executive Air - Air Taxi</option>
+<option value="Executive Funds">Executive Funds</option>
+<option value="Executive Jet Sales Inc.">Executive Jet Sales Inc.</option>
+<option value="Exportada De Sal S.A.">Exportada De Sal S.A.</option>
+<option value="Express Airlines - Northwest Airlink">Express Airlines - Northwest Airlink</option>
+<option value="Expresso Aéreo">Expresso Aéreo</option>
+<option value="F.R. de la Direccion General de Ados">F.R. de la Direccion General de Ados</option>
+<option value="Fairbanks Air - Air Taxi">Fairbanks Air - Air Taxi</option>
+<option value="Fairbanks Air Service - Taxi">Fairbanks Air Service - Taxi</option>
+<option value="Fairways">Fairways</option>
+<option value="Falcon Airways - Air Taxi">Falcon Airways - Air Taxi</option>
+<option value="Falcon Aviation Group">Falcon Aviation Group</option>
+<option value="FAMA (Argentina)">FAMA (Argentina)</option>
+<option value="Far Aviation - Air Taxi / Speeds Flying - Air Taxi">Far Aviation - Air Taxi / Speeds Flying - Air Taxi</option>
+<option value="Far Eastern Air Transport">Far Eastern Air Transport</option>
+<option value="Faucett">Faucett</option>
+<option value="Federal Express">Federal Express</option>
+<option value="FedEx">FedEx</option>
+<option value="Festus Flying Service - Air Taxi">Festus Flying Service - Air Taxi</option>
+<option value="Fiji Air">Fiji Air</option>
+<option value="Fiji Air Services">Fiji Air Services</option>
+<option value="Fine Air">Fine Air</option>
+<option value="Finnair">Finnair</option>
+<option value="First Air">First Air</option>
+<option value="Fleming International Airways">Fleming International Airways</option>
+<option value="Flight Service">Flight Service</option>
+<option value="Flightline">Flightline</option>
+<option value="Florida Commuter Airlines">Florida Commuter Airlines</option>
+<option value="Flota Aérea Mercante Argentina">Flota Aérea Mercante Argentina</option>
+<option value="Fly 540">Fly 540</option>
+<option value="Flying Tiger Line">Flying Tiger Line</option>
+<option value="Flying W Airways">Flying W Airways</option>
+<option value="Ford Air Freight Inc.">Ford Air Freight Inc.</option>
+<option value="Formosa Airlines">Formosa Airlines</option>
+<option value="Fortaire Aviation - Air Taxi">Fortaire Aviation - Air Taxi</option>
+<option value="Foster Aviation">Foster Aviation</option>
+<option value="Fragtflug">Fragtflug</option>
+<option value="Francisco Cruz">Francisco Cruz</option>
+<option value="Franco-Roumaine">Franco-Roumaine</option>
+<option value="Freedom International">Freedom International</option>
+<option value="Frigorifico Cooperativo Los Andes">Frigorifico Cooperativo Los Andes</option>
+<option value="Frigorifico Santa Rita">Frigorifico Santa Rita</option>
+<option value="Frontier Airlines">Frontier Airlines</option>
+<option value="Frontier Flying Service">Frontier Flying Service</option>
+<option value="Frontier Flying Service - Air Taxi">Frontier Flying Service - Air Taxi</option>
+<option value="Fuerza Aérea Argentina">Fuerza Aérea Argentina</option>
+<option value="Fuerza Aérea Colombiana">Fuerza Aérea Colombiana</option>
+<option value="Fuerza Aérea del Peru">Fuerza Aérea del Peru</option>
+<option value="Fuerza Aérea Nicaragua">Fuerza Aérea Nicaragua</option>
+<option value="Fuerza Aérea Panamena">Fuerza Aérea Panamena</option>
+<option value="Fuerza Aérea Uruguaya">Fuerza Aérea Uruguaya</option>
+<option value="Fuerza Aérea Venezolana">Fuerza Aérea Venezolana</option>
+<option value="Fuerza Area Angolaise">Fuerza Area Angolaise</option>
+<option value="Fuji Airlines">Fuji Airlines</option>
+<option value="Fujita Koku Kabushki Kai">Fujita Koku Kabushki Kai</option>
+<option value="Fun Air">Fun Air</option>
+<option value="G &amp; W Aviation">G &amp; W Aviation</option>
+<option value="Gaige Aviation - Air Taxi">Gaige Aviation - Air Taxi</option>
+<option value="Galaxy Airlines">Galaxy Airlines</option>
+<option value="Galena Air Service - Air Taxi">Galena Air Service - Air Taxi</option>
+<option value="Galesburg Aviation - Air Taxi">Galesburg Aviation - Air Taxi</option>
+<option value="Gander Aviation">Gander Aviation</option>
+<option value="Garamut Aviation">Garamut Aviation</option>
+<option value="Garuda Indonesia Airlines">Garuda Indonesia Airlines</option>
+<option value="Gastonia Aviation - Taxi">Gastonia Aviation - Taxi</option>
+<option value="Gay Airways - Air Taxi">Gay Airways - Air Taxi</option>
+<option value="General Airways">General Airways</option>
+<option value="General Aviation Inc.">General Aviation Inc.</option>
+<option value="Georgian Air">Georgian Air</option>
+<option value="Geoterrex">Geoterrex</option>
+<option value="Ghana Airlink">Ghana Airlink</option>
+<option value="Ghana Airways">Ghana Airways</option>
+<option value="GLM Aviation">GLM Aviation</option>
+<option value="Global Executive Aviation">Global Executive Aviation</option>
+<option value="Globe Air">Globe Air</option>
+<option value="Glow Air/Air Castle - Charter">Glow Air/Air Castle - Charter</option>
+<option value="Golden Star Air Cargo">Golden Star Air Cargo</option>
+<option value="Golden West Airlines / Private">Golden West Airlines / Private</option>
+<option value="Goose Bay Air Services">Goose Bay Air Services</option>
+<option value="Gor&#39;ky Eskadril&#39;ya">Gor'ky Eskadril'ya</option>
+<option value="Goroka Air Services">Goroka Air Services</option>
+<option value="GP Express Airlines">GP Express Airlines</option>
+<option value="Grand Aire">Grand Aire</option>
+<option value="Grand Canyon Air - Air Taxi">Grand Canyon Air - Air Taxi</option>
+<option value="Grand Canyon Airlines">Grand Canyon Airlines</option>
+<option value="Grand Canyon Airlines / Helitech">Grand Canyon Airlines / Helitech</option>
+<option value="Grands Express Aeriens">Grands Express Aeriens</option>
+<option value="Greek Government">Greek Government</option>
+<option value="Green Acres - Air Taxi">Green Acres - Air Taxi</option>
+<option value="Green River Aviation - Air Taxi">Green River Aviation - Air Taxi</option>
+<option value="Greenbriar Airways">Greenbriar Airways</option>
+<option value="Greylock Airways / Private">Greylock Airways / Private</option>
+<option value="GT Air">GT Air</option>
+<option value="Guardia Nacional de Venezuela">Guardia Nacional de Venezuela</option>
+<option value="Guinea Airways">Guinea Airways</option>
+<option value="Guinea Airways Limited">Guinea Airways Limited</option>
+<option value="Gulf Aviation (Kalinga Airways)">Gulf Aviation (Kalinga Airways)</option>
+<option value="Haines Airways - Air Taxi">Haines Airways - Air Taxi</option>
+<option value="Haïti Air Inter">Haïti Air Inter</option>
+<option value="Hallo Bay Air - Air Taxi">Hallo Bay Air - Air Taxi</option>
+<option value="Halvorson - Air Taxi">Halvorson - Air Taxi</option>
+<option value="Hamilton Aviation">Hamilton Aviation</option>
+<option value="Handley Page Transport">Handley Page Transport</option>
+<option value="Hang Khong (Vietnam)">Hang Khong (Vietnam)</option>
+<option value="Hankins Airways - Air Taxi">Hankins Airways - Air Taxi</option>
+<option value="Harbour Air Seaplanes Ltd.">Harbour Air Seaplanes Ltd.</option>
+<option value="Hargreaves Airways">Hargreaves Airways</option>
+<option value="Harka Air Services">Harka Air Services</option>
+<option value="Harold&#39;s Air Service">Harold's Air Service</option>
+<option value="Harold E. Bell - Air Taxi">Harold E. Bell - Air Taxi</option>
+<option value="Harrington&#39;s Inc">Harrington's Inc</option>
+<option value="Harry Faulkner - Air Taxi">Harry Faulkner - Air Taxi</option>
+<option value="Harvey&#39;s Flying Service - Air Taxi">Harvey's Flying Service - Air Taxi</option>
+<option value="Hati Express">Hati Express</option>
+<option value="Havasu City Air - Air Taxi">Havasu City Air - Air Taxi</option>
+<option value="Heavylift Cargo Airlines">Heavylift Cargo Airlines</option>
+<option value="Helaire Helicopter">Helaire Helicopter</option>
+<option value="Heli-USA Airways">Heli-USA Airways</option>
+<option value="Heli-USA Airways, In- Air Taxi">Heli-USA Airways, In- Air Taxi</option>
+<option value="Heliandes">Heliandes</option>
+<option value="Helicol Colombia">Helicol Colombia</option>
+<option value="Helicopter - Air Taxi">Helicopter - Air Taxi</option>
+<option value="Helisul Taxi Aéreo">Helisul Taxi Aéreo</option>
+<option value="Henry Webber Air - Air Taxi">Henry Webber Air - Air Taxi</option>
+<option value="Heringer Air Taxi">Heringer Air Taxi</option>
+<option value="Hesler Noble - Air Taxi">Hesler Noble - Air Taxi</option>
+<option value="Hewa Bora Airways">Hewa Bora Airways</option>
+<option value="Hibiscus Air">Hibiscus Air</option>
+<option value="Himmelsschreiber">Himmelsschreiber</option>
+<option value="HiTech Helicopters">HiTech Helicopters</option>
+<option value="Hlavka Aviation - Air Taxi">Hlavka Aviation - Air Taxi</option>
+<option value="Holmstoem Air">Holmstoem Air</option>
+<option value="Holyman Airways">Holyman Airways</option>
+<option value="Homer Air Service - Air Taxi">Homer Air Service - Air Taxi</option>
+<option value="Horizon Properties">Horizon Properties</option>
+<option value="Hornbill Airways">Hornbill Airways</option>
+<option value="Houston-Beech - Air Taxi">Houston-Beech - Air Taxi</option>
+<option value="Houston Metro Airlines">Houston Metro Airlines</option>
+<option value="Hudgin Air Service">Hudgin Air Service</option>
+<option value="Hudson Air Service - Air Taxi">Hudson Air Service - Air Taxi</option>
+<option value="Hughes Airwest  / Military - US Marine Air Corps">Hughes Airwest  / Military - US Marine Air Corps</option>
+<option value="Hunter Airways">Hunter Airways</option>
+<option value="Hunting Air Travel">Hunting Air Travel</option>
+<option value="Huron Air">Huron Air</option>
+<option value="Hyannis Air Service - Air Taxi">Hyannis Air Service - Air Taxi</option>
+<option value="IAI 1124 Westwind">IAI 1124 Westwind</option>
+<option value="Iberia Airlines">Iberia Airlines</option>
+<option value="Ibertrans Aérea">Ibertrans Aérea</option>
+<option value="Icelandair">Icelandair</option>
+<option value="Imperial Airways">Imperial Airways</option>
+<option value="Imperial Comm - Air Taxi">Imperial Comm - Air Taxi</option>
+<option value="Indamer">Indamer</option>
+<option value="Independent Air Inc.">Independent Air Inc.</option>
+<option value="Independent Air Travel">Independent Air Travel</option>
+<option value="Indian Airlines">Indian Airlines</option>
+<option value="Indian Airlines/Alliance Airlines">Indian Airlines/Alliance Airlines</option>
+<option value="Indian National Airlines">Indian National Airlines</option>
+<option value="Indian National Airways">Indian National Airways</option>
+<option value="Inland Aviation - Air Taxi">Inland Aviation - Air Taxi</option>
+<option value="Inter City Flug">Inter City Flug</option>
+<option value="Intercontinental de Aviacion">Intercontinental de Aviacion</option>
+<option value="Interflug">Interflug</option>
+<option value="Interior Airways">Interior Airways</option>
+<option value="Interior Airways - Air Taxi">Interior Airways - Air Taxi</option>
+<option value="International Air Freight">International Air Freight</option>
+<option value="International Control Commision">International Control Commision</option>
+<option value="International Jet Charter">International Jet Charter</option>
+<option value="Interocean">Interocean</option>
+<option value="Interstate Airlines">Interstate Airlines</option>
+<option value="Intracostals - Air Taxi">Intracostals - Air Taxi</option>
+<option value="Iran Air">Iran Air</option>
+<option value="Iraqi Airways">Iraqi Airways</option>
+<option value="Island Air">Island Air</option>
+<option value="Island Airways">Island Airways</option>
+<option value="Island Sky Ferry - Air Taxi">Island Sky Ferry - Air Taxi</option>
+<option value="Islands Nationair">Islands Nationair</option>
+<option value="Itavia">Itavia</option>
+<option value="Itek Air">Itek Air</option>
+<option value="Ivolga Avia">Ivolga Avia</option>
+<option value="Jack Harter Helicopters">Jack Harter Helicopters</option>
+<option value="Jack N. Boswick - Air Taxi">Jack N. Boswick - Air Taxi</option>
+<option value="Jamair">Jamair</option>
+<option value="Jamie Ramirez - Air Taxi">Jamie Ramirez - Air Taxi</option>
+<option value="Japan Air Lines">Japan Air Lines</option>
+<option value="JAT Yugoslav Airlines">JAT Yugoslav Airlines</option>
+<option value="JC Air">JC Air</option>
+<option value="Jersey Airways">Jersey Airways</option>
+<option value="Jet Pro">Jet Pro</option>
+<option value="Jetcom S.A.">Jetcom S.A.</option>
+<option value="Jetstream Inc.">Jetstream Inc.</option>
+<option value="Jett Paqueteria SA">Jett Paqueteria SA</option>
+<option value="Johnson Flying Service">Johnson Flying Service</option>
+<option value="Jordan International Airlines">Jordan International Airlines</option>
+<option value="Juba Air Cargo">Juba Air Cargo</option>
+<option value="Kalinga Airlines">Kalinga Airlines</option>
+<option value="Kam Air">Kam Air</option>
+<option value="Kamchatavia">Kamchatavia</option>
+<option value="Kansas City Southern Skyways">Kansas City Southern Skyways</option>
+<option value="Kapowsin Air Sports">Kapowsin Air Sports</option>
+<option value="Karibu Airways">Karibu Airways</option>
+<option value="Kauai Helicopter - Air Taxi">Kauai Helicopter - Air Taxi</option>
+<option value="Kelowna Flightcraft Air Charter">Kelowna Flightcraft Air Charter</option>
+<option value="Kenai Air Service - Air Taxi">Kenai Air Service - Air Taxi</option>
+<option value="Kenn Borek Air">Kenn Borek Air</option>
+<option value="Kenya Airways">Kenya Airways</option>
+<option value="Key West Sea Plane Service - Air Taxi">Key West Sea Plane Service - Air Taxi</option>
+<option value="Keystone Air Services Ltd. - Air Taxi">Keystone Air Services Ltd. - Air Taxi</option>
+<option value="Khalatyrka">Khalatyrka</option>
+<option value="Kiev Production Association">Kiev Production Association</option>
+<option value="Kime Flying Service - Air Taxi">Kime Flying Service - Air Taxi</option>
+<option value="Kimura International">Kimura International</option>
+<option value="Kish Airlines">Kish Airlines</option>
+<option value="Kismayo Airlines">Kismayo Airlines</option>
+<option value="Kiwi West Aviation">Kiwi West Aviation</option>
+<option value="KLM Cityhopper">KLM Cityhopper</option>
+<option value="KLM Royal Dutch Airlines">KLM Royal Dutch Airlines</option>
+<option value="Knight Air">Knight Air</option>
+<option value="KNILM">KNILM</option>
+<option value="Knowles Flying Service of Detroit">Knowles Flying Service of Detroit</option>
+<option value="Kodiak Airways">Kodiak Airways</option>
+<option value="Kodiak Western Alaska Airlines">Kodiak Western Alaska Airlines</option>
+<option value="Kondair">Kondair</option>
+<option value="Korean Air">Korean Air</option>
+<option value="Korean Airlines">Korean Airlines</option>
+<option value="Kuban Airlines">Kuban Airlines</option>
+<option value="Kurtzer Flying Service - Taxi">Kurtzer Flying Service - Taxi</option>
+<option value="L&#39;Express Airlines">L'Express Airlines</option>
+<option value="L.J. Simmons - Air Taxi">L.J. Simmons - Air Taxi</option>
+<option value="Lab Flying Service - Air Taxi">Lab Flying Service - Air Taxi</option>
+<option value="Labradore Airways">Labradore Airways</option>
+<option value="LAC Colombia">LAC Colombia</option>
+<option value="LAC Columbia">LAC Columbia</option>
+<option value="Lackey Aero Company - Taxi">Lackey Aero Company - Taxi</option>
+<option value="LACOL">LACOL</option>
+<option value="Lake Havasu Air">Lake Havasu Air</option>
+<option value="Lambair">Lambair</option>
+<option value="LAN">LAN</option>
+<option value="LANC Colombia">LANC Colombia</option>
+<option value="Lancashire Aircraft Corporation (Skyways)">Lancashire Aircraft Corporation (Skyways)</option>
+<option value="Lanica">Lanica</option>
+<option value="LANSA">LANSA</option>
+<option value="Lao Aviation">Lao Aviation</option>
+<option value="Laoag International Airlines">Laoag International Airlines</option>
+<option value="LAPA, Lineas Aereas Privadas Argentinas">LAPA, Lineas Aereas Privadas Argentinas</option>
+<option value="LARES">LARES</option>
+<option value="Las Vegas Airlines">Las Vegas Airlines</option>
+<option value="Latecoere Airlines">Latecoere Airlines</option>
+<option value="LATI">LATI</option>
+<option value="Laurentian Air Services">Laurentian Air Services</option>
+<option value="Leadair - Charter">Leadair - Charter</option>
+<option value="Leamon Flying Service">Leamon Flying Service</option>
+<option value="Lebanese International Airways">Lebanese International Airways</option>
+<option value="Lehigh Acres Development Inc.">Lehigh Acres Development Inc.</option>
+<option value="Les Ailes de Gaspé Inc.">Les Ailes de Gaspé Inc.</option>
+<option value="Lester C. Bush - Air Taxi">Lester C. Bush - Air Taxi</option>
+<option value="Lexington Air Taxi">Lexington Air Taxi</option>
+<option value="Liard Air">Liard Air</option>
+<option value="Libya Arab Airlines / Military -  Libya Air Force">Libya Arab Airlines / Military -  Libya Air Force</option>
+<option value="Líder Táxi Aéreo">Líder Táxi Aéreo</option>
+<option value="Lignes Aeriennes Latecoere">Lignes Aeriennes Latecoere</option>
+<option value="Lina Congo">Lina Congo</option>
+<option value="Linair Express">Linair Express</option>
+<option value="Linea Aérea Nacional">Linea Aérea Nacional</option>
+<option value="Linea Aeropostal Venezolana">Linea Aeropostal Venezolana</option>
+<option value="Lineas Aéreas Brasil">Lineas Aéreas Brasil</option>
+<option value="Lineas Aéreas Cave">Lineas Aéreas Cave</option>
+<option value="Lineas Aéreas Colombianas">Lineas Aéreas Colombianas</option>
+<option value="Lineas Aéreas Costarricenses  LACSA">Lineas Aéreas Costarricenses  LACSA</option>
+<option value="Lineas Aereas del Caribe">Lineas Aereas del Caribe</option>
+<option value="Lineas Aéreas Interpolar">Lineas Aéreas Interpolar</option>
+<option value="Lineas Aéreas La Urraca">Lineas Aéreas La Urraca</option>
+<option value="Lineas Aéreas Mineras">Lineas Aéreas Mineras</option>
+<option value="Lineas Aéreas Nacionales">Lineas Aéreas Nacionales</option>
+<option value="Lineas Aereas Suramericanas">Lineas Aereas Suramericanas</option>
+<option value="Lineas Aéreas Suramericanas">Lineas Aéreas Suramericanas</option>
+<option value="Líneas Aéreas Suramericanas">Líneas Aéreas Suramericanas</option>
+<option value="Lineas Aéreas Trans. Brasileira">Lineas Aéreas Trans. Brasileira</option>
+<option value="Lineas Aereas Unidas">Lineas Aereas Unidas</option>
+<option value="Lineas Areas Unidas">Lineas Areas Unidas</option>
+<option value="Lineas Areas Venezolanas">Lineas Areas Venezolanas</option>
+<option value="Linee Aeree Italiane">Linee Aeree Italiane</option>
+<option value="Linjefyg">Linjefyg</option>
+<option value="Lion Air">Lion Air</option>
+<option value="Lisa Jet Inc. - Air Taxi">Lisa Jet Inc. - Air Taxi</option>
+<option value="Livingston Helicopter - Air Taxi">Livingston Helicopter - Air Taxi</option>
+<option value="Lloyd Aereo Boliviano">Lloyd Aereo Boliviano</option>
+<option value="Lloyd Aéreo Boliviano">Lloyd Aéreo Boliviano</option>
+<option value="Lloyd Aereo Colombiano">Lloyd Aereo Colombiano</option>
+<option value="Lloyd Aero Boliviano">Lloyd Aero Boliviano</option>
+<option value="Loftleidir IcelandiAirlines">Loftleidir IcelandiAirlines</option>
+<option value="Loganair">Loganair</option>
+<option value="Loide Aereo Nacional">Loide Aereo Nacional</option>
+<option value="Loide Aéreo Nacional">Loide Aéreo Nacional</option>
+<option value="Loma Linda University - Air Taxi">Loma Linda University - Air Taxi</option>
+<option value="Lone Star Airlines">Lone Star Airlines</option>
+<option value="Los Angeles Airways">Los Angeles Airways</option>
+<option value="LOT Polish Airlines">LOT Polish Airlines</option>
+<option value="Luft-Taxi Emsland">Luft-Taxi Emsland</option>
+<option value="Lufthansa">Lufthansa</option>
+<option value="Lufthansa Cargo Airlines">Lufthansa Cargo Airlines</option>
+<option value="Lufthansa Cityline">Lufthansa Cityline</option>
+<option value="Luthi Aviation - Air Taxi">Luthi Aviation - Air Taxi</option>
+<option value="Mabuhay Airways">Mabuhay Airways</option>
+<option value="Macon Horizons - Air Taxi">Macon Horizons - Air Taxi</option>
+<option value="Maddux Airlines">Maddux Airlines</option>
+<option value="Maddux Airlines / Military - U.S.Army Air Force">Maddux Airlines / Military - U.S.Army Air Force</option>
+<option value="Madrid Taxi Aéreo - Charter">Madrid Taxi Aéreo - Charter</option>
+<option value="MajestiAir Cargo">MajestiAir Cargo</option>
+<option value="Malaysia Airlines">Malaysia Airlines</option>
+<option value="MALERT">MALERT</option>
+<option value="Malev Hungarian Airlines">Malev Hungarian Airlines</option>
+<option value="Malu Aviation">Malu Aviation</option>
+<option value="Mamer - Shreck  - Air Taxi">Mamer - Shreck  - Air Taxi</option>
+<option value="Manacá Táxi Aéreo">Manacá Táxi Aéreo</option>
+<option value="Manchurian Air Lines">Manchurian Air Lines</option>
+<option value="Mandala Airlines">Mandala Airlines</option>
+<option value="Mannin Airways">Mannin Airways</option>
+<option value="Manunggal Air">Manunggal Air</option>
+<option value="MAP">MAP</option>
+<option value="MAP - Ministerstvo Aviatsionnoi Promyshlennosti">MAP - Ministerstvo Aviatsionnoi Promyshlennosti</option>
+<option value="Marco Zero Air Taxi">Marco Zero Air Taxi</option>
+<option value="Maritime Central Airways">Maritime Central Airways</option>
+<option value="MaRoberston-Miller Airlines">MaRoberston-Miller Airlines</option>
+<option value="MaRobertson-Miller Airlines">MaRobertson-Miller Airlines</option>
+<option value="Maryland State Police">Maryland State Police</option>
+<option value="MATS - Manila Aero Transport System">MATS - Manila Aero Transport System</option>
+<option value="Mayoral Executive Jet">Mayoral Executive Jet</option>
+<option value="McCoy Flying Service - Taxi">McCoy Flying Service - Taxi</option>
+<option value="McKenzie Flying Service - Air Taxi">McKenzie Flying Service - Air Taxi</option>
+<option value="McKinley Air Service - Air Taxi">McKinley Air Service - Air Taxi</option>
+<option value="MD Air Services">MD Air Services</option>
+<option value="Med Flight Air Ambulance - Private">Med Flight Air Ambulance - Private</option>
+<option value="Mercer Airlines">Mercer Airlines</option>
+<option value="Mercury Aviation">Mercury Aviation</option>
+<option value="Merpati Nasantara Airlines">Merpati Nasantara Airlines</option>
+<option value="Merpati Nusantara Airlines">Merpati Nusantara Airlines</option>
+<option value="MerriAviation - Air Taxi">MerriAviation - Air Taxi</option>
+<option value="Metro Air Systems">Metro Air Systems</option>
+<option value="Metro Aviation">Metro Aviation</option>
+<option value="Metro Cargo">Metro Cargo</option>
+<option value="Metro Commuter - Air Taxi">Metro Commuter - Air Taxi</option>
+<option value="Mexican Government">Mexican Government</option>
+<option value="Mexicana">Mexicana</option>
+<option value="Miami Airlines">Miami Airlines</option>
+<option value="MIAT - Mongolian Airlines">MIAT - Mongolian Airlines</option>
+<option value="Mid-AtlantiFreight">Mid-AtlantiFreight</option>
+<option value="Mid Continent Airlines">Mid Continent Airlines</option>
+<option value="Mid Island Air - Air Taxi">Mid Island Air - Air Taxi</option>
+<option value="Mid PacifiAir">Mid PacifiAir</option>
+<option value="Middle East Airlines">Middle East Airlines</option>
+<option value="Middle East Airlines / Military - Turkish Air ForceC-47">Middle East Airlines / Military - Turkish Air ForceC-47</option>
+<option value="Middle States Airlines">Middle States Airlines</option>
+<option value="Midwest Express">Midwest Express</option>
+<option value="Mililtary - Royal Canadian Air Force">Mililtary - Royal Canadian Air Force</option>
+<option value="Mililtary - Soviet Air Force">Mililtary - Soviet Air Force</option>
+<option value="Mililtary - U.S. Navy">Mililtary - U.S. Navy</option>
+<option value="Military - Afghan Republican Air Force">Military - Afghan Republican Air Force</option>
+<option value="Military - Algerian Air Force">Military - Algerian Air Force</option>
+<option value="Military - Argentine Air Force">Military - Argentine Air Force</option>
+<option value="Military - Armée de l&#39;Air Malgache">Military - Armée de l'Air Malgache</option>
+<option value="Military - Belgian Air Force">Military - Belgian Air Force</option>
+<option value="Military - Brazilian Air Force">Military - Brazilian Air Force</option>
+<option value="Military - Canadian Army">Military - Canadian Army</option>
+<option value="Military - Centrafricain Airlines">Military - Centrafricain Airlines</option>
+<option value="Military - Chadian Air Force">Military - Chadian Air Force</option>
+<option value="Military - Chilean Air Force">Military - Chilean Air Force</option>
+<option value="Military - Chilian Air Force">Military - Chilian Air Force</option>
+<option value="Military - Chinese Air Force">Military - Chinese Air Force</option>
+<option value="Military - Congolese Air Force">Military - Congolese Air Force</option>
+<option value="Military - Deutsche Luftwaffe">Military - Deutsche Luftwaffe</option>
+<option value="Military - Ecuadorian Air Force">Military - Ecuadorian Air Force</option>
+<option value="Military - Egyptian Air Force">Military - Egyptian Air Force</option>
+<option value="Military - El Salvador Air Force">Military - El Salvador Air Force</option>
+<option value="Military - Florida Army National Guard">Military - Florida Army National Guard</option>
+<option value="Military - Força Aérea Brasileira">Military - Força Aérea Brasileira</option>
+<option value="Military - Força Aérea Portuguesa">Military - Força Aérea Portuguesa</option>
+<option value="Military - Force Aérienne Zaïroise">Military - Force Aérienne Zaïroise</option>
+<option value="Military - Forces Militaires Françaises">Military - Forces Militaires Françaises</option>
+<option value="Military - French Air Force">Military - French Air Force</option>
+<option value="Military - French Naval Aviation">Military - French Naval Aviation</option>
+<option value="Military - Fuerza Aérea Argentina">Military - Fuerza Aérea Argentina</option>
+<option value="Military - Fuerza Aérea de Chile">Military - Fuerza Aérea de Chile</option>
+<option value="Military - Fuerza Del Peru">Military - Fuerza Del Peru</option>
+<option value="Military - Georgian Air Force">Military - Georgian Air Force</option>
+<option value="Military - German Air National Guard">Military - German Air National Guard</option>
+<option value="Military - German Army">Military - German Army</option>
+<option value="Military - German Navy">Military - German Navy</option>
+<option value="Military - Greek Air Force">Military - Greek Air Force</option>
+<option value="Military - Indian Air Force">Military - Indian Air Force</option>
+<option value="Military - Indian Navy">Military - Indian Navy</option>
+<option value="Military - Indonesian Air Force">Military - Indonesian Air Force</option>
+<option value="Military - Iranian Air Force">Military - Iranian Air Force</option>
+<option value="Military - Iranian Revolutionary Guard Corps Air Force">Military - Iranian Revolutionary Guard Corps Air Force</option>
+<option value="Military - IslamiRepubliof Iran Air Force">Military - IslamiRepubliof Iran Air Force</option>
+<option value="Military - Israel Air Force /Military -  Israel Air Force">Military - Israel Air Force /Military -  Israel Air Force</option>
+<option value="Military - Italian Air Force">Military - Italian Air Force</option>
+<option value="Military - Japan Maritime Self Defense Force">Military - Japan Maritime Self Defense Force</option>
+<option value="Military - Kenya Air Force">Military - Kenya Air Force</option>
+<option value="Military - Kenyan Air Force">Military - Kenyan Air Force</option>
+<option value="Military - Lybian Arab Air Force">Military - Lybian Arab Air Force</option>
+<option value="Military - Macedonian Air Force">Military - Macedonian Air Force</option>
+<option value="Military - Mexican Air Force">Military - Mexican Air Force</option>
+<option value="Military - Mozambique Air Force">Military - Mozambique Air Force</option>
+<option value="Military - Nigerian Air Force">Military - Nigerian Air Force</option>
+<option value="Military - Pakistan Air Force">Military - Pakistan Air Force</option>
+<option value="Military - People&#39;s Army/ Military - Peoples Air Force">Military - People's Army/ Military - Peoples Air Force</option>
+<option value="Military - People&#39;s Liberation Army">Military - People's Liberation Army</option>
+<option value="Military - Peruvian Naval Aviation">Military - Peruvian Naval Aviation</option>
+<option value="Military - Philippine Air Force">Military - Philippine Air Force</option>
+<option value="Military - Polish Air Force">Military - Polish Air Force</option>
+<option value="Military - Portuguese Air Force">Military - Portuguese Air Force</option>
+<option value="Military - Republiof China Air Force">Military - Republiof China Air Force</option>
+<option value="Military - Republiof South Korea Air Force">Military - Republiof South Korea Air Force</option>
+<option value="Military - Royal Air Force">Military - Royal Air Force</option>
+<option value="Military - Royal Airship Works">Military - Royal Airship Works</option>
+<option value="Military - Royal Australian Air Force">Military - Royal Australian Air Force</option>
+<option value="Military - Royal British Navy">Military - Royal British Navy</option>
+<option value="Military - Royal Canadian Air Force">Military - Royal Canadian Air Force</option>
+<option value="Military - Royal Indian Air Force">Military - Royal Indian Air Force</option>
+<option value="Military - Royal Jordanian Air Force">Military - Royal Jordanian Air Force</option>
+<option value="Military - Royal Nepalese Air Force">Military - Royal Nepalese Air Force</option>
+<option value="Military - Royal Netherlands Naval Air Service">Military - Royal Netherlands Naval Air Service</option>
+<option value="Military - Royal Saudi Air Force">Military - Royal Saudi Air Force</option>
+<option value="Military - Royal Thai Air Force">Military - Royal Thai Air Force</option>
+<option value="Military - Russian Air Force">Military - Russian Air Force</option>
+<option value="Military - Russian Air Force/Uzbekistan Airways">Military - Russian Air Force/Uzbekistan Airways</option>
+<option value="Military - Russian Army">Military - Russian Army</option>
+<option value="Military - Russian Navy">Military - Russian Navy</option>
+<option value="Military - Salvadorian Air Force">Military - Salvadorian Air Force</option>
+<option value="Military - Servicio Aereo Nacional">Military - Servicio Aereo Nacional</option>
+<option value="Military - South African Air Force">Military - South African Air Force</option>
+<option value="Military - Soviet Air Force">Military - Soviet Air Force</option>
+<option value="Military - Soviet Navy">Military - Soviet Navy</option>
+<option value="Military - Sri Lanka Air Force">Military - Sri Lanka Air Force</option>
+<option value="Military - Thai Army">Military - Thai Army</option>
+<option value="Military - Turkish Air Force">Military - Turkish Air Force</option>
+<option value="Military - U. S. Air Force">Military - U. S. Air Force</option>
+<option value="Military - U.S.  Air Force / Military - U.S. Navy">Military - U.S.  Air Force / Military - U.S. Navy</option>
+<option value="Military - U.S. Air Force">Military - U.S. Air Force</option>
+<option value="Military - U.S. Air Force / Military -  U.S. Air Force">Military - U.S. Air Force / Military -  U.S. Air Force</option>
+<option value="Military - U.S. Air Force / Military U.S. Air Force">Military - U.S. Air Force / Military U.S. Air Force</option>
+<option value="Military - U.S. Air Force/Military - U.S. Air Force">Military - U.S. Air Force/Military - U.S. Air Force</option>
+<option value="Military - U.S. Army">Military - U.S. Army</option>
+<option value="Military - U.S. Army / Military U.S. Army">Military - U.S. Army / Military U.S. Army</option>
+<option value="Military - U.S. Army Air Corps">Military - U.S. Army Air Corps</option>
+<option value="Military - U.S. Army Air Forces">Military - U.S. Army Air Forces</option>
+<option value="Military - U.S. Army Air Forces / Military - U.S. Army Air Forces">Military - U.S. Army Air Forces / Military - U.S. Army Air Forces</option>
+<option value="Military - U.S. Marine Corps">Military - U.S. Marine Corps</option>
+<option value="Military - U.S. Marine Corps/Military - U.S. Marine Corps">Military - U.S. Marine Corps/Military - U.S. Marine Corps</option>
+<option value="Military - U.S. Marines">Military - U.S. Marines</option>
+<option value="Military - U.S. Navy">Military - U.S. Navy</option>
+<option value="Military - U.S. Navy / Military -  U.S. Navy">Military - U.S. Navy / Military -  U.S. Navy</option>
+<option value="Military - U.S. Navy / NASA">Military - U.S. Navy / NASA</option>
+<option value="Military - Ukraine Air Force">Military - Ukraine Air Force</option>
+<option value="Military - Union of Burma Air Force">Military - Union of Burma Air Force</option>
+<option value="Military - United States Air Force">Military - United States Air Force</option>
+<option value="Military - United States Army Air Force">Military - United States Army Air Force</option>
+<option value="Military - United States Navy">Military - United States Navy</option>
+<option value="Military - US Air Force">Military - US Air Force</option>
+<option value="Military - Venezuelan Air Force">Military - Venezuelan Air Force</option>
+<option value="Military - Venezuelan Army">Military - Venezuelan Army</option>
+<option value="Military - Zambia Air Force">Military - Zambia Air Force</option>
+<option value="Military - Zimbabwe Air Force">Military - Zimbabwe Air Force</option>
+<option value="Military -Royal Air Force">Military -Royal Air Force</option>
+<option value="Military Soviet  Air Force - Aeroflot">Military Soviet  Air Force - Aeroflot</option>
+<option value="Military U.S. Navy">Military U.S. Navy</option>
+<option value="Military U.S. Navy / Military - U.S. Navy">Military U.S. Navy / Military - U.S. Navy</option>
+<option value="Million Air">Million Air</option>
+<option value="Milne Bay Air">Milne Bay Air</option>
+<option value="Miltiary - U.S. Airforce">Miltiary - U.S. Airforce</option>
+<option value="Minerva Airlines">Minerva Airlines</option>
+<option value="Misrair">Misrair</option>
+<option value="Missionary Aviation Fellowship">Missionary Aviation Fellowship</option>
+<option value="MK Airlines">MK Airlines</option>
+<option value="Mohawk Airlines">Mohawk Airlines</option>
+<option value="Monarch Aviation">Monarch Aviation</option>
+<option value="Mongolian Defense Ministry">Mongolian Defense Ministry</option>
+<option value="Monmouth Airways">Monmouth Airways</option>
+<option value="Monument Valle - Air Taxi">Monument Valle - Air Taxi</option>
+<option value="Moore&#39;s Air Charter">Moore's Air Charter</option>
+<option value="Morningstar Air Express">Morningstar Air Express</option>
+<option value="Morris Hancock Flying Club - Charter">Morris Hancock Flying Club - Charter</option>
+<option value="Mountain Air Cargo">Mountain Air Cargo</option>
+<option value="Moyer Aviation - Air Taxi">Moyer Aviation - Air Taxi</option>
+<option value="Mt. McKinley Airfreight">Mt. McKinley Airfreight</option>
+<option value="Munz Northern Airlines">Munz Northern Airlines</option>
+<option value="Mustang Aviati">Mustang Aviati</option>
+<option value="Myanmar Airways">Myanmar Airways</option>
+<option value="Nahanni Air Services">Nahanni Air Services</option>
+<option value="Nash and Tampo - Air Taxi">Nash and Tampo - Air Taxi</option>
+<option value="Naske Air">Naske Air</option>
+<option value="Nationair (chartered by Nigeria Airways)">Nationair (chartered by Nigeria Airways)</option>
+<option value="National Air Operators">National Air Operators</option>
+<option value="National Air Transport">National Air Transport</option>
+<option value="National Air Transport Services">National Air Transport Services</option>
+<option value="National Airlines">National Airlines</option>
+<option value="National Jet Services Inc.,  (Air Indiana)">National Jet Services Inc.,  (Air Indiana)</option>
+<option value="National Parks Airways">National Parks Airways</option>
+<option value="Nationwide Air Transport">Nationwide Air Transport</option>
+<option value="Naturelink">Naturelink</option>
+<option value="Navegacao Aerea Brasileira">Navegacao Aerea Brasileira</option>
+<option value="Naysa Aerotaxis">Naysa Aerotaxis</option>
+<option value="NC Simpson - Taxi">NC Simpson - Taxi</option>
+<option value="Necon Air">Necon Air</option>
+<option value="New  York Helicopter">New  York Helicopter</option>
+<option value="New England Airlines">New England Airlines</option>
+<option value="New England Airways">New England Airways</option>
+<option value="New England Aviaiton">New England Aviaiton</option>
+<option value="New York Airways">New York Airways</option>
+<option value="New Zealand National Airways">New Zealand National Airways</option>
+<option value="NewCal Aviation">NewCal Aviation</option>
+<option value="NHR Táxi-Aéreo">NHR Táxi-Aéreo</option>
+<option value="Nigeria Airways">Nigeria Airways</option>
+<option value="Nightexpress">Nightexpress</option>
+<option value="Nile Safaris Aviation">Nile Safaris Aviation</option>
+<option value="NLM (Nederlandse Luchtvaart Maatschappij)">NLM (Nederlandse Luchtvaart Maatschappij)</option>
+<option value="Nordair">Nordair</option>
+<option value="Nordchurchaid">Nordchurchaid</option>
+<option value="Nordeste Linhas Aereas">Nordeste Linhas Aereas</option>
+<option value="Nordeste Linhas Aéreas">Nordeste Linhas Aéreas</option>
+<option value="North Bay Charter">North Bay Charter</option>
+<option value="North Central Airlines">North Central Airlines</option>
+<option value="North Central Airlines / Air Wisconsin">North Central Airlines / Air Wisconsin</option>
+<option value="North Central Airlines / Private">North Central Airlines / Private</option>
+<option value="North Coast Aviation">North Coast Aviation</option>
+<option value="North East Bolivian Airways">North East Bolivian Airways</option>
+<option value="North PacifiAirlines">North PacifiAirlines</option>
+<option value="North Queensland Airways">North Queensland Airways</option>
+<option value="North Sound Aviation">North Sound Aviation</option>
+<option value="North Western Air Transport">North Western Air Transport</option>
+<option value="Northeast Airlines">Northeast Airlines</option>
+<option value="Northeast Jet">Northeast Jet</option>
+<option value="Northern Air (Tanzania)">Northern Air (Tanzania)</option>
+<option value="Northern Air Cargo">Northern Air Cargo</option>
+<option value="Northern Executive Aviation">Northern Executive Aviation</option>
+<option value="Northern Illinois Flight Center">Northern Illinois Flight Center</option>
+<option value="Northern Thunderbird Air Ltd.">Northern Thunderbird Air Ltd.</option>
+<option value="Northwest Airlines">Northwest Airlines</option>
+<option value="Northwest Airlines/ Northwest Airlines">Northwest Airlines/ Northwest Airlines</option>
+<option value="Northwest Airlink">Northwest Airlink</option>
+<option value="Northwest Airways">Northwest Airways</option>
+<option value="Northwest Moon - Air Taxi">Northwest Moon - Air Taxi</option>
+<option value="Northwest Orient Airlines">Northwest Orient Airlines</option>
+<option value="NY, Phil., Washington AW">NY, Phil., Washington AW</option>
+<option value="Oceanaire Helicopter - Air Taxi">Oceanaire Helicopter - Air Taxi</option>
+<option value="Oefag Flugdienst">Oefag Flugdienst</option>
+<option value="Okanagan Helicopters">Okanagan Helicopters</option>
+<option value="OlympiAirways">OlympiAirways</option>
+<option value="OlympiAviation">OlympiAviation</option>
+<option value="One-Two-Go Airlines">One-Two-Go Airlines</option>
+<option value="Onzeair">Onzeair</option>
+<option value="Orcon Inc. - Air Taxi">Orcon Inc. - Air Taxi</option>
+<option value="Orient Air System and Integrated Services">Orient Air System and Integrated Services</option>
+<option value="Orient Airways">Orient Airways</option>
+<option value="Oriental Airlines">Oriental Airlines</option>
+<option value="Orlando Airways - Air Taxi">Orlando Airways - Air Taxi</option>
+<option value="Ortner Air Service - Taxi">Ortner Air Service - Taxi</option>
+<option value="Overseas National Airways">Overseas National Airways</option>
+<option value="Ozark Air Lines">Ozark Air Lines</option>
+<option value="Ozark Air Lines / Private">Ozark Air Lines / Private</option>
+<option value="PacifiAir">PacifiAir</option>
+<option value="PacifiAir Lines">PacifiAir Lines</option>
+<option value="PacifiAir Transport">PacifiAir Transport</option>
+<option value="PacifiAirways">PacifiAirways</option>
+<option value="PacifiAlaska Air Freight">PacifiAlaska Air Freight</option>
+<option value="PacifiAlaska Airlines">PacifiAlaska Airlines</option>
+<option value="PacifiCoast Airlines">PacifiCoast Airlines</option>
+<option value="PacifiCoastal Airlines">PacifiCoastal Airlines</option>
+<option value="PacifiNorthern Airlines">PacifiNorthern Airlines</option>
+<option value="PacifiOverseas Airways">PacifiOverseas Airways</option>
+<option value="PacifiSouthwest Airlines">PacifiSouthwest Airlines</option>
+<option value="PacifiSouthwest Airlines / Private">PacifiSouthwest Airlines / Private</option>
+<option value="PacifiWestern Airlines">PacifiWestern Airlines</option>
+<option value="Page Airways">Page Airways</option>
+<option value="Pakair">Pakair</option>
+<option value="Pakistan Airways">Pakistan Airways</option>
+<option value="Pakistan International Airlines">Pakistan International Airlines</option>
+<option value="Palair Macedonian">Palair Macedonian</option>
+<option value="Pan African Air Charter">Pan African Air Charter</option>
+<option value="Pan American Airways">Pan American Airways</option>
+<option value="Pan American Airways (Scadta)">Pan American Airways (Scadta)</option>
+<option value="Pan American Grace Airways">Pan American Grace Airways</option>
+<option value="Pan American World Airways">Pan American World Airways</option>
+<option value="Pan American World Airways / KLM">Pan American World Airways / KLM</option>
+<option value="Pan Malaysian Air Transport">Pan Malaysian Air Transport</option>
+<option value="Panagra">Panagra</option>
+<option value="Panair do Brasil">Panair do Brasil</option>
+<option value="Panorama Air Tour">Panorama Air Tour</option>
+<option value="Paradise Tour Helicopters">Paradise Tour Helicopters</option>
+<option value="Paraense Transportes Aéreos">Paraense Transportes Aéreos</option>
+<option value="Paramount Airlilnes">Paramount Airlilnes</option>
+<option value="Parsa">Parsa</option>
+<option value="Partnair">Partnair</option>
+<option value="Patagonia Airlines">Patagonia Airlines</option>
+<option value="Pathet Lao Airlines">Pathet Lao Airlines</option>
+<option value="Patuxent Airways / Private">Patuxent Airways / Private</option>
+<option value="Pavair">Pavair</option>
+<option value="Pelita Air Service">Pelita Air Service</option>
+<option value="PenAir">PenAir</option>
+<option value="PENAS">PENAS</option>
+<option value="Peninsula Air Services">Peninsula Air Services</option>
+<option value="Penninsula Airways - Air Taxi">Penninsula Airways - Air Taxi</option>
+<option value="Pennsylvania Airlines">Pennsylvania Airlines</option>
+<option value="Pennsylvania Central Airlines">Pennsylvania Central Airlines</option>
+<option value="Perimeter Airlines">Perimeter Airlines</option>
+<option value="Permaviatrans">Permaviatrans</option>
+<option value="Perris Valley Aviation">Perris Valley Aviation</option>
+<option value="Petroleum Helicopter">Petroleum Helicopter</option>
+<option value="Petrolium Helicopter">Petrolium Helicopter</option>
+<option value="Petrolium Helo Inc.">Petrolium Helo Inc.</option>
+<option value="PHI Air Medical">PHI Air Medical</option>
+<option value="Philippine Aerotransport">Philippine Aerotransport</option>
+<option value="Philippine Air Express">Philippine Air Express</option>
+<option value="Philippine Air Lines">Philippine Air Lines</option>
+<option value="Phoenix Air">Phoenix Air</option>
+<option value="Phoenix Airlines">Phoenix Airlines</option>
+<option value="Phoenix Aviation">Phoenix Aviation</option>
+<option value="Pickwick Airways">Pickwick Airways</option>
+<option value="Piedmont Airlines">Piedmont Airlines</option>
+<option value="Piedmont Airlines / Private">Piedmont Airlines / Private</option>
+<option value="Pilgrim Airlines">Pilgrim Airlines</option>
+<option value="Pinnacle Airlines/Northwest Airlink">Pinnacle Airlines/Northwest Airlink</option>
+<option value="Pioneer Airlines">Pioneer Airlines</option>
+<option value="Planemasters">Planemasters</option>
+<option value="Points North Air Services">Points North Air Services</option>
+<option value="Polynesian Airlines">Polynesian Airlines</option>
+<option value="Portsmouth Aviation - Air Taxi">Portsmouth Aviation - Air Taxi</option>
+<option value="President Airlines">President Airlines</option>
+<option value="Prestige Airlines (Cargo) Charter">Prestige Airlines (Cargo) Charter</option>
+<option value="Price Aircraft Company">Price Aircraft Company</option>
+<option value="Prinair">Prinair</option>
+<option value="Priority Air - Air Taxi">Priority Air - Air Taxi</option>
+<option value="Priorty Air Charter">Priorty Air Charter</option>
+<option value="Private">Private</option>
+<option value="Private - Boeing Aircraft Company">Private - Boeing Aircraft Company</option>
+<option value="Private - Corporate">Private - Corporate</option>
+<option value="Private - Hendrick Motorsports Inc.">Private - Hendrick Motorsports Inc.</option>
+<option value="Private - Omniflight Helicopters">Private - Omniflight Helicopters</option>
+<option value="Private - Parajump air show">Private - Parajump air show</option>
+<option value="Private - WNBC">Private - WNBC</option>
+<option value="Private air taxi">Private air taxi</option>
+<option value="Private charter">Private charter</option>
+<option value="Private Charter">Private Charter</option>
+<option value="Private KNBC Los Angeles">Private KNBC Los Angeles</option>
+<option value="Private Wings">Private Wings</option>
+<option value="Procuraduría General de la República">Procuraduría General de la República</option>
+<option value="Procurator Generale de la Republica">Procurator Generale de la Republica</option>
+<option value="Professional Aviation Services">Professional Aviation Services</option>
+<option value="Propair">Propair</option>
+<option value="Prospec">Prospec</option>
+<option value="Provincetown - Boston Airlines">Provincetown - Boston Airlines</option>
+<option value="Provincial Airlines">Provincial Airlines</option>
+<option value="PT Air Regional">PT Air Regional</option>
+<option value="Pudget Sound Air - Air Taxi">Pudget Sound Air - Air Taxi</option>
+<option value="Pulkovo Airlines">Pulkovo Airlines</option>
+<option value="Pulkovo Aviation Enterprise">Pulkovo Aviation Enterprise</option>
+<option value="Purdue Airlines Inc.">Purdue Airlines Inc.</option>
+<option value="Qantas">Qantas</option>
+<option value="Quakertown Aviation - Air Taxi">Quakertown Aviation - Air Taxi</option>
+<option value="Quebecair">Quebecair</option>
+<option value="Queen Airmotive - Air Taxi">Queen Airmotive - Air Taxi</option>
+<option value="Queen Charlotte Airlines">Queen Charlotte Airlines</option>
+<option value="Queensland Airlines">Queensland Airlines</option>
+<option value="Radeair">Radeair</option>
+<option value="RAM">RAM</option>
+<option value="Rambar Aviation - Air Taxi">Rambar Aviation - Air Taxi</option>
+<option value="Rapid Air Transport">Rapid Air Transport</option>
+<option value="Raytheon Aircraft">Raytheon Aircraft</option>
+<option value="RCMP-GRC Air Services">RCMP-GRC Air Services</option>
+<option value="REAL">REAL</option>
+<option value="REAL / Military - U.S. Navy">REAL / Military - U.S. Navy</option>
+<option value="Reali Taxi Aereo">Reali Taxi Aereo</option>
+<option value="Red Aircraft Service - Air Taxi">Red Aircraft Service - Air Taxi</option>
+<option value="Red Bank Air Taxi">Red Bank Air Taxi</option>
+<option value="Red Carpet Flying Service - Air Taxi">Red Carpet Flying Service - Air Taxi</option>
+<option value="Reed Aviation - Air Taxi">Reed Aviation - Air Taxi</option>
+<option value="Reeve Aleutian Airlines">Reeve Aleutian Airlines</option>
+<option value="Regency Express Air">Regency Express Air</option>
+<option value="Regina Cargo Airlines">Regina Cargo Airlines</option>
+<option value="Regional Airlines">Regional Airlines</option>
+<option value="Regional Compagnie Aerienne Europeenne">Regional Compagnie Aerienne Europeenne</option>
+<option value="Regionnair">Regionnair</option>
+<option value="RepubliAirlines">RepubliAirlines</option>
+<option value="Réseau Aérien Interinsulaire">Réseau Aérien Interinsulaire</option>
+<option value="Resort Air Service - Air Taxi">Resort Air Service - Air Taxi</option>
+<option value="Resort Airlines">Resort Airlines</option>
+<option value="Revilla Flying Service - Air Taxi">Revilla Flying Service - Air Taxi</option>
+<option value="Reynolds Airways">Reynolds Airways</option>
+<option value="Rhoadgs Aviation - Air Taxi">Rhoadgs Aviation - Air Taxi</option>
+<option value="Richland Aviation  - Taxi">Richland Aviation  - Taxi</option>
+<option value="Richland Flying Service - Air Taxii">Richland Flying Service - Air Taxii</option>
+<option value="Richmor Aviation">Richmor Aviation</option>
+<option value="Rico Taxi Aéreo">Rico Taxi Aéreo</option>
+<option value="Rico Taxi Aero">Rico Taxi Aero</option>
+<option value="Riddle Airlines">Riddle Airlines</option>
+<option value="Rijnmond Air Services">Rijnmond Air Services</option>
+<option value="Rimouski Airlines">Rimouski Airlines</option>
+<option value="Rinaldo Piaggio">Rinaldo Piaggio</option>
+<option value="Riverside Air">Riverside Air</option>
+<option value="Roadrunner Airlines">Roadrunner Airlines</option>
+<option value="Robinson Airlines">Robinson Airlines</option>
+<option value="Romanian Banat Air">Romanian Banat Air</option>
+<option value="Ross Aviation - Air Taxi">Ross Aviation - Air Taxi</option>
+<option value="Rotor Airs In- Air Taxi">Rotor Airs In- Air Taxi</option>
+<option value="Rousseau Aviaiton">Rousseau Aviaiton</option>
+<option value="Royal Air Lao">Royal Air Lao</option>
+<option value="Royal Air Maroc">Royal Air Maroc</option>
+<option value="Royal American - Air Taxi">Royal American - Air Taxi</option>
+<option value="Royal Nepal Airlines">Royal Nepal Airlines</option>
+<option value="Rubner Flying Service">Rubner Flying Service</option>
+<option value="Russ Air Transport Company">Russ Air Transport Company</option>
+<option value="Rusts Flying Service Inc.">Rusts Flying Service Inc.</option>
+<option value="Rutaca">Rutaca</option>
+<option value="Rutaca Airlines">Rutaca Airlines</option>
+<option value="Rutas Aéreas Nacionales SA">Rutas Aéreas Nacionales SA</option>
+<option value="Rutas Internacionales Peruanes">Rutas Internacionales Peruanes</option>
+<option value="Rwanda Government">Rwanda Government</option>
+<option value="Ryan Air Services">Ryan Air Services</option>
+<option value="Ryan Blake Air Charter">Ryan Blake Air Charter</option>
+<option value="Ryan International Airlines">Ryan International Airlines</option>
+<option value="Sabah Air">Sabah Air</option>
+<option value="Sabang Merauke Raya Air Charter">Sabang Merauke Raya Air Charter</option>
+<option value="Sabena">Sabena</option>
+<option value="Safe Air Cargo">Safe Air Cargo</option>
+<option value="Safeway Airways">Safeway Airways</option>
+<option value="Saha Airline Services">Saha Airline Services</option>
+<option value="Sahara">Sahara</option>
+<option value="Sahsa Airlines">Sahsa Airlines</option>
+<option value="Saint Lawrence Airways">Saint Lawrence Airways</option>
+<option value="Salair">Salair</option>
+<option value="Salida Flying Service - Air Taxi">Salida Flying Service - Air Taxi</option>
+<option value="Salmon Air - Air Taxi">Salmon Air - Air Taxi</option>
+<option value="SAM Colombia">SAM Colombia</option>
+<option value="SAMSA">SAMSA</option>
+<option value="SAN Ecuador">SAN Ecuador</option>
+<option value="San Juan Air">San Juan Air</option>
+<option value="SANSA">SANSA</option>
+<option value="Santa Barbara Airlines">Santa Barbara Airlines</option>
+<option value="Sarit Airlines">Sarit Airlines</option>
+<option value="Sasco Air Lines">Sasco Air Lines</option>
+<option value="Saskatchewan Government Northern Air Operations">Saskatchewan Government Northern Air Operations</option>
+<option value="SATA">SATA</option>
+<option value="SATCO">SATCO</option>
+<option value="SATENA">SATENA</option>
+<option value="Saturn Airways">Saturn Airways</option>
+<option value="Saudi Arabian Airlines">Saudi Arabian Airlines</option>
+<option value="Saudi Arabian Royal Flight">Saudi Arabian Royal Flight</option>
+<option value="Savanair">Savanair</option>
+<option value="Savannair">Savannair</option>
+<option value="SAVCO">SAVCO</option>
+<option value="SCADTA">SCADTA</option>
+<option value="Scandinavian Airlines (SAS)">Scandinavian Airlines (SAS)</option>
+<option value="Scandinavian Airlines (SAS) / Private">Scandinavian Airlines (SAS) / Private</option>
+<option value="SceniAir Lines">SceniAir Lines</option>
+<option value="SceniAir Tours">SceniAir Tours</option>
+<option value="SceniAirline - Air Taxi">SceniAirline - Air Taxi</option>
+<option value="SceniAirlines">SceniAirlines</option>
+<option value="Scibe Airlift Cargo Zaire">Scibe Airlift Cargo Zaire</option>
+<option value="Scottish Airlines">Scottish Airlines</option>
+<option value="Sea Airmotive">Sea Airmotive</option>
+<option value="Seattle Air Charter">Seattle Air Charter</option>
+<option value="Security Air">Security Air</option>
+<option value="SELVA">SELVA</option>
+<option value="SELVA Colombia">SELVA Colombia</option>
+<option value="Sempati Air">Sempati Air</option>
+<option value="Servant Air">Servant Air</option>
+<option value="Servicio Aereo Columbiano / SCADTA">Servicio Aereo Columbiano / SCADTA</option>
+<option value="Servicio Aéreo Panini">Servicio Aéreo Panini</option>
+<option value="Servicios Aereas Virgen de Copacabana">Servicios Aereas Virgen de Copacabana</option>
+<option value="Servicios Aéreos Boliviano">Servicios Aéreos Boliviano</option>
+<option value="Servicios Aereos Martinez Leon">Servicios Aereos Martinez Leon</option>
+<option value="Servicios Aereos Nacionales">Servicios Aereos Nacionales</option>
+<option value="Servicios Aereos Santa Ana">Servicios Aereos Santa Ana</option>
+<option value="Servicios Aeronauticos Sucre (SASCA)">Servicios Aeronauticos Sucre (SASCA)</option>
+<option value="Servicios Americanos">Servicios Americanos</option>
+<option value="Seventy Airways - Air Taxi">Seventy Airways - Air Taxi</option>
+<option value="Shanair Inc. - Air Taxi">Shanair Inc. - Air Taxi</option>
+<option value="Shangri La Air">Shangri La Air</option>
+<option value="Shanxi Airlines">Shanxi Airlines</option>
+<option value="Shell Co of Ecuador">Shell Co of Ecuador</option>
+<option value="Shelter Cove Sea Park">Shelter Cove Sea Park</option>
+<option value="Sibir (S7)">Sibir (S7)</option>
+<option value="Sierra PacifiAirlines">Sierra PacifiAirlines</option>
+<option value="SilkAir">SilkAir</option>
+<option value="Silver City Airways">Silver City Airways</option>
+<option value="Simmons Airlines">Simmons Airlines</option>
+<option value="Simpson Air Service - Air Taxi">Simpson Air Service - Air Taxi</option>
+<option value="Singapore Airlines">Singapore Airlines</option>
+<option value="Sinquanon Management - Air Taxi">Sinquanon Management - Air Taxi</option>
+<option value="Skagway Air Service - Air Taxi">Skagway Air Service - Air Taxi</option>
+<option value="Skips Air Service - Air Taxi">Skips Air Service - Air Taxi</option>
+<option value="Sky Cabs">Sky Cabs</option>
+<option value="Sky Chopper  - Air Taxi">Sky Chopper  - Air Taxi</option>
+<option value="Sky Haven - Air Taxi">Sky Haven - Air Taxi</option>
+<option value="Sky Train Air">Sky Train Air</option>
+<option value="Skycraft Air Transport">Skycraft Air Transport</option>
+<option value="Skyline Airways">Skyline Airways</option>
+<option value="Skyline Aviation - Air Taxi">Skyline Aviation - Air Taxi</option>
+<option value="Skyline Sweden">Skyline Sweden</option>
+<option value="Skyline Transportation Company">Skyline Transportation Company</option>
+<option value="Skylink Airlines">Skylink Airlines</option>
+<option value="Skypower Express Airways">Skypower Express Airways</option>
+<option value="Skystream Airlines">Skystream Airlines</option>
+<option value="Skyvan Airways">Skyvan Airways</option>
+<option value="Skyward Aviation">Skyward Aviation</option>
+<option value="Skyway Air  - Taxi">Skyway Air  - Taxi</option>
+<option value="Skyways">Skyways</option>
+<option value="Skywest Airlines / Private.">Skywest Airlines / Private.</option>
+<option value="Skyworld Airlines (Ports of Call Inc.)">Skyworld Airlines (Ports of Call Inc.)</option>
+<option value="SL Aviation Services">SL Aviation Services</option>
+<option value="Slick Airways">Slick Airways</option>
+<option value="Smithers Air Service">Smithers Air Service</option>
+<option value="Smyer Aircraft - Air Taxi">Smyer Aircraft - Air Taxi</option>
+<option value="Snow Valley Ski Lines">Snow Valley Ski Lines</option>
+<option value="Sobelair SA (Belgium)">Sobelair SA (Belgium)</option>
+<option value="Soc. de Tr. Aériens d&#39;Extrême Orient">Soc. de Tr. Aériens d'Extrême Orient</option>
+<option value="Sociedad Aeronautica Medellin">Sociedad Aeronautica Medellin</option>
+<option value="Societa Aerea Mediterranea">Societa Aerea Mediterranea</option>
+<option value="Società Aerea Teseo">Società Aerea Teseo</option>
+<option value="Societe Indochinoise de Transport Aeriens">Societe Indochinoise de Transport Aeriens</option>
+<option value="Soldotna Air Services">Soldotna Air Services</option>
+<option value="Solomon Islands Airlines">Solomon Islands Airlines</option>
+<option value="Somali Airlines">Somali Airlines</option>
+<option value="Soundsair">Soundsair</option>
+<option value="South African Airways">South African Airways</option>
+<option value="South Central Airlines">South Central Airlines</option>
+<option value="South PacifiIsland Airways">South PacifiIsland Airways</option>
+<option value="Southcentral Air">Southcentral Air</option>
+<option value="Southeast Airlines">Southeast Airlines</option>
+<option value="Southeast Sky - Air Taxi">Southeast Sky - Air Taxi</option>
+<option value="Southeast Skyways - Air Taxi">Southeast Skyways - Air Taxi</option>
+<option value="Southern Air Transport">Southern Air Transport</option>
+<option value="Southern Airways">Southern Airways</option>
+<option value="Southern Cross Airways">Southern Cross Airways</option>
+<option value="Southern Express">Southern Express</option>
+<option value="Southern Jersey Air - Air Taxi">Southern Jersey Air - Air Taxi</option>
+<option value="Southwest Air">Southwest Air</option>
+<option value="Southwest Airlift">Southwest Airlift</option>
+<option value="Southwest Airlines">Southwest Airlines</option>
+<option value="Southwest Aviation - Air Taxi">Southwest Aviation - Air Taxi</option>
+<option value="Sowind Air">Sowind Air</option>
+<option value="Spanair">Spanair</option>
+<option value="Spanish Air Force">Spanish Air Force</option>
+<option value="Spantax">Spantax</option>
+<option value="Speed Service Couriers">Speed Service Couriers</option>
+<option value="Spencer Airways / Ceskoslovenske Aerolinie">Spencer Airways / Ceskoslovenske Aerolinie</option>
+<option value="Spernak Airway - Air Taxi">Spernak Airway - Air Taxi</option>
+<option value="Spernak Airways - Air Taxi">Spernak Airways - Air Taxi</option>
+<option value="STAAP">STAAP</option>
+<option value="Standard Airlines">Standard Airlines</option>
+<option value="Star Aviation">Star Aviation</option>
+<option value="Starair">Starair</option>
+<option value="Starways">Starways</option>
+<option value="STASA">STASA</option>
+<option value="Stavropol Airlines">Stavropol Airlines</option>
+<option value="Sterling Airways">Sterling Airways</option>
+<option value="Stikine Air Service - Air Taxi">Stikine Air Service - Air Taxi</option>
+<option value="Straits Air Freight Express">Straits Air Freight Express</option>
+<option value="Straley Flying Service - Air Taxi">Straley Flying Service - Air Taxi</option>
+<option value="Strato Freight">Strato Freight</option>
+<option value="Stratofreight">Stratofreight</option>
+<option value="Streamline">Streamline</option>
+<option value="Suburban Airlines - Air Taxi">Suburban Airlines - Air Taxi</option>
+<option value="Sudan Airways">Sudan Airways</option>
+<option value="Sudania Air Cargo">Sudania Air Cargo</option>
+<option value="Summit Air Charters">Summit Air Charters</option>
+<option value="Sun Valley Airways - Air Taxi">Sun Valley Airways - Air Taxi</option>
+<option value="Sun West Airline - Air Taxi">Sun West Airline - Air Taxi</option>
+<option value="Sunbeam Air Transport Co.">Sunbeam Air Transport Co.</option>
+<option value="SunQuest Executive Air Charter">SunQuest Executive Air Charter</option>
+<option value="Superior Aviation">Superior Aviation</option>
+<option value="Svedijos Prekés">Svedijos Prekés</option>
+<option value="Svenska Aero">Svenska Aero</option>
+<option value="SW Air Rangers - Air Taxi">SW Air Rangers - Air Taxi</option>
+<option value="Swifair">Swifair</option>
+<option value="Swissair">Swissair</option>
+<option value="Syndicato Condor">Syndicato Condor</option>
+<option value="Syrian Arab Airlines">Syrian Arab Airlines</option>
+<option value="T &amp; G Aviation">T &amp; G Aviation</option>
+<option value="T.A. Intercontinentaux (France)">T.A. Intercontinentaux (France)</option>
+<option value="TAA">TAA</option>
+<option value="TAAG Angola Airlines">TAAG Angola Airlines</option>
+<option value="TABA">TABA</option>
+<option value="TACA">TACA</option>
+<option value="TACA International Airlines">TACA International Airlines</option>
+<option value="Tadair">Tadair</option>
+<option value="TAESA">TAESA</option>
+<option value="TAG Airlines">TAG Airlines</option>
+<option value="Taiwan Airlines">Taiwan Airlines</option>
+<option value="Tajikistan Airlines">Tajikistan Airlines</option>
+<option value="Talair">Talair</option>
+<option value="TAM (Bolivia)">TAM (Bolivia)</option>
+<option value="TAM (Brazil)">TAM (Brazil)</option>
+<option value="TAM Lineas Aéreas Regional">TAM Lineas Aéreas Regional</option>
+<option value="TAM Paraguay">TAM Paraguay</option>
+<option value="Tamair">Tamair</option>
+<option value="TAME">TAME</option>
+<option value="TAME Ecuador">TAME Ecuador</option>
+<option value="Tampa Air Center - Air Taxi">Tampa Air Center - Air Taxi</option>
+<option value="TAMPA Colombia">TAMPA Colombia</option>
+<option value="TAN Honduras">TAN Honduras</option>
+<option value="TanaMana Aviation">TanaMana Aviation</option>
+<option value="Tanana Air Taxi">Tanana Air Taxi</option>
+<option value="Tanzania Aviation">Tanzania Aviation</option>
+<option value="TAO">TAO</option>
+<option value="Taquan Air Service">Taquan Air Service</option>
+<option value="TAR">TAR</option>
+<option value="Tar Heel Aviation">Tar Heel Aviation</option>
+<option value="Tarom">Tarom</option>
+<option value="Tashkent Aircraft Production Corporation">Tashkent Aircraft Production Corporation</option>
+<option value="Tassili Airlines">Tassili Airlines</option>
+<option value="TAUSA">TAUSA</option>
+<option value="Taxair">Taxair</option>
+<option value="Taxi Aéreo Cesar Aguiar">Taxi Aéreo Cesar Aguiar</option>
+<option value="Taxi Aereo de Santander">Taxi Aereo de Santander</option>
+<option value="Taxi Aéreo del Guaviare">Taxi Aéreo del Guaviare</option>
+<option value="Taxi Aereo el Venado">Taxi Aereo el Venado</option>
+<option value="Taxi Aéreo el Venado">Taxi Aéreo el Venado</option>
+<option value="Taxi Aéreo Kovacs">Taxi Aéreo Kovacs</option>
+<option value="Team Air">Team Air</option>
+<option value="Telford Aviation">Telford Aviation</option>
+<option value="Temesco Helicopter - Air Taxi">Temesco Helicopter - Air Taxi</option>
+<option value="Temsco Airlines">Temsco Airlines</option>
+<option value="Temsco Helicopter - Air Taxi">Temsco Helicopter - Air Taxi</option>
+<option value="Texas International Airlines">Texas International Airlines</option>
+<option value="Thai Airways">Thai Airways</option>
+<option value="Thai International">Thai International</option>
+<option value="Theif River Aviation - Air Taxi">Theif River Aviation - Air Taxi</option>
+<option value="Tierra del Fuego Province">Tierra del Fuego Province</option>
+<option value="Tigres Voladores">Tigres Voladores</option>
+<option value="Tiramavia">Tiramavia</option>
+<option value="Titan Airways">Titan Airways</option>
+<option value="Toa DomestiAirline (Japan)">Toa DomestiAirline (Japan)</option>
+<option value="Tomahawk Airways">Tomahawk Airways</option>
+<option value="Top Air - Air Taxi">Top Air - Air Taxi</option>
+<option value="Total">Total</option>
+<option value="Total  Air Lines">Total  Air Lines</option>
+<option value="Touraine Air Transport">Touraine Air Transport</option>
+<option value="TPI International Airways">TPI International Airways</option>
+<option value="Trafik-Turist-Transportflyg">Trafik-Turist-Transportflyg</option>
+<option value="Trans-Luxury Airlines">Trans-Luxury Airlines</option>
+<option value="Trans Alaska Helicopter - Air Taxi">Trans Alaska Helicopter - Air Taxi</option>
+<option value="Trans Australia Airlines">Trans Australia Airlines</option>
+<option value="Trans Canada Air Lines">Trans Canada Air Lines</option>
+<option value="Trans Canada Air Lines / RCAF">Trans Canada Air Lines / RCAF</option>
+<option value="Trans Caribbean Airways">Trans Caribbean Airways</option>
+<option value="Trans Colorado AL / Continental Express">Trans Colorado AL / Continental Express</option>
+<option value="Trans Continental Air Transport">Trans Continental Air Transport</option>
+<option value="Trans Continental and Western Air">Trans Continental and Western Air</option>
+<option value="Trans Guyana Airways">Trans Guyana Airways</option>
+<option value="Trans International Airlines">Trans International Airlines</option>
+<option value="Trans Isle Air">Trans Isle Air</option>
+<option value="Trans Luxury Airlines">Trans Luxury Airlines</option>
+<option value="Trans Mediterranean Airways">Trans Mediterranean Airways</option>
+<option value="Trans National Airlines">Trans National Airlines</option>
+<option value="Trans World Airlines">Trans World Airlines</option>
+<option value="Trans World Airlines / Eastern Air Lines">Trans World Airlines / Eastern Air Lines</option>
+<option value="Trans World Airlines / Private">Trans World Airlines / Private</option>
+<option value="Transafrik">Transafrik</option>
+<option value="Transair">Transair</option>
+<option value="Transair Georgia Airlines">Transair Georgia Airlines</option>
+<option value="Transamazonica">Transamazonica</option>
+<option value="Transamerica Airlines">Transamerica Airlines</option>
+<option value="Transamerican Air Transport">Transamerican Air Transport</option>
+<option value="Transamerican Airlines">Transamerican Airlines</option>
+<option value="Transaven">Transaven</option>
+<option value="Transaviaexport Airlines">Transaviaexport Airlines</option>
+<option value="Transbrasil">Transbrasil</option>
+<option value="Transcontinental">Transcontinental</option>
+<option value="Transmandu">Transmandu</option>
+<option value="Transmeridian Air Cargo">Transmeridian Air Cargo</option>
+<option value="Transocean Air Lines">Transocean Air Lines</option>
+<option value="Transpolar">Transpolar</option>
+<option value="Transporte Aereo Federal">Transporte Aereo Federal</option>
+<option value="Transportes Aéreos Itenez">Transportes Aéreos Itenez</option>
+<option value="Transportes Aéreos Mexicanos">Transportes Aéreos Mexicanos</option>
+<option value="Transportes Aereos Orientales">Transportes Aereos Orientales</option>
+<option value="Transportes Aéreos Salvador">Transportes Aéreos Salvador</option>
+<option value="Transportes Areos Nacionales">Transportes Areos Nacionales</option>
+<option value="Transporturile Aeriene Romano-Sovietice">Transporturile Aeriene Romano-Sovietice</option>
+<option value="Travel Air Flug">Travel Air Flug</option>
+<option value="Trigana Air Service">Trigana Air Service</option>
+<option value="Trillium Air">Trillium Air</option>
+<option value="Tropical Airways">Tropical Airways</option>
+<option value="TsAGI">TsAGI</option>
+<option value="Tulakes Aviaiton - Air Taxi">Tulakes Aviaiton - Air Taxi</option>
+<option value="Tura Air Enterprise">Tura Air Enterprise</option>
+<option value="Turkish Airlines">Turkish Airlines</option>
+<option value="Turkish Airlines (THY)">Turkish Airlines (THY)</option>
+<option value="Tyee Airlines - Air Taxi">Tyee Airlines - Air Taxi</option>
+<option value="Tyumen Aviatrans">Tyumen Aviatrans</option>
+<option value="U. S. Air Force">U. S. Air Force</option>
+<option value="U.S. Government (leased)">U.S. Government (leased)</option>
+<option value="Uganda Airlines">Uganda Airlines</option>
+<option value="Ukraine Aviation Transport Company">Ukraine Aviation Transport Company</option>
+<option value="Ukvozduchput">Ukvozduchput</option>
+<option value="Uni Air">Uni Air</option>
+<option value="Union Aeromaritime de Transport">Union Aeromaritime de Transport</option>
+<option value="Union Airways">Union Airways</option>
+<option value="Union des Transports Aeriens de Guinee">Union des Transports Aeriens de Guinee</option>
+<option value="Union Flights">Union Flights</option>
+<option value="Union of Burma Airways">Union of Burma Airways</option>
+<option value="United Air Lines">United Air Lines</option>
+<option value="United Air Lines / Trans World Airlines">United Air Lines / Trans World Airlines</option>
+<option value="United Air Services">United Air Services</option>
+<option value="United Airways">United Airways</option>
+<option value="United Airways of New Zealand">United Airways of New Zealand</option>
+<option value="United Arab Airlines">United Arab Airlines</option>
+<option value="United Express">United Express</option>
+<option value="United Express  / Private">United Express  / Private</option>
+<option value="United Nations Organization">United Nations Organization</option>
+<option value="Universal Airlines">Universal Airlines</option>
+<option value="Universal Airways">Universal Airways</option>
+<option value="Universal Jet Aviation">Universal Jet Aviation</option>
+<option value="Uralex">Uralex</option>
+<option value="US Aerial Mail Service">US Aerial Mail Service</option>
+<option value="US Air Express/Air Midwest">US Air Express/Air Midwest</option>
+<option value="US Airlines">US Airlines</option>
+<option value="US Airways">US Airways</option>
+<option value="US Airways Express">US Airways Express</option>
+<option value="USA Jet Airlines">USA Jet Airlines</option>
+<option value="USAir">USAir</option>
+<option value="USAir / Skywest Airlilnes">USAir / Skywest Airlilnes</option>
+<option value="UTAir Airlines">UTAir Airlines</option>
+<option value="Utility Helocopter - Air Taxi">Utility Helocopter - Air Taxi</option>
+<option value="Uzbek Civil Aviation Administration">Uzbek Civil Aviation Administration</option>
+<option value="Uzbekistan Airways">Uzbekistan Airways</option>
+<option value="Uzu Air">Uzu Air</option>
+<option value="Valley Air Service - Air Taxi">Valley Air Service - Air Taxi</option>
+<option value="ValuJet">ValuJet</option>
+<option value="Varig">Varig</option>
+<option value="Varney Air Lines">Varney Air Lines</option>
+<option value="Varney Airlines">Varney Airlines</option>
+<option value="VASP">VASP</option>
+<option value="VASP / Private">VASP / Private</option>
+<option value="Vayudoot">Vayudoot</option>
+<option value="Venezolana">Venezolana</option>
+<option value="Venezolana Internacional de Aviacion">Venezolana Internacional de Aviacion</option>
+<option value="Vercoa Air Service - Air Taxi">Vercoa Air Service - Air Taxi</option>
+<option value="Viaçao Cometa">Viaçao Cometa</option>
+<option value="VIARCO">VIARCO</option>
+<option value="Vickers">Vickers</option>
+<option value="Vieques Air Link">Vieques Air Link</option>
+<option value="Vietnam Airlines">Vietnam Airlines</option>
+<option value="Viking Air Transport">Viking Air Transport</option>
+<option value="Viking Airways - Air Taxi">Viking Airways - Air Taxi</option>
+<option value="Village Airways">Village Airways</option>
+<option value="Village Aviation - Air Taxi">Village Aviation - Air Taxi</option>
+<option value="Vincent Aviation">Vincent Aviation</option>
+<option value="Virgin Islands Airways">Virgin Islands Airways</option>
+<option value="Vladivostokavia">Vladivostokavia</option>
+<option value="Vnokovo Airlines">Vnokovo Airlines</option>
+<option value="Vnukovo Airlines">Vnukovo Airlines</option>
+<option value="Volga-Dnepr Airlines">Volga-Dnepr Airlines</option>
+<option value="Volga Air">Volga Air</option>
+<option value="Vologodskiye Airlines">Vologodskiye Airlines</option>
+<option value="VOTEC">VOTEC</option>
+<option value="VOTEC / VOTEC">VOTEC / VOTEC</option>
+<option value="VoteTaxi Aéreo">VoteTaxi Aéreo</option>
+<option value="Walker - Watts Aviation - Air Taxi">Walker - Watts Aviation - Air Taxi</option>
+<option value="Warsaw Aviation - Taxi">Warsaw Aviation - Taxi</option>
+<option value="Wasa Wings">Wasa Wings</option>
+<option value="Wayumi Air Taxi">Wayumi Air Taxi</option>
+<option value="Weasua Airtransport">Weasua Airtransport</option>
+<option value="Webber Airlines -Air Taxi">Webber Airlines -Air Taxi</option>
+<option value="Webstas Aviation Services Inc.">Webstas Aviation Services Inc.</option>
+<option value="Wehite Cap Aviation">Wehite Cap Aviation</option>
+<option value="Wein Alaska Airlines Inc.">Wein Alaska Airlines Inc.</option>
+<option value="Wenela Air Services">Wenela Air Services</option>
+<option value="West Air">West Air</option>
+<option value="West Aviation">West Aviation</option>
+<option value="West Coast Air">West Coast Air</option>
+<option value="West Coast Airlines">West Coast Airlines</option>
+<option value="Western Air Express">Western Air Express</option>
+<option value="Western Airlines">Western Airlines</option>
+<option value="Western Canada Airways">Western Canada Airways</option>
+<option value="Western Helicopter">Western Helicopter</option>
+<option value="Western Straits Air">Western Straits Air</option>
+<option value="Wheeler Airlines">Wheeler Airlines</option>
+<option value="Whyalla Airlines">Whyalla Airlines</option>
+<option value="Wicks Flying Service - Air Taxi">Wicks Flying Service - Air Taxi</option>
+<option value="Wideroe&#39;s Flyveselksap">Wideroe's Flyveselksap</option>
+<option value="Wien Air Alaska">Wien Air Alaska</option>
+<option value="Wien Alaska Airlines">Wien Alaska Airlines</option>
+<option value="Wien Consolidated Airlines">Wien Consolidated Airlines</option>
+<option value="Wiggins Airways">Wiggins Airways</option>
+<option value="Wigmo">Wigmo</option>
+<option value="Willow Air Service - Air Taxi">Willow Air Service - Air Taxi</option>
+<option value="Wilson Airways">Wilson Airways</option>
+<option value="Win Win Aviation">Win Win Aviation</option>
+<option value="Winchester Air">Winchester Air</option>
+<option value="Wings West Airlines / Private">Wings West Airlines / Private</option>
+<option value="Winship Air">Winship Air</option>
+<option value="Winship Air Service">Winship Air Service</option>
+<option value="Winship Air Service - Air Taxi">Winship Air Service - Air Taxi</option>
+<option value="World Airways">World Airways</option>
+<option value="Wrangell Air Service">Wrangell Air Service</option>
+<option value="Wuhan Airlines">Wuhan Airlines</option>
+<option value="Wyman Pilot Service - Air Taxi">Wyman Pilot Service - Air Taxi</option>
+<option value="Wyoming Air Service">Wyoming Air Service</option>
+<option value="Yacimientos Petroliferos Fiscales">Yacimientos Petroliferos Fiscales</option>
+<option value="Yakutavia">Yakutavia</option>
+<option value="Yates Aviation">Yates Aviation</option>
+<option value="Yeti Airlines">Yeti Airlines</option>
+<option value="YPF">YPF</option>
+<option value="YPFB Transportes Aereos">YPFB Transportes Aereos</option>
+<option value="Yute Air Alaska - Air Taxi">Yute Air Alaska - Air Taxi</option>
+<option value="Zanex">Zanex</option>
+<option value="Zantop Air Transport">Zantop Air Transport</option>
+<option value="Zantop Airways">Zantop Airways</option>
+<option value="Zantop International Airlines">Zantop International Airlines</option></select>
+<script type="application/json" data-for="operator_choice">{"maxOptions":10000,"plugins":["selectize-plugin-a11y"]}</script>
+</div>
+</div>
+<div id="section-crash-locations-for-selected-operator"
+class="section level3">
+<h3>Crash Locations for Selected Operator</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div class="leaflet html-widget html-widget-output shiny-report-size html-fill-item" id="out31bb3bf4ec9f3289" style="width:100%;height:400px;"></div>
+</div>
+<div id="section-crashes-by-minimum-fatalities" class="section level3">
+<h3>Crashes by Minimum Fatalities</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div class="form-group shiny-input-container">
+<label class="control-label" id="min_fatalities-label" for="min_fatalities">Show crashes with at least this many fatalities:</label>
+<input id="min_fatalities" type="number" class="shiny-input-number form-control" value="50" data-update-on="change" min="0" max="583"/>
+</div>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div class="leaflet html-widget html-widget-output shiny-report-size html-fill-item" id="outaaa963cdfbcfc664" style="width:100%;height:400px;"></div>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div class="form-group shiny-input-container">
+<label class="control-label" id="year_choice-label" for="year_choice">Select Year:</label>
+<input class="js-range-slider" id="year_choice" data-skin="shiny" data-min="1908" data-max="2009" data-from="1908" data-step="1" data-grid="true" data-grid-num="9.18181818181818" data-grid-snap="false" data-prettify-separator="" data-prettify-enabled="false" data-keyboard="true" data-data-type="number"/>
+</div>
+</div>
+</div>
+<div id="section-row" class="section level2" data-height="700">
+<h2>Row</h2>
+<div id="section-map-of-crashes-for-selected-year"
+class="section level3">
+<h3>Map of Crashes for Selected Year</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div class="leaflet html-widget html-widget-output shiny-report-size html-fill-item" id="outf3d6778c177e3050" style="width:100%;height:400px;"></div>
+</div>
+</div>
+
+</div>
+
+<script>
+$(document).ready(function() {
+  // add bootstrap table styles to pandoc tables
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed table-sm');
+
+  // initialize mathjax
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+  document.getElementsByTagName("head")[0].appendChild(script);
+
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+  FlexDashboard.init({
+    fillPage: true,
+    orientation: "rows",
+    storyboard: false,
+    defaultFigWidth: 576,
+    defaultFigHeight: 460,
+    defaultFigWidthMobile: 360,
+    defaultFigHeightMobile: 460,
+    resize_reload: true
+  });
+  var navbar = $(".navbar").first();
+  var body = $("body").first();
+  var sidebar = $(".section.sidebar").first();
+  function addNavbarPadding() {
+    var navHeight = navbar.outerHeight();
+    body.css("padding-top", (navHeight + 8) + "px");
+    sidebar.css("top", navHeight + "px");
+    var resizeEvent = window.document.createEvent("UIEvents");
+    resizeEvent.initUIEvent("resize", true, false, window, 0);
+    window.dispatchEvent(resizeEvent);
+  }
+  if (!window.Shiny) setTimeout(addNavbarPadding, 100);
+  $(document).on("shiny:idle", function() {
+    setTimeout(addNavbarPadding, 50);
+  });
+});
+</script>
+
+</body>
+</html>

@@ -2,6 +2,8 @@
 title: "Exploring the Data"
 date: "2025-11-18"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include=FALSE, message = FALSE, warning = FALSE}

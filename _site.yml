@@ -1,13 +1,27 @@
-name: "Yay internet!"
+name: "Fly High"
 output_dir: "."
 navbar:
-  title: "Home"
+  title: "Fly High"
   right:
+    - text: "Home"
+      href: index.html
+    - text: "Project Proposal"
+      href: project_proposal.html
+    - text: "Descriptive Statistics"
+      href: descriptive_stats.html
+    - text: "Exploratory Analysis"
+      href: exploratory_analysis.html
+    - text: "Shiny Dashboard"
+      href: ShinyDashboard2.html
+    - text: "Final Report"
+      href: final_report.html
     - text: "About"
       href: about.html
     - icon: fa-envelope fa-lg
       href: mailto:<you@youremail.com>
     - icon: fa-github fa-lg
       href: http://github.com/<YOUR_GH_NAME>/
+
 output:
-  html_document
+  html_document:
+    theme: readable
