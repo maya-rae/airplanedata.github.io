@@ -3,7 +3,7 @@ title: "Airplane Crashes - Visualizaed Data with Pinned Locations"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
-    vertical_layout: fill
+    vertical_layout: scroll
 runtime: shiny
 ---
 
@@ -195,7 +195,7 @@ sliderInput(
 ```
 
 
-Row {data-height=700}
+
 -----------------------------------------------------------------------
 
 ### Map of Crashes for Selected Year
@@ -226,6 +226,11 @@ leaflet(filtered) |>
 })
 
 ```
+
+```{r}
+rsconnect::deployDoc("ShinyDashboard2.Rmd")
+```
+
 
 
 
