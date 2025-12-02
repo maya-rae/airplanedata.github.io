@@ -5,6 +5,6 @@ account: karolinabwiesiolek
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 16212829
-bundleId:
+bundleId: 11260843
 url: https://karolinabwiesiolek.shinyapps.io/shinydashboard2/
 version: 1
