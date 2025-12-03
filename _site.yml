@@ -13,10 +13,10 @@ navbar:
       href: exploratory_analysis.html
     - text: "Interactive Map Search"
       href: InteractiveMapSearch.html
+    - text: "ANOVA"
+      href: ANOVA.html    
     - text: "Final Report"
       href: final_report.html
-    - icon: fa-envelope fa-lg
-      href: mailto:<you@youremail.com>
     - icon: fa-github fa-lg
       href: https://github.com/maya-rae/airplanedata.github.io.git
 

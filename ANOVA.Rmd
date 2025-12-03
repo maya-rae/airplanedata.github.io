@@ -1,0 +1,94 @@
+---
+title: "ANOVA"
+output: 
+  html_document:
+    toc: true
+    toc_float: true 
+    code_folding: hide 
+editor_options: 
+  chunk_output_type: console
+---
+
+
+This file contains ANOVA and respective post-hoc tests of the dataset.
+
+
+Load & Clean Data
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+
+library(tidyverse)
+library(lubridate)
+library(stringr)
+library(plotly)
+library(ggthemes)
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+  )
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+```
+
+
+
+```{r}
+
+airplane_df = read_csv("datasets/airplane_crashes_data.csv") |> 
+  janitor::clean_names() |> 
+  filter(ground != "NULL", aboard != "NULL") |> 
+
+  # removes unnecessary columns for our analyses
+  select(-flight_number, -time, - registration)
+
+airplane_df = 
+  airplane_df |> 
+  mutate(
+    # remove leading and trailing spaces
+    date = str_trim(date),
+    
+    # extract month, day, and year from the date string
+    m = as.numeric(sub("/.*", "", date)),                    
+    d = as.numeric(sub(".*/(.*)/.*", "\\1", date)),          
+    y = as.numeric(sub(".*/(.*)$", "\\1", date)),            
+    
+    # convert 2-digit years (<100) to 4-digit (1900s)
+    y = ifelse(y < 100, y + 1900, y),
+    
+    # rebuild the string
+    date_clean = paste(m, d, y, sep = "/"),
+    
+    # convert to Date type
+    date = mdy(date_clean),
+    
+    # extract numeric year and month
+    year = year(date),
+    month = month(date),
+    month_name = factor(month(date, 
+                              label = TRUE, 
+                              abbr = TRUE), 
+                              levels = month.abb)
+  ) |>
+  select(-m, -d, -y, -date_clean)  # remove unnecessary columns
+
+airplane_df = 
+  airplane_df |> 
+  mutate(
+    aboard     = as.numeric(aboard),
+    fatalities =  as.numeric(ground),
+    operator   = as.factor(operator)  # to group by operator
+    )
+
+airplane_df = 
+  airplane_df |> 
+  mutate(
+    decade = floor(year / 10) * 10, 
+    decade = paste0(decade, "s")
+  ) |> 
+  select(date, year, decade, month, month_name, everything()) 
+```
