@@ -7,10 +7,10 @@ editor_options:
 ---
 
 
-### Scientific Title
+# Scientific Title
 Data Analysis of Aviation Crashes. 
 
-### Group Members:
+# Group Members:
 
   + Maya Arnott  
   + Karolina Wiesiolek  
@@ -18,7 +18,7 @@ Data Analysis of Aviation Crashes.
   + Zichen Fan 
 
 
-## Motivation 
+# Motivation 
 In recent years, airplane crashes seem to receive intense media attention, often framed as sensational “click-bait” headlines. This can create the impression that commercial air travel is increasingly dangerous, even though aviation is widely regarded as one of the safest modes of transportation.
 
 Our project is motivated by two main goals:
@@ -66,11 +66,11 @@ As we started the project, our main questions were:
     * Are crashes more common in certain seasons or months of the year?
     * Is there evidence that weather or climate conditions (from NOAA) are associated with crash frequency or severity?
 
-<<<<<<< HEAD
+
 As data exploration continued over the following weeks, additional questions were developed:
 =======
 As data exploration contiued over following weeks, additional questions were developed:
->>>>>>> 82d1f090f4957af9415c20a275eceee706bb7935
+
 
   * What is the best way to present the fatalities that occurred around the world? 
   * Are there notable geographic clusters of crashes? 
@@ -82,46 +82,111 @@ As data exploration contiued over following weeks, additional questions were dev
 ### Data Source:
 The dataset was sourced as a CSV file from Kaggle and stored in a datasets folder within our project directory. We read it into R using read_csv() and maintain all code in an R Project linked to a public GitHub repository for reproducibility. An additional dataset, created by our group, contains geocoded latitude and longitude information for each crash location. Because the Kaggle file lists location as text (e.g., “Paris, France” or “5 miles from Cairo”), our group geocoded each unique location string and stored the results in geocoded_cache.csv. This allowed us to build interactive maps.
 
-### Data: 
-
-### Exploratory analysis
-# Data Cleaning and Preparation
+# Data and Exploratory analysis
+### Data Cleaning and Preparation
 Before performing geographic or temporal analysis, our dataset required substantial cleaning due to inconsistent formatting and missing coordinate data. We wrote the preprocessing code used throughout the analysis pipeline. It included four major steps:
 
+### Analysis:
 1. Initial Cleaning of the Raw Dataset
-  * "NULL" entries in numeric columns (aboard, ground)
-  * Unnecessary textual variables (flight_number, time, registration)
+- "NULL" entries in numeric columns (aboard, ground)
+- Unnecessary textual variables (flight_number, time, registration)
+
+
+
+```{r, eval=FALSE}
+airplane_df = read_csv("datasets/airplane_crashes_data.csv") |>
+  clean_names() |>
+  filter(ground != "NULL", aboard != "NULL") |>
+  select(-flight_number, -time, -registration)
+```
+
+
+
+This ensured that subsequent numerical processing would not break.
 
 2. Parsing and Standardizing Dates
 
-The original “date” column had inconsistent formatting (e.g., 3/4/78, 12/9/2001, 1/3/35). To prepare the variable for filtering and mapping, we:
-  * extracted the crash year for filtering
-  * extracted month
-  * day, and year using regex
-  * converted 2-digit years into 4-digit format
-  * reconstructed a consistent date string, converted to a real Date object
+The original “date” column had inconsistent formatting (e.g., 3/4/78, 12/9/2001, 1/3/35). 
+To prepare the variable for filtering and mapping, we:
+
+- extracted the crash month using regex  
+- extracted the crash day using regex  
+- extracted the crash year using regex  
+- converted 2-digit years into 4-digit format  
+- reconstructed a consistent date string  
+- converted the string into a real `Date` object  
+- extracted the year for filtering and mapping  
+
+
+```{r, eval=FALSE}
+airplane_df = airplane_df |>
+  mutate(
+    date = str_trim(date),
+    m = as.numeric(sub("/.*", "", date)),
+    d = as.numeric(sub(".*/(.*)/.*", "\\1", date)),
+    y = as.numeric(sub(".*/(.*)$", "\\1", date)),
+    y = ifelse(y < 100, y + 1900, y),
+    date_clean = paste(m, d, y, sep = "/"),
+    date = mdy(date_clean),
+    year = year(date)
+  ) |>
+  select(-m, -d, -y, -date_clean)
+```
+
 
 This step was essential because our interactive filters depend on having an accurate year variable and leaflet maps require a clean timeline for sorting or grouping crashes
 
-3. Converting numeric variables
-  * Some numeric columns were stored as text and needed conversion
+3. Converting numeric variables:
+Some numeric columns were stored as text and needed conversion:
+
+```{r, eval=FALSE}
+airplane_df = airplane_df |>
+  mutate(
+    aboard     = as.numeric(aboard),
+    fatalities = as.numeric(fatalities),
+    ground     = as.numeric(ground),
+    operator   = as.factor(operator)
+  )
+```
+
+
 Cleaning these variables allowed us to:
-  * filter crashes by fatality count
-  * color-code operators in maps
+- filter crashes by fatality count
+- color-code operators in maps
 
 4. Joining Geocoded Coordinates for Mapping
 Because the raw dataset contained only text descriptions of crash locations, our group generated a supplementary file (geocoded_cache.csv) containing:
-  * cleaned location names
-  * latitude and longitude for each crash
-  * We merged this data with our cleaned dataset, this action produced the final dataset used in all mapping visuals.
+- cleaned location names
+- latitude and longitude for each crash
+We merged this data with our cleaned dataset, this action produced the final dataset used in all mapping visuals: 
+
+
+```{r, eval=FALSE}
+df_map <- airplane_df |>
+  left_join(geocoded_locations,
+            by = c("location" = "location_clean")) |>
+  filter(!is.na(Latitude), !is.na(Longitude))
+```
+
   
 5. Preparing the Shared Dataset for Interactive Filtering
 To allow dynamic filtering without Shiny, I used the crosstalk package. This connects:
-  * the map
-  * the data table
-  * the filter widgets
+- the map
+- the data table
+- the filter widgets
 
 All components update simultaneously without reloading.
+
+
+```{r, eval=FALSE}
+shared = SharedData$new(df_display, group = "crashes")
+```
+
+This enabled an interactive interface where users can:
+- choose an operator
+- filter by year
+- select a fatality threshold
+- see both the map and table update instantly
 
 ### Additional analysis 
 (If you undertake formal statistical analyses, describe these in detail)
