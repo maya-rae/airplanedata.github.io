@@ -424,10 +424,65 @@ allowed us to build interactive maps.</p>
 </div>
 <div id="exploratory-analysis" class="section level3">
 <h3>Exploratory analysis</h3>
-<p>(Visualizations, summaries, and exploratory statistical analyses.
-Justify the steps you took, and show any major changes to your
-ideas.)</p>
 </div>
+</div>
+<div id="data-cleaning-and-preparation" class="section level1">
+<h1>Data Cleaning and Preparation</h1>
+<p>Before performing geographic or temporal analysis, our dataset
+required substantial cleaning due to inconsistent formatting and missing
+coordinate data. We wrote the preprocessing code used throughout the
+analysis pipeline. It included four major steps:</p>
+<ol style="list-style-type: decimal">
+<li>Initial Cleaning of the Raw Dataset</li>
+</ol>
+<ul>
+<li>“NULL” entries in numeric columns (aboard, ground)</li>
+<li>Unnecessary textual variables (flight_number, time,
+registration)</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li>Parsing and Standardizing Dates</li>
+</ol>
+<p>The original “date” column had inconsistent formatting (e.g., 3/4/78,
+12/9/2001, 1/3/35). To prepare the variable for filtering and mapping,
+we: * extracted the crash year for filtering * extracted month * day,
+and year using regex * converted 2-digit years into 4-digit format *
+reconstructed a consistent date string, converted to a real Date
+object</p>
+<p>This step was essential because our interactive filters depend on
+having an accurate year variable and leaflet maps require a clean
+timeline for sorting or grouping crashes</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Converting numeric variables</li>
+</ol>
+<ul>
+<li>Some numeric columns were stored as text and needed conversion
+Cleaning these variables allowed us to:</li>
+<li>filter crashes by fatality count</li>
+<li>color-code operators in maps</li>
+</ul>
+<ol start="4" style="list-style-type: decimal">
+<li>Joining Geocoded Coordinates for Mapping Because the raw dataset
+contained only text descriptions of crash locations, our group generated
+a supplementary file (geocoded_cache.csv) containing:</li>
+</ol>
+<ul>
+<li>cleaned location names</li>
+<li>latitude and longitude for each crash</li>
+<li>We merged this data with our cleaned dataset, this action produced
+the final dataset used in all mapping visuals.</li>
+</ul>
+<ol start="5" style="list-style-type: decimal">
+<li>Preparing the Shared Dataset for Interactive Filtering To allow
+dynamic filtering without Shiny, I used the crosstalk package. This
+connects:</li>
+</ol>
+<ul>
+<li>the map</li>
+<li>the data table</li>
+<li>the filter widgets</li>
+</ul>
+<p>All components update simultaneously without reloading.</p>
 <div id="additional-analysis" class="section level3">
 <h3>Additional analysis</h3>
 <p>(If you undertake formal statistical analyses, describe these in

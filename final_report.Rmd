@@ -85,7 +85,43 @@ The dataset was sourced as a CSV file from Kaggle and stored in a datasets folde
 ### Data: 
 
 ### Exploratory analysis
-(Visualizations, summaries, and exploratory statistical analyses. Justify the steps you took, and show any major changes to your ideas.)
+# Data Cleaning and Preparation
+Before performing geographic or temporal analysis, our dataset required substantial cleaning due to inconsistent formatting and missing coordinate data. We wrote the preprocessing code used throughout the analysis pipeline. It included four major steps:
+
+1. Initial Cleaning of the Raw Dataset
+  * "NULL" entries in numeric columns (aboard, ground)
+  * Unnecessary textual variables (flight_number, time, registration)
+
+2. Parsing and Standardizing Dates
+
+The original “date” column had inconsistent formatting (e.g., 3/4/78, 12/9/2001, 1/3/35). To prepare the variable for filtering and mapping, we:
+  * extracted the crash year for filtering
+  * extracted month
+  * day, and year using regex
+  * converted 2-digit years into 4-digit format
+  * reconstructed a consistent date string, converted to a real Date object
+
+This step was essential because our interactive filters depend on having an accurate year variable and leaflet maps require a clean timeline for sorting or grouping crashes
+
+3. Converting numeric variables
+  * Some numeric columns were stored as text and needed conversion
+Cleaning these variables allowed us to:
+  * filter crashes by fatality count
+  * color-code operators in maps
+
+4. Joining Geocoded Coordinates for Mapping
+Because the raw dataset contained only text descriptions of crash locations, our group generated a supplementary file (geocoded_cache.csv) containing:
+  * cleaned location names
+  * latitude and longitude for each crash
+  * We merged this data with our cleaned dataset, this action produced the final dataset used in all mapping visuals.
+  
+5. Preparing the Shared Dataset for Interactive Filtering
+To allow dynamic filtering without Shiny, I used the crosstalk package. This connects:
+  * the map
+  * the data table
+  * the filter widgets
+
+All components update simultaneously without reloading.
 
 ### Additional analysis 
 (If you undertake formal statistical analyses, describe these in detail)
