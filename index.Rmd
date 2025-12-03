@@ -14,5 +14,7 @@ title: "Aviation Crash Data Analysis"
 
 [Interactive Map Search](InteractiveMapSearch.html)
 
+[ANOVA](ANOVA.html)
+
 [Final Report](final_report.html)
 
