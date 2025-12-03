@@ -5,16 +5,7 @@ output: html_document
 editor_options: 
   chunk_output_type: console
 ---
-<<<<<<< HEAD
-Motivation: Provide an overview of the project goals and motivation. (Karolina)
 
-Related work: Anything that inspired you, such as a paper, a web site, or something we discussed in class. (Karolina)
-
-Initial questions: What questions are you trying to answer? How did these questions evolve over the course of the project? What new questions did you consider in the course of your analysis? (Karolina)
-
-Data: Source, scraping method, cleaning, etc.
-(Maya can explain the data cleaning method)
-=======
 
 ### Scientific Title
 Data Analysis of Aviation Crashes. 
@@ -25,14 +16,9 @@ Data Analysis of Aviation Crashes.
   + Karolina Wiesiolek  
   + Casandra Laney  
   + Zichen Fan 
->>>>>>> 616b82df47eb05ace43a097a947d37ad87596901
 
 
-<<<<<<< HEAD
-Additional analysis: If you undertake formal statistical analyses, describe these in detail (Zichen can explain the ANOVA/any other stats)
-Discussion: What were your findings? Are they what you expect? What insights into the data can you make?
-=======
-# Motivation 
+## Motivation 
 In recent years, airplane crashes seem to receive intense media attention, often framed as sensational “click-bait” headlines. This can create the impression that commercial air travel is increasingly dangerous, even though aviation is widely regarded as one of the safest modes of transportation.
 
 Our project is motivated by two main goals:
@@ -94,7 +80,7 @@ As data exploration contiued over following weeks, additional questions were dev
 # Data Summary 
 
 ### Data Source:
-The dataset was sourced as a CSV file from Kaggle and stored in a datasets folder within our project directory. We read it into R using read_csv() and maintain all code in an R Project linked to a public GitHub repository for reproducibility. 
+The dataset was sourced as a CSV file from Kaggle and stored in a datasets folder within our project directory. We read it into R using read_csv() and maintain all code in an R Project linked to a public GitHub repository for reproducibility. An additional dataset, created by our group, contains geocoded latitude and longitude information for each crash location. Because the Kaggle file lists location as text (e.g., “Paris, France” or “5 miles from Cairo”), our group geocoded each unique location string and stored the results in geocoded_cache.csv. This allowed us to build interactive maps.
 
 ### Data: 
 
@@ -111,4 +97,4 @@ The data and knowledge of the world demonstrates that as the total number of fli
 
 Though the number of sudden fatalities due to aircraft crash is high and therefore is always highly covered by media outlets, commuting by air is considered one of the safest ways to commute. 
 
->>>>>>> 616b82df47eb05ace43a097a947d37ad87596901
+
