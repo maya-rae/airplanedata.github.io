@@ -1,7 +1,6 @@
 ---
 title: "Interactive Map"
 output: html_document
-date: "2025-11-22"
 ---
 
 ```{r, include=FALSE, echo=FALSE}
@@ -18,14 +17,14 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
 
 ```{r, echo=FALSE}
-airplane_df <- read_csv("datasets/airplane_crashes_data.csv") |>
+airplane_df = read_csv("datasets/airplane_crashes_data.csv") |>
   clean_names() |>
   filter(ground != "NULL", aboard != "NULL") |>
   select(-flight_number, -time, -registration)
 ```
 
 ```{r, echo=FALSE}
-airplane_df <- airplane_df |>
+airplane_df = airplane_df |>
   mutate(
     date = str_trim(date),
     m = as.numeric(sub("/.*", "", date)),
@@ -40,7 +39,7 @@ airplane_df <- airplane_df |>
 ```
 
 ```{r, echo=FALSE}
-airplane_df <- airplane_df |>
+airplane_df = airplane_df |>
   mutate(
     aboard     = as.numeric(aboard),
     fatalities = as.numeric(fatalities),
@@ -50,7 +49,7 @@ airplane_df <- airplane_df |>
 ```
 
 ```{r, echo=FALSE}
-geocoded_locations <- read_csv("datasets/geocoded_cache.csv")
+geocoded_locations = read_csv("datasets/geocoded_cache.csv")
 
 df_map <- airplane_df |>
   left_join(geocoded_locations, by = c("location" = "location_clean")) |>
@@ -61,18 +60,20 @@ df_map <- airplane_df |>
 
 ## Interactive Filters + Map and Table
 
+This interactive dashboard displays airplane crash locations using a linked map and data table. A filter panel allows users to dynamically select crashes by year, operator, and number of fatalities. Selecting a filter instantly updates both the map and the table through Crosstalk, without requiring Shiny. Each marker represents a crash event and includes detailed information in a popup.
+
 ```{r, echo=FALSE}
-# Prepare Crosstalk dataset
-df_display <- df_map |>
+# crosstalk dataset
+df_display = df_map |>
   mutate(
     year = as.factor(year),
     operator = as.factor(operator)
   ) |>
   select(year, operator, date, location, fatalities, Latitude, Longitude)
 
-shared <- SharedData$new(df_display, group = "crashes")
+shared = SharedData$new(df_display, group = "crashes")
 
-# Build Filter Sidebar + Map + Table
+# Filter Sidebar + Map + Table
 bscols(
   widths = c(3, 9),
 
@@ -128,6 +129,8 @@ bscols(
 
 ## Heatmap -- Crash Intensity Heat Layer 
 
+This map displays all airplane crash locations in the dataset using marker clustering. Each marker represents an individual crash, showing the crash date and airline operator in a popup. Clustering helps visualize dense regions by grouping nearby crashes together, expanding into individual points as the user zooms in.
+
 ```{r}
 leaflet(df_map) |>
   addProviderTiles(providers$CartoDB.Positron) |>
@@ -141,9 +144,9 @@ leaflet(df_map) |>
 ```
 
 ```{r}
-airplane_df <- airplane_df |>
+airplane_df = airplane_df |>
   mutate(
-    date = mdy(str_trim(date)),   # FIXED
+    date = mdy(str_trim(date)),   # fixed
     year = year(date),
     month = month(date),
     operator = as.factor(operator),
@@ -156,19 +159,22 @@ airplane_df <- airplane_df |>
 
 
 ## Color-coded operator map
+
+This map visualizes the top five airline operators with the highest number of airplane crashes in the dataset. Each point represents a crash site, positioned according to its recorded latitude and longitude. Operators are color-coded, allowing easy comparison of where different airlines have experienced accidents worldwide. Pop-ups display the airline name, crash date, and location for additional context. The legend identifies the five airlines included in the visualization.
+
 ```{r}
-# Identify top 5 operators by number of crashes
-top_ops <- df_map |>
+# Top 5 operators by number of crashes
+top_ops = df_map |>
   count(operator, sort = TRUE) |>
   slice(1:5) |>
   pull(operator)
 
 # Filter dataset for ONLY these operators
-df_top <- df_map |> 
+df_top = df_map |> 
   filter(operator %in% top_ops)
 
-# Color palette for the 5 operators
-pal <- colorFactor(
+#  palette for the 5 operators
+pal = colorFactor(
   palette = rainbow(length(top_ops)),
   domain = top_ops
 )

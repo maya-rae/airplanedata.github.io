@@ -1,14 +1,20 @@
 ---
-title: "Descriptive Statistics"
-date: "2025-11-22"
-output: html_document
+title: "Descriptive Statistics and Plots"
+output: 
+  html_document:
+    toc: true
+    toc_float: true 
+    code_folding: hide 
 editor_options: 
   chunk_output_type: console
 ---
 
-This file contains the final drafts of the plots we want to use in our website and the trends noted in each. 
+This file contains descriptive statistics plots and includes the data cleaning process involved with it.
 
-```{r, include=FALSE, message = FALSE, warning = FALSE}
+
+# Data Cleaning
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
 
 library(tidyverse)
 library(lubridate)
@@ -28,8 +34,9 @@ theme_set(theme_minimal() + theme(legend.position = "bottom"))
 
 ```
 
+If you would like to see some of our data cleaning methods, click "show" to show the code corresponding to each step of the process below: 
 
-# Loading and cleaning the data.
+1. Loading and cleaning the data
 
 ```{r}
 
@@ -42,7 +49,7 @@ airplane_df = read_csv("datasets/airplane_crashes_data.csv") |>
 
 ```
 
-Converting 2 digit years to four digit years.
+2. Converting 2 digit years to four digit years
 
 ```{r}
 airplane_df = airplane_df |> 
@@ -76,7 +83,7 @@ airplane_df = airplane_df |>
 
 ```
 
-Converting variables to their proper variable types.
+3. Converting variables to their proper variable types
 
 ```{r}
 
@@ -89,7 +96,7 @@ airplane_df = airplane_df |>
 
 ```
 
-Creating a decade column, now that year is numeric.
+4. Creating a decade column, now that year is numeric
 
 ```{r}
 airplane_df = airplane_df |> 
@@ -99,10 +106,16 @@ airplane_df = airplane_df |>
   ) |> 
   select(date, year, decade, month, month_name, everything()) 
 ```
+# Descriptive Statistics
+
+```{r}
+airplane_df |>
+  skimr::skim()
+```
 
 # Final Plots
 
-
+## Airplane Crashes Per Year
 ```{r}
 
 airplane_df |> 
@@ -125,6 +138,8 @@ airplane_df |>
 
 In the early years of flight, there were not as many airplanes in the sky, so the relatively low number of crashes from the early 1900s to 1940 make sense. Beginning in the late 1940s to early 50's, more people started flying, which coincides with an increase in crashes. The commercial jet service was introduced in 1952, which is where we see a steady increase in crashes after that.
 
+## Average Number of People on Planes per Year
+
 ```{r}
 airplane_df |> 
   group_by(year) |> 
@@ -145,6 +160,8 @@ airplane_df |>
 ```
 
 It is useful to see the general trends in the number of people on planes per year. Overall, there is a steady upward trend in the number of people on planes as air travel became more widely tested and popularity grew.
+
+## Top 15 Airline Operators with the Most Crashes
 
 ```{r}
 
@@ -168,6 +185,7 @@ airplane_df |>
 
 Aeroflot, the largest airline in Russia, is by far the commercial airline with the greatest crashes at `r airplane_df |>  filter(grepl("Aeroflot", operator, ignore.case = TRUE)) |> nrow()` total crashes. The U.S. Air Force, a military airline, comes in close second at `r airplane_df |> filter(grepl("Military - U.S. Air Force", operator, ignore.case = TRUE)) |> nrow()` total crashes.
 
+## Aircrafts with the Most Crashes 
 
 ```{r}
 airplane_df |> 
