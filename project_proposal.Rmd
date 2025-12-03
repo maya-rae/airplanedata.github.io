@@ -1,6 +1,5 @@
 ---
 title: "Project Proposal: Aviation Crash Data Analysis"
-date: "2025-11-06"
 output: html_document
 editor_options: 
   chunk_output_type: console

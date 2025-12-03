@@ -1,21 +1,24 @@
 ---
 title: "Fly High Project - Final Report"
-date: "2025-11-25"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true 
 editor_options: 
   chunk_output_type: console
 ---
 
 
-# Scientific Title
-Data Analysis of Aviation Crashes. 
+# Title
 
-# Group Members:
+Data Analysis of Aviation Crashes 
 
-  + Maya Arnott  
-  + Karolina Wiesiolek  
-  + Casandra Laney  
-  + Zichen Fan 
+# Group Members
+
+  * Maya Arnott  
+  * Karolina Wiesiolek  
+  * Casandra Laney  
+  * Zichen Fan 
 
 
 # Motivation 
@@ -68,9 +71,6 @@ As we started the project, our main questions were:
 
 
 As data exploration continued over the following weeks, additional questions were developed:
-=======
-As data exploration contiued over following weeks, additional questions were developed:
-
 
   * What is the best way to present the fatalities that occurred around the world? 
   * Are there notable geographic clusters of crashes? 
@@ -82,7 +82,8 @@ As data exploration contiued over following weeks, additional questions were dev
 ### Data Source:
 The dataset was sourced as a CSV file from Kaggle and stored in a datasets folder within our project directory. We read it into R using read_csv() and maintain all code in an R Project linked to a public GitHub repository for reproducibility. An additional dataset, created by our group, contains geocoded latitude and longitude information for each crash location. Because the Kaggle file lists location as text (e.g., “Paris, France” or “5 miles from Cairo”), our group geocoded each unique location string and stored the results in geocoded_cache.csv. This allowed us to build interactive maps.
 
-# Data and Exploratory analysis
+# Data and Exploratory Analysis
+
 ### Data Cleaning and Preparation
 Before performing geographic or temporal analysis, our dataset required substantial cleaning due to inconsistent formatting and missing coordinate data. We wrote the preprocessing code used throughout the analysis pipeline. It included four major steps:
 
@@ -187,7 +188,7 @@ This enabled an interactive interface where users can:
 ### Additional analysis 
 (If you undertake formal statistical analyses, describe these in detail)
 
-# Discussion:
+# Discussion
 In this final stage of the project, we returned to the questions from our Motivation and Initial Questions sections to reflect on what we learned. 
 
 The data and knowledge of the world demonstrates that as the total number of flights and passengers has increased over the decades, the aviation industry has become significantly safer due to stringent standards, advanced technology, and well-trained professionals. The absolute number of crashes has not risen in proportion to the volume of air traffic, meaning that the rate of accidents has fallen to historically low levels. 

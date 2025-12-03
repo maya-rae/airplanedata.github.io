@@ -1,7 +1,6 @@
 ---
 title: "Interactive Map"
 output: html_document
-date: "2025-11-22"
 ---
 
 ```{r, include=FALSE, echo=FALSE}
