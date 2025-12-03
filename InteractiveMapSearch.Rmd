@@ -1,7 +1,9 @@
 ---
 title: "Interactive Map"
-output: html_document
 date: "2025-11-22"
+output: 
+  html_document: 
+    code_folding: hide 
 ---
 
 ```{r, include=FALSE, echo=FALSE}

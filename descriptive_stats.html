@@ -10,14 +10,13 @@
 
 
 
-<meta name="date" content="2025-11-22" />
 
-<title>Descriptive Statistics</title>
+<title>Descriptive Statistics and Plots</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -30,8 +29,12 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
@@ -219,7 +222,73 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
 
 
 
@@ -229,6 +298,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -255,19 +334,16 @@ $(document).ready(function () {
   <a href="project_proposal.html">Project Proposal</a>
 </li>
 <li>
-  <a href="descriptive_stats.html">Descriptive Statistics</a>
+  <a href="descriptive_stats.html">Descriptive Statistics and Plots</a>
 </li>
 <li>
   <a href="exploratory_analysis.html">Exploratory Analysis</a>
 </li>
 <li>
-  <a href="ShinyDashboard2.html">Shiny Dashboard</a>
+  <a href="InteractiveMapSearch.html">Interactive Map Search</a>
 </li>
 <li>
   <a href="final_report.html">Final Report</a>
-</li>
-<li>
-  <a href="about.html">About</a>
 </li>
 <li>
   <a href="mailto:&lt;you@youremail.com&gt;">
@@ -288,18 +364,31 @@ $(document).ready(function () {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
-<h1 class="title toc-ignore">Descriptive Statistics</h1>
-<h4 class="date">2025-11-22</h4>
+
+<h1 class="title toc-ignore">Descriptive Statistics and Plots</h1>
 
 </div>
 
 
-<p>This file contains the final drafts of the plots we want to use in
-our website and the trends noted in each.</p>
-<div id="loading-and-cleaning-the-data." class="section level1">
-<h1>Loading and cleaning the data.</h1>
+<p>This file contains descriptive statistics plots and includes the data
+cleaning process involved with it.</p>
+<div id="data-cleaning" class="section level1">
+<h1>Data Cleaning</h1>
+<p>If you would like to see some of our data cleaning methods, click
+“show” to show the code corresponding to each step of the process
+below:</p>
+<ol style="list-style-type: decimal">
+<li>Loading and cleaning the data</li>
+</ol>
 <pre class="r"><code>airplane_df = read_csv(&quot;datasets/airplane_crashes_data.csv&quot;) |&gt; 
   janitor::clean_names() |&gt; 
   filter(ground != &quot;NULL&quot;, aboard != &quot;NULL&quot;) |&gt; 
@@ -314,7 +403,9 @@ our website and the trends noted in each.</p>
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<p>Converting 2 digit years to four digit years.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Converting 2 digit years to four digit years</li>
+</ol>
 <pre class="r"><code>airplane_df = airplane_df |&gt; 
   mutate(
     # remove leading and trailing spaces
@@ -343,14 +434,18 @@ our website and the trends noted in each.</p>
                               levels = month.abb)
   ) |&gt;
   select(-m, -d, -y, -date_clean)  # remove unnecessary columns</code></pre>
-<p>Converting variables to their proper variable types.</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Converting variables to their proper variable types</li>
+</ol>
 <pre class="r"><code>airplane_df = airplane_df |&gt; 
   mutate(
     aboard     = as.numeric(aboard),
     fatalities =  as.numeric(ground),
     operator   = as.factor(operator)  # to group by operator
     )</code></pre>
-<p>Creating a decade column, now that year is numeric.</p>
+<ol start="4" style="list-style-type: decimal">
+<li>Creating a decade column, now that year is numeric</li>
+</ol>
 <pre class="r"><code>airplane_df = airplane_df |&gt; 
   mutate(
     decade = floor(year / 10) * 10, 
@@ -358,8 +453,322 @@ our website and the trends noted in each.</p>
   ) |&gt; 
   select(date, year, decade, month, month_name, everything()) </code></pre>
 </div>
+<div id="descriptive-statistics" class="section level1">
+<h1>Descriptive Statistics</h1>
+<pre class="r"><code>airplane_df |&gt;
+  skimr::skim()</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">airplane_df</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">5236</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">14</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">6</td>
+</tr>
+<tr class="odd">
+<td align="left">Date</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">factor</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">5</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table style="width:100%;">
+<colgroup>
+<col width="19%" />
+<col width="13%" />
+<col width="19%" />
+<col width="5%" />
+<col width="6%" />
+<col width="8%" />
+<col width="12%" />
+<col width="15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">decade</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="right">0</td>
+<td align="right">11</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">location</td>
+<td align="right">19</td>
+<td align="right">1.00</td>
+<td align="right">5</td>
+<td align="right">60</td>
+<td align="right">0</td>
+<td align="right">4280</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">route</td>
+<td align="right">1686</td>
+<td align="right">0.68</td>
+<td align="right">4</td>
+<td align="right">59</td>
+<td align="right">0</td>
+<td align="right">3235</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">type</td>
+<td align="right">25</td>
+<td align="right">1.00</td>
+<td align="right">4</td>
+<td align="right">40</td>
+<td align="right">0</td>
+<td align="right">2435</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">cn_in</td>
+<td align="right">1209</td>
+<td align="right">0.77</td>
+<td align="right">1</td>
+<td align="right">20</td>
+<td align="right">0</td>
+<td align="right">3698</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">summary</td>
+<td align="right">382</td>
+<td align="right">0.93</td>
+<td align="right">6</td>
+<td align="right">1954</td>
+<td align="right">0</td>
+<td align="right">4652</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: Date</strong></p>
+<table>
+<colgroup>
+<col width="17%" />
+<col width="12%" />
+<col width="17%" />
+<col width="13%" />
+<col width="13%" />
+<col width="13%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="left">min</th>
+<th align="left">max</th>
+<th align="left">median</th>
+<th align="right">n_unique</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">date</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">1908-09-17</td>
+<td align="left">2009-06-08</td>
+<td align="left">1973-04-12</td>
+<td align="right">4723</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: factor</strong></p>
+<table>
+<colgroup>
+<col width="14%" />
+<col width="10%" />
+<col width="14%" />
+<col width="8%" />
+<col width="9%" />
+<col width="41%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="left">ordered</th>
+<th align="right">n_unique</th>
+<th align="left">top_counts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">month_name</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">TRUE</td>
+<td align="right">12</td>
+<td align="left">Dec: 513, Jan: 494, Aug: 472, Sep: 457</td>
+</tr>
+<tr class="even">
+<td align="left">operator</td>
+<td align="right">18</td>
+<td align="right">1</td>
+<td align="left">FALSE</td>
+<td align="right">2474</td>
+<td align="left">Aer: 179, Mil: 174, Air: 67, Deu: 65</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table style="width:100%;">
+<colgroup>
+<col width="16%" />
+<col width="12%" />
+<col width="16%" />
+<col width="9%" />
+<col width="7%" />
+<col width="6%" />
+<col width="6%" />
+<col width="6%" />
+<col width="6%" />
+<col width="6%" />
+<col width="7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">year</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1971.41</td>
+<td align="right">22.34</td>
+<td align="right">1908</td>
+<td align="right">1954</td>
+<td align="right">1973</td>
+<td align="right">1990</td>
+<td align="right">2009</td>
+<td align="left">▁▅▇▇▇</td>
+</tr>
+<tr class="even">
+<td align="left">month</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">6.64</td>
+<td align="right">3.54</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">7</td>
+<td align="right">10</td>
+<td align="right">12</td>
+<td align="left">▇▅▅▅▇</td>
+</tr>
+<tr class="odd">
+<td align="left">aboard</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">27.59</td>
+<td align="right">43.11</td>
+<td align="right">0</td>
+<td align="right">5</td>
+<td align="right">13</td>
+<td align="right">30</td>
+<td align="right">644</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">fatalities</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1.61</td>
+<td align="right">54.04</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">2750</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">ground</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1.61</td>
+<td align="right">54.04</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">2750</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div id="final-plots" class="section level1">
 <h1>Final Plots</h1>
+<div id="airplane-crashes-per-year" class="section level2">
+<h2>Airplane Crashes Per Year</h2>
 <pre class="r"><code>airplane_df |&gt; 
   group_by(year) |&gt; 
   summarize(total_crashes = n()) |&gt; 
@@ -376,13 +785,17 @@ our website and the trends noted in each.</p>
     axis.title = element_text(size = 14),  # keep axis titles
     axis.text  = element_text(size = 12)   # keep axis tick labels
   )</code></pre>
-<p><img src="descriptive_stats_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
+<p><img src="descriptive_stats_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
 <p>In the early years of flight, there were not as many airplanes in the
 sky, so the relatively low number of crashes from the early 1900s to
 1940 make sense. Beginning in the late 1940s to early 50’s, more people
 started flying, which coincides with an increase in crashes. The
 commercial jet service was introduced in 1952, which is where we see a
 steady increase in crashes after that.</p>
+</div>
+<div id="average-number-of-people-on-planes-per-year"
+class="section level2">
+<h2>Average Number of People on Planes per Year</h2>
 <pre class="r"><code>airplane_df |&gt; 
   group_by(year) |&gt; 
   summarize(avg_aboard = mean(aboard, na.rm = TRUE), .groups = &quot;drop&quot;) |&gt; 
@@ -399,11 +812,15 @@ steady increase in crashes after that.</p>
     axis.title = element_text(size = 14),  # keep axis titles
     axis.text  = element_text(size = 12)   # keep axis tick labels
   )</code></pre>
-<p><img src="descriptive_stats_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
+<p><img src="descriptive_stats_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
 <p>It is useful to see the general trends in the number of people on
 planes per year. Overall, there is a steady upward trend in the number
 of people on planes as air travel became more widely tested and
 popularity grew.</p>
+</div>
+<div id="top-15-airline-operators-with-the-most-crashes"
+class="section level2">
+<h2>Top 15 Airline Operators with the Most Crashes</h2>
 <pre class="r"><code>airplane_df |&gt; 
   group_by(operator) |&gt; 
   summarise(total_crashes = n(), .groups = &quot;drop&quot;) |&gt; 
@@ -420,11 +837,14 @@ popularity grew.</p>
   theme(
     axis.title = element_text(size = 14)
   ) </code></pre>
-<p><img src="descriptive_stats_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
+<p><img src="descriptive_stats_files/figure-html/unnamed-chunk-9-1.png" width="90%" /></p>
 <p>Aeroflot, the largest airline in Russia, is by far the commercial
 airline with the greatest crashes at 187 total crashes. The U.S. Air
 Force, a military airline, comes in close second at 182 total
 crashes.</p>
+</div>
+<div id="aircrafts-with-the-most-crashes" class="section level2">
+<h2>Aircrafts with the Most Crashes</h2>
 <pre class="r"><code>airplane_df |&gt; 
   filter(!is.na(type)) |&gt; 
   group_by(type) |&gt; 
@@ -442,7 +862,7 @@ crashes.</p>
   theme(
     axis.title = element_text(size = 14)
   ) </code></pre>
-<p><img src="descriptive_stats_files/figure-html/unnamed-chunk-9-1.png" width="90%" /></p>
+<p><img src="descriptive_stats_files/figure-html/unnamed-chunk-10-1.png" width="90%" /></p>
 <p>The Douglas DC-3 has had by far the most crashes out of all the
 aircraft types. Most of the planes in this graph are Douglas aircrafts.
 Interestingly, the Douglas DC-3 became the most successful airliner in
@@ -450,9 +870,12 @@ the formative years of air transformation, and was the first to fly
 profitably without government subsidy.</p>
 <p>Is there a certain place in the world that has the most crashes?</p>
 </div>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -484,7 +907,41 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

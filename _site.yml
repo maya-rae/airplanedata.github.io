@@ -7,16 +7,14 @@ navbar:
       href: index.html
     - text: "Project Proposal"
       href: project_proposal.html
-    - text: "Descriptive Statistics"
+    - text: "Descriptive Statistics and Plots"
       href: descriptive_stats.html
     - text: "Exploratory Analysis"
       href: exploratory_analysis.html
-    - text: "Shiny Dashboard"
-      href: ShinyDashboard2.html
+    - text: "Interactive Map Search"
+      href: InteractiveMapSearch.html
     - text: "Final Report"
       href: final_report.html
-    - text: "About"
-      href: about.html
     - icon: fa-envelope fa-lg
       href: mailto:<you@youremail.com>
     - icon: fa-github fa-lg
@@ -24,4 +22,5 @@ navbar:
 
 output:
   html_document:
-    theme: readable
+    theme: flatly
+    highlight: textmate
