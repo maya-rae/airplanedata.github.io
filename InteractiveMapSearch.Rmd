@@ -203,5 +203,3 @@ leaflet(df_top) |>
 
 ```
 
-
-
