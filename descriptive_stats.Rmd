@@ -113,10 +113,12 @@ airplane_df |>
   skimr::skim()
 ```
 
+Our dataset, `airplane_df`, has 5,236 rows and 14 variables (columns). Some variables had missing values, such as `location`, `route`, `type`, `cn_in`, `summary`, and `operator`, but our key numeric variables had no missing values. p0, p50, p75, and p100 represent the minimal value, the 25th percentile, median, the 75th percentile, and the maximum value, respectively. 
+
 # Final Plots
 
 ## Airplane Crashes Per Year
-```{r}
+```{r, fig.width=8, fig.height=5}
 
 airplane_df |> 
   group_by(year) |> 
@@ -140,7 +142,7 @@ In the early years of flight, there were not as many airplanes in the sky, so th
 
 ## Average Number of People on Planes per Year
 
-```{r}
+```{r, fig.width=8, fig.height=5}
 airplane_df |> 
   group_by(year) |> 
   summarize(avg_aboard = mean(aboard, na.rm = TRUE), .groups = "drop") |> 
@@ -163,7 +165,7 @@ It is useful to see the general trends in the number of people on planes per yea
 
 ## Top 15 Airline Operators with the Most Crashes
 
-```{r}
+```{r, fig.width=8, fig.height=5}
 
 airplane_df |> 
   group_by(operator) |> 
@@ -173,7 +175,7 @@ airplane_df |>
   geom_col(fill = "blue") +
   coord_flip() +
   labs(
-    title = "Top 15 Airline Operators with the Most Crashes",
+    title = "Top 15 Airline Operators with Most Crashes",
     x     = "Airline Operators",
     y     = "Number of Crashes"
   )  + 
@@ -187,7 +189,7 @@ Aeroflot, the largest airline in Russia, is by far the commercial airline with t
 
 ## Aircrafts with the Most Crashes 
 
-```{r}
+```{r, fig.width=8, fig.height=5}
 airplane_df |> 
   filter(!is.na(type)) |> 
   group_by(type) |> 
@@ -209,7 +211,21 @@ airplane_df |>
 
 The Douglas DC-3 has had by far the most crashes out of all the aircraft types. Most of the planes in this graph are Douglas aircrafts. Interestingly, the Douglas DC-3 became the most successful airliner in the formative years of air transformation, and was the first to fly profitably without government subsidy. 
 
+## Seasonal and Yearly Trends displayed on a Heat Map
 
+```{r, fig.width=8, fig.height=5}
 
-Is there a certain place in the world that has the most crashes? 
+# heatmap of crashes by year and month
+airplane_df |> 
+  count(decade, month_name) |>  # counts crashes in the decade/month
+  ggplot(aes(x = decade, y = month_name, fill = n)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "white", high = "red") +
+  labs(title = "Heatmap of Airplane Crashes by Year and Month",
+       x = "Deacde",
+       y = "Month",
+       fill = "Number of Crashes")
 
+```
+
+Based on this map, the 1970s, particularly the January, December, October, September, and August months have especially high numbers of crashes compared to other decades and months. July in the 1990s, also had a particularly high number of crashes, indicated by the darker red color. The monthly and seasonal trends will be looked at in more detail using ANOVA <a href="anova.html" target="_blank">here.</a>

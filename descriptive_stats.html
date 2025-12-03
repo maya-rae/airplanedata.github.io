@@ -337,9 +337,6 @@ div.tocify {
   <a href="descriptive_stats.html">Descriptive Statistics and Plots</a>
 </li>
 <li>
-  <a href="exploratory_analysis.html">Exploratory Analysis</a>
-</li>
-<li>
   <a href="InteractiveMapSearch.html">Interactive Map Search</a>
 </li>
 <li>
@@ -393,7 +390,7 @@ below:</p>
   # removes unnecessary columns for our analyses
   select(-flight_number, -time, - registration)</code></pre>
 <pre><code>## Rows: 5268 Columns: 13
-## ── Column specification ─────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (10): Date, Time, Location, Operator, Flight #, Route, Type, Registratio...
 ## dbl  (3): Aboard, Fatalities, Ground
@@ -826,7 +823,7 @@ class="section level2">
   geom_col(fill = &quot;blue&quot;) +
   coord_flip() +
   labs(
-    title = &quot;Top 15 Airline Operators with the Most Crashes&quot;,
+    title = &quot;Top 15 Airline Operators with Most Crashes&quot;,
     x     = &quot;Airline Operators&quot;,
     y     = &quot;Number of Crashes&quot;
   )  + 
@@ -865,7 +862,27 @@ aircraft types. Most of the planes in this graph are Douglas aircrafts.
 Interestingly, the Douglas DC-3 became the most successful airliner in
 the formative years of air transformation, and was the first to fly
 profitably without government subsidy.</p>
-<p>Is there a certain place in the world that has the most crashes?</p>
+</div>
+<div id="seasonal-and-yearly-trends-displayed-on-a-heat-map"
+class="section level2">
+<h2>Seasonal and Yearly Trends displayed on a Heat Map</h2>
+<pre class="r"><code># heatmap of crashes by year and month
+airplane_df |&gt; 
+  count(decade, month_name) |&gt;  # counts crashes in the decade/month
+  ggplot(aes(x = decade, y = month_name, fill = n)) +
+  geom_tile(color = &quot;white&quot;) +
+  scale_fill_gradient(low = &quot;white&quot;, high = &quot;red&quot;) +
+  labs(title = &quot;Heatmap of Airplane Crashes by Year and Month&quot;,
+       x = &quot;Deacde&quot;,
+       y = &quot;Month&quot;,
+       fill = &quot;Number of Crashes&quot;)</code></pre>
+<p><img src="descriptive_stats_files/figure-html/unnamed-chunk-11-1.png" width="90%" /></p>
+<p>Based on this map, the 1970s, particularly the January, December,
+October, September, and August months have especially high numbers of
+crashes compared to other decades and months. July in the 1990s, also
+had a particularly high number of crashes, indicated by the darker red
+color. The monthly and seasonal trends will be looked at in more detail
+using ANOVA <a href="anova.html" target="_blank">here.</a></p>
 </div>
 </div>
 
