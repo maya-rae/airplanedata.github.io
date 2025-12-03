@@ -88,11 +88,11 @@ The dataset was sourced as a CSV file from Kaggle and stored in a datasets folde
 Before performing geographic or temporal analysis, our dataset required substantial cleaning due to inconsistent formatting and missing coordinate data. We wrote the preprocessing code used throughout the analysis pipeline. It included four major steps:
 
 ### Analysis:
+
+# Interactive Map 
 1. Initial Cleaning of the Raw Dataset
 - "NULL" entries in numeric columns (aboard, ground)
 - Unnecessary textual variables (flight_number, time, registration)
-
-
 
 ```{r, eval=FALSE}
 airplane_df = read_csv("datasets/airplane_crashes_data.csv") |>
@@ -100,8 +100,6 @@ airplane_df = read_csv("datasets/airplane_crashes_data.csv") |>
   filter(ground != "NULL", aboard != "NULL") |>
   select(-flight_number, -time, -registration)
 ```
-
-
 
 This ensured that subsequent numerical processing would not break.
 
@@ -133,7 +131,6 @@ airplane_df = airplane_df |>
   ) |>
   select(-m, -d, -y, -date_clean)
 ```
-
 
 This step was essential because our interactive filters depend on having an accurate year variable and leaflet maps require a clean timeline for sorting or grouping crashes
 
@@ -177,7 +174,6 @@ To allow dynamic filtering without Shiny, I used the crosstalk package. This con
 - the filter widgets
 
 All components update simultaneously without reloading.
-
 
 ```{r, eval=FALSE}
 shared = SharedData$new(df_display, group = "crashes")
