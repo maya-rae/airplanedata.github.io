@@ -9,8 +9,6 @@ navbar:
       href: project_proposal.html
     - text: "Descriptive Statistics and Plots"
       href: descriptive_stats.html
-    - text: "Exploratory Analysis"
-      href: exploratory_analysis.html
     - text: "Interactive Map Search"
       href: InteractiveMapSearch.html
     - text: "ANOVA"
