@@ -1,6 +1,5 @@
 ---
 title: "Exploring the Data"
-date: "2025-11-18"
 output: 
   html_document: 
     code_folding: hide 
