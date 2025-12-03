@@ -60,7 +60,7 @@ df_map <- airplane_df |>
 
 ## Interactive Filters + Map and Table
 
-This interactive dashboard displays airplane crash locations using a linked map and data table. A filter panel allows users to dynamically select crashes by year, operator, and number of fatalities. Selecting a filter instantly updates both the map and the table through Crosstalk, without requiring Shiny. Each marker represents a crash event and includes detailed information in a popup.
+This interactive dashboard displays airplane crash locations using a linked map and data table. A filter panel allows users to dynamically select crashes by year, operator, and number of fatalities. Selecting a filter instantly updates both the map and the table through Crosstalk. Each marker represents a crash event and includes detailed information in a popup.
 
 ```{r, echo=FALSE}
 # crosstalk dataset
@@ -114,7 +114,7 @@ bscols(
       filter = "top",
       rownames = FALSE,
       options = list(
-        pageLength = 4,
+        pageLength = 2,
         lengthChange = FALSE,
         searching = TRUE,
         autoWidth = TRUE,
@@ -202,5 +202,6 @@ leaflet(df_top) |>
   )
 
 ```
+
 
 
