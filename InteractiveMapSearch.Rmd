@@ -1,6 +1,6 @@
 ---
 title: "Interactive Map"
-output: html_document
+output: github_document
 ---
 
 ```{r, include=FALSE, echo=FALSE}
