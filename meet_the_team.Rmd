@@ -118,3 +118,11 @@ Maya is a Master's Student in Environmental Health Data Science at Columbia Univ
 </div>
 </div>
 
+<div class="team-member">
+<img src="images/zichen_fan.jpg" alt="Zichen Fan">
+<h3>Zichen Fan</h3>
+<p>Collaborator</p>
+<div class="bio">
+Zichen graduated from Duke Kunshan University and is now studying Environmental Health Data Science at Columbia Mailman.
+</div>
+</div>
