@@ -30,7 +30,15 @@ knitr::opts_chunk$set(
   out.width = "90%"
   )
 
-theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+theme_set(
+  theme_fivethirtyeight() + 
+    theme(
+      axis.title = element_text(size = 14),
+      axis.text  = element_text(size = 12),
+      legend.position = "bottom"
+    )
+)
 
 ```
 
@@ -90,7 +98,8 @@ airplane_df = airplane_df |>
 airplane_df = airplane_df |> 
   mutate(
     aboard     = as.numeric(aboard),
-    fatalities =  as.numeric(ground),
+    fatalities =  as.numeric(fatalities),
+    ground     = as.numeric(ground),
     operator   = as.factor(operator)  # to group by operator
     )
 
@@ -117,51 +126,102 @@ Our dataset, `airplane_df`, has 5,236 rows and 14 variables (columns). Some vari
 
 # Final Plots
 
-## Airplane Crashes Per Year
+## Interactive Map of Airplane Crashes per Year
+
 ```{r, fig.width=8, fig.height=5}
 
 airplane_df |> 
-  group_by(year) |> 
-  summarize(total_crashes = n()) |> 
-  ggplot(aes(x = year, y = total_crashes)) + 
-  geom_line(color = "blue") +
-  geom_point(color = "darkblue") + 
-  labs(
-    title = "Airplane Crashes per Year",
-       x  = "Year",
-       y  = "Number of Crashes"
-    ) +
-  theme_fivethirtyeight() +
- theme(
-    axis.title = element_text(size = 14),  # keep axis titles
-    axis.text  = element_text(size = 12)   # keep axis tick labels
+  count(year) |> 
+  plot_ly(
+    x = ~year, 
+    y = ~n,
+    type = "scatter",
+    mode = "lines+markers",
+    hovertemplate = "Year: %{x}<br>Crashes: %{y}<extra></extra>"
+  ) |> 
+  layout(
+    title = list(
+      text = "Airplane Crashes per Year",
+      y    = 0.98,
+      font = list(size = 20)
+    ),
+      xaxis  = list(
+      title  = list(
+        text = "Year",
+        font = list(size = 16)
+      )
+      ),
+      yaxis  = list(
+      title  = list(
+        text = "Number of Crashes",
+        font = list(size = 16)
+      )
+    )
   )
 ```
 
 In the early years of flight, there were not as many airplanes in the sky, so the relatively low number of crashes from the early 1900s to 1940 make sense. Beginning in the late 1940s to early 50's, more people started flying, which coincides with an increase in crashes. The commercial jet service was introduced in 1952, which is where we see a steady increase in crashes after that.
 
-## Average Number of People on Planes per Year
+## Number of People Aboard per Crash per Year
 
 ```{r, fig.width=8, fig.height=5}
-airplane_df |> 
+
+plot_ly(
+  data = airplane_df,
+  x = ~year,
+  y = ~aboard,
+  type = 'scatter',
+  mode = 'markers',
+  marker = list(color = 'orange', size = 6),
+  text = ~paste("Crash Year:", year, "<br>People Aboard:", aboard),
+  hoverinfo = 'text'
+) |> 
+  layout(
+    title = "Number of People Aboard per Crash Over Time",
+    xaxis = list(title = "Year"),
+    yaxis = list(title = "People Aboard")
+  )
+
+```
+
+It is useful to see the general trends in the number of people on planes that crashed per year. Overall, there is a steady upward trend in the number of people on the crashed planes as aircrafts could hold more people.
+
+## Average Fatality Rate per Year
+
+I have excluded the year 2001, which was an outlier and had 5,641 fatalities, because of the 9/11 attacks.
+
+```{r, fig.width=8, fig.height=5}
+# calculate the avg fatality rate per year
+fatality_trends = airplane_df |> 
+  filter (aboard > 0) |> 
+  filter(year != 2001) |> 
+  mutate(fatality_rate = fatalities/aboard) |>   
   group_by(year) |> 
-  summarize(avg_aboard = mean(aboard, na.rm = TRUE), .groups = "drop") |> 
-  ggplot(aes(x = year, y = avg_aboard)) +
-  geom_line(color = "darkorange", size = 1) +
-  geom_point(color = "orange", size = 2) +
-  labs(
-    title = "Average Number of People on Planes per Year",
-    x     = "Year",
-    y     = "Average Number of People"
-  ) +
-  theme_fivethirtyeight() +
-  theme(
-    axis.title = element_text(size = 14),  # keep axis titles
-    axis.text  = element_text(size = 12)   # keep axis tick labels
+  summarize(avg_fatality_rate = mean(fatality_rate, na.rm = TRUE),
+            n_crashes = n())
+  
+# plot the trends interactively
+plot_ly(
+  data = fatality_trends,
+  x = ~year,
+  y = ~avg_fatality_rate,
+  type = 'scatter',
+  mode = 'lines+markers',
+  line = list(color = 'blue', width = 2),
+  marker = list(color = 'blue', size = 6),
+  text = ~paste("Year:", year,
+                "<br>Avg Fatality Rate:", round(avg_fatality_rate, 3),
+                "<br>Number of Crashes:", n_crashes),
+  hoverinfo = 'text'
+) |> 
+  layout(
+    title = "Average Fatality Rate per Airplane Crash Over Years",
+    xaxis = list(title = "Year"),
+    yaxis = list(title = "Average Fatality Rate")
   )
 ```
 
-It is useful to see the general trends in the number of people on planes per year. Overall, there is a steady upward trend in the number of people on planes as air travel became more widely tested and popularity grew.
+The average airplane fatality rate per year was as high as 100% in the 1910s and 1920s and shows a downward trend as the years progress, showing that, when there is a crash, there are less fatalities on the airplane. Although, the percentage is still well above 50%.
 
 ## Top 15 Airline Operators with the Most Crashes
 
@@ -175,13 +235,9 @@ airplane_df |>
   geom_col(fill = "blue") +
   coord_flip() +
   labs(
-    title = "Top 15 Airline Operators with Most Crashes",
+    title = "Airline Operators with Most Crashes",
     x     = "Airline Operators",
     y     = "Number of Crashes"
-  )  + 
-  theme_fivethirtyeight() +
-  theme(
-    axis.title = element_text(size = 14)
   ) 
 ```
 
@@ -202,11 +258,7 @@ airplane_df |>
     title = "Aircrafts with the Most Crashes",
     x     = "Number of Crashes",
     y     = "Aircraft Type"
-  ) +  
-  theme_fivethirtyeight() +
-  theme(
-    axis.title = element_text(size = 14)
-  ) 
+  )
 ```
 
 The Douglas DC-3 has had by far the most crashes out of all the aircraft types. Most of the planes in this graph are Douglas aircrafts. Interestingly, the Douglas DC-3 became the most successful airliner in the formative years of air transformation, and was the first to fly profitably without government subsidy. 
