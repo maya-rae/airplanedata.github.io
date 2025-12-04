@@ -274,7 +274,7 @@ airplane_df |>
   geom_tile(color = "white") +
   scale_fill_gradient(low = "white", high = "red") +
   labs(title = "Heatmap of Airplane Crashes by Year and Month",
-       x = "Deacde",
+       x = "Decade",
        y = "Month",
        fill = "Number of Crashes")
 
