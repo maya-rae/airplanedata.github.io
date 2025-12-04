@@ -11,7 +11,7 @@
 
 
 
-<title>ANOVA</title>
+<title>Statistical Analysis</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -346,6 +346,9 @@ div.tocify {
   <a href="final_report.html">Final Report</a>
 </li>
 <li>
+  <a href="meet_the_team.html">Meet the Team</a>
+</li>
+<li>
   <a href="https://github.com/maya-rae/airplanedata.github.io.git">
     <span class="fa fa-github fa-lg"></span>
      
@@ -368,7 +371,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">ANOVA</h1>
+<h1 class="title toc-ignore">Statistical Analysis</h1>
 
 </div>
 
@@ -376,65 +379,301 @@ div.tocify {
 <p>This file contains ANOVA and respective post-hoc tests of the
 dataset.</p>
 <p>Load &amp; Clean Data</p>
-<pre class="r"><code>airplane_df = read_csv(&quot;datasets/airplane_crashes_data.csv&quot;) |&gt; 
-  janitor::clean_names() |&gt; 
-  filter(ground != &quot;NULL&quot;, aboard != &quot;NULL&quot;) |&gt; 
-
-  # removes unnecessary columns for our analyses
-  select(-flight_number, -time, - registration)</code></pre>
 <pre><code>## Rows: 5268 Columns: 13
-## ── Column specification ─────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (10): Date, Time, Location, Operator, Flight #, Route, Type, Registratio...
 ## dbl  (3): Aboard, Fatalities, Ground
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>airplane_df = 
-  airplane_df |&gt; 
-  mutate(
-    # remove leading and trailing spaces
-    date = str_trim(date),
-    
-    # extract month, day, and year from the date string
-    m = as.numeric(sub(&quot;/.*&quot;, &quot;&quot;, date)),                    
-    d = as.numeric(sub(&quot;.*/(.*)/.*&quot;, &quot;\\1&quot;, date)),          
-    y = as.numeric(sub(&quot;.*/(.*)$&quot;, &quot;\\1&quot;, date)),            
-    
-    # convert 2-digit years (&lt;100) to 4-digit (1900s)
-    y = ifelse(y &lt; 100, y + 1900, y),
-    
-    # rebuild the string
-    date_clean = paste(m, d, y, sep = &quot;/&quot;),
-    
-    # convert to Date type
-    date = mdy(date_clean),
-    
-    # extract numeric year and month
-    year = year(date),
-    month = month(date),
-    month_name = factor(month(date, 
-                              label = TRUE, 
-                              abbr = TRUE), 
-                              levels = month.abb)
-  ) |&gt;
-  select(-m, -d, -y, -date_clean)  # remove unnecessary columns
-
-airplane_df = 
-  airplane_df |&gt; 
-  mutate(
-    aboard     = as.numeric(aboard),
-    fatalities =  as.numeric(ground),
-    operator   = as.factor(operator)  # to group by operator
-    )
-
-airplane_df = 
-  airplane_df |&gt; 
+<pre class="r"><code>airplane_df = airplane_df |&gt; 
   mutate(
     decade = floor(year / 10) * 10, 
     decade = paste0(decade, &quot;s&quot;)
   ) |&gt; 
   select(date, year, decade, month, month_name, everything()) </code></pre>
+<hr />
+<div
+id="are-total-airplane-crashes-evenly-distributed-across-the-four-seasons"
+class="section level2">
+<h2>Are total airplane crashes evenly distributed across the four
+seasons?</h2>
+<pre class="r"><code>airplane_season = airplane_df |&gt;
+  filter(aboard &gt; 0, !is.na(fatalities)) |&gt; 
+  mutate(
+    survival_rate = (aboard - fatalities) / aboard,
+    month_num     = month(date),
+    season = case_when(
+      month_num %in% c(12, 1, 2)  ~ &quot;Winter&quot;,
+      month_num %in% c(3, 4, 5)   ~ &quot;Spring&quot;,
+      month_num %in% c(6, 7, 8)   ~ &quot;Summer&quot;,
+      month_num %in% c(9, 10, 11) ~ &quot;Fall&quot;
+    )
+  ) |&gt;
+  filter(!is.na(season)) |&gt;
+  mutate(season = fct_relevel(season, &quot;Spring&quot;, &quot;Summer&quot;, &quot;Fall&quot;, &quot;Winter&quot;))
+
+season_summary = airplane_season |&gt;
+  # ---- seasonal crash counts ----
+  count(season, name = &quot;n&quot;) |&gt;
+
+  # ---- compute expected + chisq ----
+  mutate(
+    expected = mean(n),
+    chisq = list(chisq.test(n)),
+    residual = n - expected,
+    std_resid = (n - expected) / sqrt(expected)
+  )|&gt; print()</code></pre>
+<pre><code>## # A tibble: 4 × 6
+##   season     n expected chisq   residual std_resid
+##   &lt;fct&gt;  &lt;int&gt;    &lt;dbl&gt; &lt;list&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Spring  1194    1308. &lt;htest&gt;   -114.     -3.17 
+## 2 Summer  1283    1308. &lt;htest&gt;    -25.5    -0.705
+## 3 Fall    1357    1308. &lt;htest&gt;     48.5     1.34 
+## 4 Winter  1400    1308. &lt;htest&gt;     91.5     2.53</code></pre>
+<pre class="r"><code># extract p-value
+chisq_p = season_summary$chisq[[1]]$p.value
+chisq_p</code></pre>
+<pre><code>## [1] 0.0003135229</code></pre>
+<pre class="r"><code># ---- plot ----
+season_summary |&gt;
+  ggplot(aes(season, n)) +
+  geom_col(fill = &quot;steelblue&quot;) +
+  geom_hline(aes(yintercept = expected),
+             linetype = &quot;dashed&quot;, size = 1) +
+  labs(
+    title = &quot;Total Crashes by Season&quot;,
+    subtitle = paste(&quot;Chi-Square p-value =&quot;, format.pval(chisq_p)),
+    x = &quot;Season&quot;,
+    y = &quot;Total Number of Crashes&quot;
+  ) +
+  theme_minimal() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="ANOVA_files/figure-html/chisq%20for%20crash%20distribution%20across%20season-1.png" width="90%" /></p>
+</div>
+<div id="does-the-average-yearly-crashes-differ-across-four-seasons"
+class="section level2">
+<h2>Does the average yearly crashes differ across four seasons?</h2>
+<pre class="r"><code>cat(&quot;=== ANOVA result ===\n&quot;)</code></pre>
+<pre><code>## === ANOVA result ===</code></pre>
+<pre class="r"><code>airplane_season |&gt; 
+  # Count crashes per year/season combo
+  count(year, season, name = &quot;crash_count&quot;)|&gt;
+
+# ANOVA 
+aov(crash_count ~ season, data = _) |&gt; 
+  summary()</code></pre>
+<pre><code>##              Df Sum Sq Mean Sq F value Pr(&gt;F)  
+## season        3    433  144.25   2.815 0.0391 *
+## Residuals   370  18963   51.25                 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code># ---- plot ----
+ airplane_season |&gt; 
+  count(year, season, name = &quot;crash_count&quot;)|&gt;
+  group_by(season) |&gt;
+  summarise(
+    mean_crashes = mean(crash_count),
+    se = sd(crash_count) / sqrt(n())
+  ) |&gt;
+  ggplot(aes(x = season, y = mean_crashes)) +
+  geom_col(fill = &quot;steelblue&quot;,show.legend = FALSE) +
+  geom_errorbar(aes(ymin = mean_crashes - se,
+                    ymax = mean_crashes + se),
+                width = 0.15) +
+  labs(
+    title = &quot;Average Yearly Airplane Crashes by Season&quot;,
+        x = &quot;Season&quot;,
+    y = &quot;Average Crash Count&quot;
+  ) +
+  theme_minimal()</code></pre>
+<p><img src="ANOVA_files/figure-html/anova%20for%20seaonal%20crashes%20per%20year-1.png" width="90%" /></p>
+</div>
+<div id="what-about-seasonale-differences-of-fatality-rate"
+class="section level2">
+<h2>What about seasonale differences of fatality rate?</h2>
+<p>No significant evidence suggest there’s seasonal differences of
+fatality rate</p>
+<pre class="r"><code>cat(&quot;=== ANOVA result ===\n&quot;)</code></pre>
+<pre><code>## === ANOVA result ===</code></pre>
+<pre class="r"><code>airplane_season|&gt;
+ ##ANOVA
+aov(survival_rate ~ season, data = _ )|&gt;
+summary()</code></pre>
+<pre><code>##               Df Sum Sq Mean Sq F value Pr(&gt;F)
+## season         3    0.5 0.17340   1.942  0.121
+## Residuals   5230  467.1 0.08931</code></pre>
+</div>
+<div id="is-the-fatality-rate-lower-over-the-years"
+class="section level2">
+<h2>Is the fatality rate lower over the years?</h2>
+<p>Statistical evidence confirms that airplane has become safer over
+time regarding survivability. linear regression analysis reveals a
+statistically significant negative correlation between year and fatality
+rate (p &lt; 0.001). However, the low R-squared value (0.004) indicates
+that while the downward trend is consistent, the outcome of any
+individual crash is heavily influenced by situational factors other than
+just the time period.</p>
+<pre class="r"><code> airplane_df |&gt; 
+  filter(aboard &gt; 0, !is.na(fatalities)) |&gt; 
+  mutate(fatality_rate = fatalities / aboard) |&gt; 
+  group_by(year) |&gt; 
+  summarise(mean_fatality_rate = mean(fatality_rate)) |&gt; 
+  ggplot(aes(x = year, y = mean_fatality_rate)) +
+  geom_point(color = &quot;steelblue&quot;, alpha = 0.6) +
+  geom_smooth(method = &quot;lm&quot;, color = &quot;red&quot;, fill = &quot;pink&quot;,se = TRUE) +
+  labs(
+    title = &quot;Trend in Airplane Fatality Rate Over Time&quot;,,
+    x = &quot;Year&quot;,
+    y = &quot;Average Fatality Rate&quot;
+  ) +
+  theme_minimal()</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="ANOVA_files/figure-html/lm%20year%20~%20fatality-1.png" width="90%" /></p>
+<pre class="r"><code> airplane_df|&gt;
+  filter(aboard &gt; 0, !is.na(fatalities)) |&gt; 
+  
+  ## Calculate fatality rate
+  mutate(fatality_rate = fatalities / aboard) |&gt; 
+  ## for individual event
+ lm(fatality_rate ~ year, data = _)|&gt; summary()</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = fatality_rate ~ year, data = mutate(filter(airplane_df, 
+##     aboard &gt; 0, !is.na(fatalities)), fatality_rate = fatalities/aboard))
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.87369 -0.03091  0.15034  0.17330  0.19754 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  2.5264723  0.3639697   6.941 4.35e-12 ***
+## year        -0.0008581  0.0001846  -4.648 3.43e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.2983 on 5232 degrees of freedom
+## Multiple R-squared:  0.004113,   Adjusted R-squared:  0.003922 
+## F-statistic: 21.61 on 1 and 5232 DF,  p-value: 3.428e-06</code></pre>
+</div>
+<div id="is-the-number-of-crash-event-higher-or-lower-over-the-years"
+class="section level2">
+<h2>Is the number of crash event higher or lower over the years?</h2>
+<pre class="r"><code>crashes_by_year = airplane_df |&gt; 
+  count(year, name = &quot;total_crashes&quot;)
+
+ggplot(crashes_by_year, aes(x = year, y = total_crashes)) +
+  geom_point(color = &quot;steelblue&quot;, alpha = 0.6) +
+  geom_smooth(method = &quot;lm&quot;, color = &quot;red&quot;, fill = &quot;pink&quot;) +
+  labs(
+    title = &quot;Trend of Total Airplane Crashes per Year&quot;,
+    x = &quot;Year&quot;,
+    y = &quot;Total Number of Crashes&quot;
+  ) +
+  theme_minimal()</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="ANOVA_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
+<pre class="r"><code>fit_count &lt;- lm(total_crashes ~ year, data = crashes_by_year)
+
+summary(fit_count)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = total_crashes ~ year, data = crashes_by_year)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -65.727 -12.685  -0.066  11.661  42.168 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -1.372e+03  1.258e+02  -10.90   &lt;2e-16 ***
+## year         7.269e-01  6.415e-02   11.33   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 18.03 on 96 degrees of freedom
+## Multiple R-squared:  0.5722, Adjusted R-squared:  0.5677 
+## F-statistic: 128.4 on 1 and 96 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div id="cross-validation-linear-vs-pwl-vs-smooth"
+class="section level2">
+<h2>Cross validation : linear vs pwl vs smooth</h2>
+<pre class="r"><code>crashes_by_year     = airplane_df |&gt; 
+  count(year, name  = &quot;total_crashes&quot;)|&gt;
+  mutate(year_cp1990= (year &gt; 1990) * (year - 1990))
+
+set.seed(1)
+cv_df = crossv_mc(crashes_by_year, 100)
+
+linear_mod = lm(total_crashes ~ year, data = crashes_by_year)
+pwl_mod    = lm(total_crashes ~ year + year_cp1990, data = crashes_by_year)
+smooth_mod = gam(total_crashes ~ s(year), data = crashes_by_year)
+## compare 3 models
+## visually smooth mod is better
+crashes_by_year |&gt; 
+  gather_predictions(linear_mod, pwl_mod, smooth_mod) |&gt; 
+  mutate(model = fct_inorder(model)) |&gt; 
+  ggplot(aes(x = year, y = total_crashes)) + 
+  geom_point(alpha = .5) +
+  geom_line(aes(y = pred), color = &quot;red&quot;) + 
+  facet_grid(~model)</code></pre>
+<p><img src="ANOVA_files/figure-html/cross%20validation-1.png" width="90%" /></p>
+<pre class="r"><code>cv_df &lt;- cv_df |&gt; 
+  mutate(
+    train = map(train, as_tibble),
+    test  = map(test, as_tibble)
+  ) |&gt; 
+  mutate(
+    
+    linear_mod = map(train, \(df) lm(total_crashes ~ year, data = df)),
+    pwl_mod     = map(train, \(df) lm(total_crashes ~ year + year_cp1990, data = df)),
+    smooth_mod = map(train, \(df) gam(total_crashes ~ s(year), data = df))
+  ) |&gt; 
+  mutate(
+    # calculate RMSE
+    rmse_linear = map2_dbl(linear_mod, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_pwl   = map2_dbl(pwl_mod, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_smooth = map2_dbl(smooth_mod, test, \(mod, df) rmse(model = mod, data = df))
+  )
+
+
+cv_df |&gt; 
+  select(starts_with(&quot;rmse&quot;)) |&gt; 
+  pivot_longer(
+    everything(),
+    names_to = &quot;model&quot;, 
+    values_to = &quot;rmse&quot;,
+    names_prefix = &quot;rmse_&quot;
+  ) |&gt; 
+  mutate(model = fct_inorder(model)) |&gt; 
+  ggplot(aes(x = model, y = rmse)) + 
+  geom_violin()</code></pre>
+<p><img src="ANOVA_files/figure-html/cross%20validation-2.png" width="90%" /></p>
+<pre class="r"><code>summary(smooth_mod)</code></pre>
+<pre><code>## 
+## Family: gaussian 
+## Link function: identity 
+## 
+## Formula:
+## total_crashes ~ s(year)
+## 
+## Parametric coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   53.429      1.037    51.5   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Approximate significance of smooth terms:
+##           edf Ref.df     F p-value    
+## s(year) 8.399    8.9 67.13  &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## R-sq.(adj) =   0.86   Deviance explained = 87.2%
+## GCV = 116.67  Scale est. = 105.48    n = 98</code></pre>
+</div>
 
 
 
