@@ -48,7 +48,7 @@ If you would like to see some of our data cleaning methods, click "show" to show
 
 ```{r}
 
-airplane_df = read_csv("datasets/airplane_crashes_data.csv") |> 
+airplane_df = read_csv("datasets/airplane_crashes_data.csv", show_col_types = FALSE) |> 
   janitor::clean_names() |> 
   filter(ground != "NULL", aboard != "NULL") |> 
 
