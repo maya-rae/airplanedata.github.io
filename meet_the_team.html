@@ -11,7 +11,7 @@
 
 
 
-<title>Project Proposal: Aviation Crash Data Analysis</title>
+<title>Meet the Team</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,7 +29,11 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
@@ -218,7 +222,73 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
 
 
 
@@ -228,6 +298,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -266,6 +346,9 @@ $(document).ready(function () {
   <a href="final_report.html">Final Report</a>
 </li>
 <li>
+  <a href="meet_the_team.html">Meet the Team</a>
+</li>
+<li>
   <a href="https://github.com/maya-rae/airplanedata.github.io.git">
     <span class="fa fa-github fa-lg"></span>
      
@@ -278,61 +361,141 @@ $(document).ready(function () {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
-<h1 class="title toc-ignore">Project Proposal: Aviation Crash Data
-Analysis</h1>
+
+<h1 class="title toc-ignore">Meet the Team</h1>
 
 </div>
 
 
-<p>authors:<br />
-- Maya Arnott<br />
-- Karolina Wiesiolek<br />
-- Casandra Laney<br />
-- Zichen Fan</p>
-<p><strong>Tentative Title: “Fly High”</strong></p>
-<p><strong>Motivation</strong>: In recent years it seems that news
-coverage on airplane crashes have increased, with plane crashes posing
-as “click bait”. We are interested in assessing how airplane crashes
-have changed in severity and quantity over time and seasons of the
-year.</p>
-<p><strong>Intended Final Products</strong>: A website with our report,
-link to our explanatory video, and visualization of trends, risks, and
-potentially explore predictors of severe or fatal crashes.</p>
-<p><strong>Anticipated Data Sources</strong>: <a
-href="https://www.kaggle.com/datasets/anandkushawaha/aviation-crashed-flights-data/data">Aviation
-Crashed Flights Data</a> on Kaggle.com and potentially use NOAA Climate
-data</p>
-<p><strong>Planned Analyses/Visualizations</strong>:<br />
-- Understand which aircraft types/models have the most crashes or
-fatalities<br />
-- Rank airlines/operators by frequency or severity of crashes<br />
-- Assess whether crashes are more common in certain seasons<br />
-- Historical crash data vs their 2024 delay performance: do airlines
-with higher delays also have more historical safety incidents?<br />
-- Temporal safety trends: how has crash frequency changed over
-decades</p>
-<p><strong>Coding Challenges</strong>:<br />
-- Converting crash location (airport name) in data cell to a location on
-the map<br />
-- Deciding how large the map will be (U.S. vs. whole world data)<br />
-- Deciding which data to exclude</p>
-<p><strong>Planned Timeline</strong><br />
-- First week of November: Pick our topic, start the data collection and
-decipher data columns<br />
-- Second week of November: Clean data and perform initial preliminary
-analysis/exploration<br />
-- Third week of November: Continue to explore trends over time, across
-airlines, across the U.S and start making visualizations<br />
-- Fourth week of November: Make histograms, scatterplots, and spatial
-leaflet plots<br />
-- First week of December: Finalize analyses and write the report<br />
-- Second week of December: Finish writing the report and finalize the
-project</p>
+<style>
+/* Container for all team members */
+.team-container {
+display: flex;
+flex-wrap: wrap;
+gap: 30px;
+justify-content: center;
+margin-top: 20px;
+}
+
+/* Individual team member card */
+.team-member {
+position: relative;        
+text-align: center;
+max-width: 180px;
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+cursor: pointer;              
+}
+
+/* Circular headshots */
+.team-member img {
+width: 150px;
+height: 150px;
+border-radius: 50%;
+object-fit: cover;
+border: 2px solid #ccc;
+box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover zoom + shadow */
+.team-member img:hover {
+transform: scale(1.1);
+box-shadow: 0px 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Name and role */
+.team-member h3 {
+margin: 10px 0 0 0;
+font-size: 1.1em;
+}
+
+.team-member p {
+margin: 2px 0 0 0;
+font-size: 0.9em;
+color: #555;
+}
+
+/* Bio popup */
+.team-member .bio {
+visibility: hidden;                 /* hidden by default */
+opacity: 0;
+width: 220px;                       /* adjust as needed */
+background-color: rgba(0,0,0,0.95);
+color: #fff;
+text-align: center;
+padding: 10px;
+border-radius: 8px;
+position: absolute;
+bottom: 100%;                        /* appear above the card */
+left: 50%;
+transform: translateX(-50%);
+z-index: 1;
+transition: opacity 0.3s ease;
+font-size: 0.9em;
+pointer-events: none;               /* prevents flicker on hover */
+}
+
+/* Arrow under the popup */
+.team-member .bio::after {
+content: "";
+position: absolute;
+top: 100%;
+left: 50%;
+margin-left: -6px;
+border-width: 6px;
+border-style: solid;
+border-color: rgba(0,0,0,0.85) transparent transparent transparent;
+}
+
+/* Show popup on hover */
+.team-member:hover .bio {
+visibility: visible;
+opacity: 1;
+}
+</style>
+<p>Thank you for checking out our Aviation Crash Analysis project! Here
+you can meet the team behind this project!</p>
+<div class="team-container">
+<div class="team-member">
+<img src="images/maya_arnott.jpg" alt="Maya Arnott">
+<h3>
+Maya Arnott
+</h3>
+<p>
+Collaborator
+</p>
+<div class="bio">
+<p>Maya is a Master’s Student in Environmental Health Data Science at
+the Columbia University’s Mailman School of Public Health.</p>
+</div>
+</div>
+<div class="team-member">
+<img src="images/.jpg" alt="XX">
+<h3>
+XX
+</h3>
+<p>
+Collaborator
+</p>
+<div class="bio">
+
+</div>
+</div>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -364,7 +527,41 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

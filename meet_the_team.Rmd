@@ -1,0 +1,120 @@
+---
+title: "Meet the Team"
+output: 
+  html_document:
+    toc: true
+    toc_float: true 
+    code_folding: hide 
+editor_options: 
+  chunk_output_type: console
+
+---
+<style>
+/* Container for all team members */
+.team-container {
+display: flex;
+flex-wrap: wrap;
+gap: 30px;
+justify-content: center;
+margin-top: 20px;
+}
+
+/* Individual team member card */
+.team-member {
+position: relative;        
+text-align: center;
+max-width: 180px;
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+cursor: pointer;              
+}
+
+/* Circular headshots */
+.team-member img {
+width: 150px;
+height: 150px;
+border-radius: 50%;
+object-fit: cover;
+border: 2px solid #ccc;
+box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover zoom + shadow */
+.team-member img:hover {
+transform: scale(1.1);
+box-shadow: 0px 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Name and role */
+.team-member h3 {
+margin: 10px 0 0 0;
+font-size: 1.1em;
+}
+
+.team-member p {
+margin: 2px 0 0 0;
+font-size: 0.9em;
+color: #555;
+}
+
+/* Bio popup */
+.team-member .bio {
+visibility: hidden;                 /* hidden by default */
+opacity: 0;
+width: 220px;                       /* adjust as needed */
+background-color: rgba(0,0,0,0.95);
+color: #fff;
+text-align: center;
+padding: 10px;
+border-radius: 8px;
+position: absolute;
+bottom: 100%;                        /* appear above the card */
+left: 50%;
+transform: translateX(-50%);
+z-index: 1;
+transition: opacity 0.3s ease;
+font-size: 0.9em;
+pointer-events: none;               /* prevents flicker on hover */
+}
+
+/* Arrow under the popup */
+.team-member .bio::after {
+content: "";
+position: absolute;
+top: 100%;
+left: 50%;
+margin-left: -6px;
+border-width: 6px;
+border-style: solid;
+border-color: rgba(0,0,0,0.85) transparent transparent transparent;
+}
+
+/* Show popup on hover */
+.team-member:hover .bio {
+visibility: visible;
+opacity: 1;
+}
+</style>
+
+
+Thank you for checking out our Aviation Crash Analysis project! Here you can meet the team behind this project!
+
+<div class="team-container">
+<div class="team-member">
+<img src="images/maya_arnott.jpg" alt="Maya Arnott">
+<h3>Maya Arnott</h3>
+<p>Collaborator</p>
+<div class="bio">
+Maya is a Master's Student in Environmental Health Data Science at Columbia University's Mailman School of Public Health.
+</div>
+</div>
+
+<div class="team-member">
+<img src="images/.jpg" alt="XX">
+<h3>XX</h3>
+<p>Collaborator</p>
+<div class="bio">
+  
+</div>
+</div>
+
