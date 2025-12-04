@@ -15,6 +15,8 @@ navbar:
       href: ANOVA.html    
     - text: "Final Report"
       href: final_report.html
+    - text: "Meet the Team"
+      href: meet_the_team.html
     - icon: fa-github fa-lg
       href: https://github.com/maya-rae/airplanedata.github.io.git
 
