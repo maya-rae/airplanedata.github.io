@@ -158,68 +158,10 @@ airplane_df = airplane_df |>
 ### Analysis:
 
 # Interactive Map 
-1. Initial Cleaning of the Raw Dataset
-- "NULL" entries in numeric columns (aboard, ground)
-- Unnecessary textual variables (flight_number, time, registration)
 
-```{r, eval=FALSE}
-airplane_df = read_csv("datasets/airplane_crashes_data.csv") |>
-  clean_names() |>
-  filter(ground != "NULL", aboard != "NULL") |>
-  select(-flight_number, -time, -registration)
-```
+Data cleaning process was the same across all group member. Once done, I moved on to creating interactive maps. Below, I am providing an overview of those steps. 
 
-This ensured that subsequent numerical processing would not break.
-
-2. Parsing and Standardizing Dates
-
-The original “date” column had inconsistent formatting (e.g., 3/4/78, 12/9/2001, 1/3/35). 
-To prepare the variable for filtering and mapping, we:
-
-- extracted the crash month using regex  
-- extracted the crash day using regex  
-- extracted the crash year using regex  
-- converted 2-digit years into 4-digit format  
-- reconstructed a consistent date string  
-- converted the string into a real `Date` object  
-- extracted the year for filtering and mapping  
-
-
-```{r, eval=FALSE}
-airplane_df = airplane_df |>
-  mutate(
-    date = str_trim(date),
-    m = as.numeric(sub("/.*", "", date)),
-    d = as.numeric(sub(".*/(.*)/.*", "\\1", date)),
-    y = as.numeric(sub(".*/(.*)$", "\\1", date)),
-    y = ifelse(y < 100, y + 1900, y),
-    date_clean = paste(m, d, y, sep = "/"),
-    date = mdy(date_clean),
-    year = year(date)
-  ) |>
-  select(-m, -d, -y, -date_clean)
-```
-
-This step was essential because our interactive filters depend on having an accurate year variable and leaflet maps require a clean timeline for sorting or grouping crashes
-
-3. Converting numeric variables:
-Some numeric columns were stored as text and needed conversion:
-
-```{r, eval=FALSE}
-airplane_df = airplane_df |>
-  mutate(
-    aboard     = as.numeric(aboard),
-    fatalities = as.numeric(fatalities),
-    ground     = as.numeric(ground),
-    operator   = as.factor(operator)
-  )
-```
-
-Cleaning these variables allowed us to:
-- filter crashes by fatality count
-- color-code operators in maps
-
-4. Joining Geocoded Coordinates for Mapping
+1. Joining Geocoded Coordinates for Mapping
 Because the raw dataset contained only text descriptions of crash locations, our group generated a supplementary file (geocoded_cache.csv) containing:
 - cleaned location names
 - latitude and longitude for each crash
@@ -232,7 +174,7 @@ df_map <- airplane_df |>
   filter(!is.na(Latitude), !is.na(Longitude))
 ```
 
-5. Preparing the Shared Dataset for Interactive Filtering
+2. Preparing the Shared Dataset for Interactive Filtering
 To allow dynamic filtering without Shiny, I used the crosstalk package. This connects:
 - the map
 - the data table
