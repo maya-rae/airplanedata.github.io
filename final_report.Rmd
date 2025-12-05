@@ -67,7 +67,7 @@ As we started the project, our main questions were:
 3. Seasonality and environment
 
     * Are crashes more common in certain seasons or months of the year?
-    * Is there evidence that weather or climate conditions (from NOAA) are associated with crash frequency or severity?
+    * Are crashes more *statistically* common in certain seasons?
 
 
 As data exploration continued over the following weeks, additional questions were developed:
