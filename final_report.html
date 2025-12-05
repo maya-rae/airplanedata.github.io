@@ -453,8 +453,8 @@ higher fatality counts per crash)?</li>
 <ul>
 <li>Are crashes more common in certain seasons or months of the
 year?</li>
-<li>Are crashes more <em>statistically</em> common in certain
-seasons?</li>
+<li>Are crashes more <em>statistically</em> significantly different in
+certain seasons?</li>
 </ul></li>
 </ol>
 <p>As data exploration continued over the following weeks, additional
@@ -474,15 +474,17 @@ like?</li>
 <h1>Data Summary</h1>
 <div id="data-source" class="section level3">
 <h3>Data Source:</h3>
-<p>The dataset was sourced as a CSV file from Kaggle and stored in a
-datasets folder within our project directory. We read it into R using
-read_csv() and maintain all code in an R Project linked to a public
-GitHub repository for reproducibility. An additional dataset, created by
-our group, contains geocoded latitude and longitude information for each
-crash location. Because the Kaggle file lists location as text (e.g.,
-“Paris, France” or “5 miles from Cairo”), our group geocoded each unique
-location string and stored the results in geocoded_cache.csv. This
-allowed us to build interactive maps.</p>
+<p>The dataset was sourced as a CSV file from <a
+href="https://www.kaggle.com">Kaggle</a> and stored in the datasets
+folder within our project directory. We read this dataset into R using
+<code>read_csv()</code> and maintained all code in an R Project linked
+to a public GitHub repository for reproducibility. An additional dataset
+was created by our group, which contains geocoded latitude and longitude
+information for each crash location. Because the Kaggle file lists
+location as text (e.g., “Paris, France” or “5 miles from Cairo”), our
+group geocoded each unique location string and stored the results in
+<code>geocoded_cache.csv</code>. This allowed us to build interactive
+maps to see the spatial distribution of crashes worldwide.</p>
 </div>
 </div>
 <div id="data-and-exploratory-analysis" class="section level1">
@@ -493,6 +495,78 @@ allowed us to build interactive maps.</p>
 required substantial cleaning due to inconsistent formatting and missing
 coordinate data. We wrote the preprocessing code used throughout the
 analysis pipeline. It included four major steps:</p>
+<ol style="list-style-type: decimal">
+<li>The dataset was initially loaded as a tibble to be able to process,
+clean, and analyze it. Rows from <code>aboard</code> and
+<code>ground</code> with missing or placeholder values were were removed
+to ensure cleaner data for analysis. <code>flight-number</code>,
+<code>time</code>, and <code>registration</code> columns were dropped
+because these did not contain relevant information for our
+analysis.</li>
+</ol>
+<pre class="r"><code>airplane_df = read_csv(&quot;datasets/airplane_crashes_data.csv&quot;, show_col_types = FALSE) |&gt; 
+  janitor::clean_names() |&gt; 
+  filter(ground != &quot;NULL&quot;, aboard != &quot;NULL&quot;) |&gt; 
+
+  # removes unnecessary columns for our analyses
+  select(-flight_number, -time, - registration)</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>The <code>date</code> column was initially stored as a string, so we
+first parsed it manually into numeric month/day/year. Then, the 2 digit
+years were able to be converted to 4 digit years to avoid
+misinterpreting. Columns for the numeric <code>year</code>
+<code>month</code>, and <code>month name</code> were created for easier
+grouping, plotting, and analysis.</li>
+</ol>
+<pre class="r"><code>airplane_df = airplane_df |&gt; 
+  mutate(
+    # remove leading and trailing spaces
+    date = str_trim(date),
+    
+    # extract month, day, and year from the date string
+    m = as.numeric(sub(&quot;/.*&quot;, &quot;&quot;, date)),                    
+    d = as.numeric(sub(&quot;.*/(.*)/.*&quot;, &quot;\\1&quot;, date)),          
+    y = as.numeric(sub(&quot;.*/(.*)$&quot;, &quot;\\1&quot;, date)),            
+    
+    # convert 2-digit years (&lt;100) to 4-digit (1900s)
+    y = ifelse(y &lt; 100, y + 1900, y),
+    
+    # rebuild the string
+    date_clean = paste(m, d, y, sep = &quot;/&quot;),
+    
+    # convert to Date type
+    date = mdy(date_clean),
+    
+    # extract numeric year and month
+    year = year(date),
+    month = month(date),
+    month_name = factor(month(date, 
+                              label = TRUE, 
+                              abbr = TRUE), 
+                              levels = month.abb)
+  ) |&gt;
+  select(-m, -d, -y, -date_clean)  # remove unnecessary columns</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Key columns were converted to numeric and operator was converted to
+a factor, so that we could group by operator in our analyses.</li>
+</ol>
+<pre class="r"><code>airplane_df = airplane_df |&gt; 
+  mutate(
+    aboard     = as.numeric(aboard),
+    fatalities =  as.numeric(fatalities),
+    ground     = as.numeric(ground),
+    operator   = as.factor(operator)  # to group by operator
+    )</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Lastly, a <code>decade</code> column was created so that plots could
+be grouped by decade.</li>
+</ol>
+<pre class="r"><code>airplane_df = airplane_df |&gt; 
+  mutate(
+    decade = floor(year / 10) * 10, 
+    decade = paste0(decade, &quot;s&quot;)
+  ) |&gt; 
+  select(date, year, decade, month, month_name, everything()) </code></pre>
 </div>
 <div id="analysis" class="section level3">
 <h3>Analysis:</h3>
