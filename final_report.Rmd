@@ -89,7 +89,7 @@ Before performing geographic or temporal analysis, our dataset required substant
 
 1. The dataset was initially loaded as a tibble to be able to process, clean, and analyze it. Rows from `aboard` and `ground` with missing or placeholder values were  were removed to ensure cleaner data for analysis. `flight-number`, `time`, and `registration` columns were dropped because these did not contain relevant information for our analysis.
 
-```{r}
+```{r, eval=FALSE}
 airplane_df = read_csv("datasets/airplane_crashes_data.csv", show_col_types = FALSE) |> 
   janitor::clean_names() |> 
   filter(ground != "NULL", aboard != "NULL") |> 
@@ -100,7 +100,7 @@ airplane_df = read_csv("datasets/airplane_crashes_data.csv", show_col_types = FA
 
 2. The `date` column was initially stored as a string, so we first parsed it manually into numeric month/day/year. Then, the 2 digit years were able to be converted to 4 digit years to avoid misinterpreting. Columns for the numeric `year` `month`, and `month name` were created  for easier grouping, plotting, and analysis. 
 
-```{r}
+```{r, eval=FALSE}
 airplane_df = airplane_df |> 
   mutate(
     # remove leading and trailing spaces
@@ -133,7 +133,7 @@ airplane_df = airplane_df |>
 
 3. Key columns were converted to numeric and operator was converted to a factor, so that we could group by operator in our analyses.
 
-```{r}
+```{r, eval=FALSE}
 airplane_df = airplane_df |> 
   mutate(
     aboard     = as.numeric(aboard),
@@ -146,7 +146,7 @@ airplane_df = airplane_df |>
 
 4. Lastly, a `decade` column was created so that plots could be grouped by decade. 
 
-```{r}
+```{r, eval=FALSE}
 airplane_df = airplane_df |> 
   mutate(
     decade = floor(year / 10) * 10, 
