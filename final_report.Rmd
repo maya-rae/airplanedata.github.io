@@ -79,7 +79,7 @@ As data exploration continued over the following weeks, additional questions wer
 
 # Data Summary 
 
-### Data Source:
+### Data Source
 The dataset was sourced as a CSV file from [Kaggle](https://www.kaggle.com) and stored in the datasets folder within our project directory. We read this dataset into R using `read_csv()` and maintained all code in an R Project linked to a public GitHub repository for reproducibility. An additional dataset was created by our group, which contains geocoded latitude and longitude information for each crash location. Because the Kaggle file lists location as text (e.g., “Paris, France” or “5 miles from Cairo”), our group geocoded each unique location string and stored the results in `geocoded_cache.csv`. This allowed us to build interactive maps to see the spatial distribution of crashes worldwide.
 
 # Data and Exploratory Analysis
@@ -155,9 +155,9 @@ airplane_df = airplane_df |>
   select(date, year, decade, month, month_name, everything()) 
 ```
 
-### Analysis:
+# Analysis
 
-# Interactive Map 
+### Interactive Map 
 
 Data cleaning process was the same across all group member. Once done, I moved on to creating interactive maps. Below, I am providing an overview of those steps. 
 
@@ -192,8 +192,49 @@ This enabled an interactive interface where users can:
 - select a fatality threshold
 - see both the map and table update instantly
 
-### Additional analysis 
-(If you undertake formal statistical analyses, describe these in detail)
+### Statistical Analysis
+
+We used ANOVA to statistically investigate questions about our dataset. To see the code we used to conduct our statistical analyses along with our figures, check out our [Statistical Analysis page](ANOVA.html).
+
+**Are total airplane crashes evenly distributed across the four seasons?**
+
+To investigate potential seasonal trends in aviation safety, we selected data from Northern Hemisphere and grouped the crash data by month of the accident. We then performed a Chi-Squared Test to determine if total historical crashes were evenly distributed throughout the year. The null hypothesis assumed that accidents occurred with equal frequency across all months. 
+
+The analysis revealed a statistically significant difference in crash frequency across seasons. The Chi-Squared test yielded a p-value below the 0.05 significance threshold, allowing us to reject the null.
+
+
+**Does the average yearly crashes differ across the months?**
+
+The Chi-Squared test examined aggregate totals, but it did not account for year-to-year variability. To address this, we aggregated crash counts by year and season to calculate the mean yearly crash rate. We then performed a One-Way ANOVA to determine if the average number of airplane crashes per year differs significantly across the months.
+
+The ANOVA results yielded a p-value of 0.039, which was below the 0.05 significance level. 
+
+**What about differences of fatality rate across months?**
+
+No significant evidence suggested a monthly difference of fatality rate.
+
+
+**Is the fatality rate lower over the years?*
+
+Statistical evidence confirmed that airplanes have become safer over time regarding rate of survival. Linear regression analysis revealed a statistically significant negative correlation between year and fatality rate (p < 0.001). 
+
+However, the low R-squared value (0.004) indicated that while the downward trend is consistent, the outcome of any individual crash is heavily influenced by situational factors other than just the time period.
+
+
+**Are the number of crash events higher or lower over the years?**
+
+To describe the historical trend of aviation safety, we aggregated the total number of crashes per year. We then fitted a simple linear regression model to determine if there was a statistically significant linear increase or decrease in crash frequency over the recorded time period (1908–2009).
+
+The linear regression analysis revealed a statistically significant upward trend.
+
+
+**Cross validation : linear vs pwl vs smooth**
+
+While the SLR suggested a significant upward trend, visual inspection implied a non-linear pattern with distinct peaks and valleys. To scientifically determine the best approach for describing this historical data, we performed Cross-Validation (CV). We compared three candidate models: a linear model, a piece wise linear model (assuming a structural break around 1990), and a generalized additive model (GAM) using smoothing splines. We evaluated them based on their ability to predict unseen data subsets.
+
+
+The visual comparison of the cross-validated predictions clearly demonstrated the limitations of the linear model. The linear fit (left panel) failed to capture the mid-century rise and the late-century decline in crashes, resulting in high systematic error. The piece wise model (middle panel) offered an improvement by accounting for the recent downtrend, but the Smooth (GAM) model (right panel) provides the superior fit. 
+
 
 # Discussion
 In this final stage of the project, we returned to the questions from our Motivation and Initial Questions sections to reflect on what we learned. 

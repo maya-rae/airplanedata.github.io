@@ -336,7 +336,7 @@ div.tocify {
   <a href="InteractiveMapSearch.html">Interactive Map Search</a>
 </li>
 <li>
-  <a href="ANOVA.html">ANOVA</a>
+  <a href="ANOVA.html">Statistical Analysis</a>
 </li>
 <li>
   <a href="final_report.html">Final Report</a>
@@ -473,7 +473,7 @@ like?</li>
 <div id="data-summary" class="section level1">
 <h1>Data Summary</h1>
 <div id="data-source" class="section level3">
-<h3>Data Source:</h3>
+<h3>Data Source</h3>
 <p>The dataset was sourced as a CSV file from <a
 href="https://www.kaggle.com">Kaggle</a> and stored in the datasets
 folder within our project directory. We read this dataset into R using
@@ -568,12 +568,11 @@ be grouped by decade.</li>
   ) |&gt; 
   select(date, year, decade, month, month_name, everything()) </code></pre>
 </div>
-<div id="analysis" class="section level3">
-<h3>Analysis:</h3>
 </div>
-</div>
-<div id="interactive-map" class="section level1">
-<h1>Interactive Map</h1>
+<div id="analysis" class="section level1">
+<h1>Analysis</h1>
+<div id="interactive-map" class="section level3">
+<h3>Interactive Map</h3>
 <p>Data cleaning process was the same across all group member. Once
 done, I moved on to creating interactive maps. Below, I am providing an
 overview of those steps.</p>
@@ -607,10 +606,71 @@ connects:</li>
 <p>This enabled an interactive interface where users can: - choose an
 operator - filter by year - select a fatality threshold - see both the
 map and table update instantly</p>
-<div id="additional-analysis" class="section level3">
-<h3>Additional analysis</h3>
-<p>(If you undertake formal statistical analyses, describe these in
-detail)</p>
+</div>
+<div id="statistical-analysis" class="section level3">
+<h3>Statistical Analysis</h3>
+<p>We used ANOVA to statistically investigate questions about our
+dataset. To see the code we used to conduct our statistical analyses
+along with our figures, check out our <a href="ANOVA.html">Statistical
+Analysis page</a>.</p>
+<p><strong>Are total airplane crashes evenly distributed across the four
+seasons?</strong></p>
+<p>To investigate potential seasonal trends in aviation safety, we
+selected data from Northern Hemisphere and grouped the crash data by
+month of the accident. We then performed a Chi-Squared Test to determine
+if total historical crashes were evenly distributed throughout the year.
+The null hypothesis assumed that accidents occurred with equal frequency
+across all months.</p>
+<p>The analysis revealed a statistically significant difference in crash
+frequency across seasons. The Chi-Squared test yielded a p-value below
+the 0.05 significance threshold, allowing us to reject the null.</p>
+<p><strong>Does the average yearly crashes differ across the
+months?</strong></p>
+<p>The Chi-Squared test examined aggregate totals, but it did not
+account for year-to-year variability. To address this, we aggregated
+crash counts by year and season to calculate the mean yearly crash rate.
+We then performed a One-Way ANOVA to determine if the average number of
+airplane crashes per year differs significantly across the months.</p>
+<p>The ANOVA results yielded a p-value of 0.039, which was below the
+0.05 significance level.</p>
+<p><strong>What about differences of fatality rate across
+months?</strong></p>
+<p>No significant evidence suggested a monthly difference of fatality
+rate.</p>
+<p>**Is the fatality rate lower over the years?*</p>
+<p>Statistical evidence confirmed that airplanes have become safer over
+time regarding rate of survival. Linear regression analysis revealed a
+statistically significant negative correlation between year and fatality
+rate (p &lt; 0.001).</p>
+<p>However, the low R-squared value (0.004) indicated that while the
+downward trend is consistent, the outcome of any individual crash is
+heavily influenced by situational factors other than just the time
+period.</p>
+<p><strong>Are the number of crash events higher or lower over the
+years?</strong></p>
+<p>To describe the historical trend of aviation safety, we aggregated
+the total number of crashes per year. We then fitted a simple linear
+regression model to determine if there was a statistically significant
+linear increase or decrease in crash frequency over the recorded time
+period (1908–2009).</p>
+<p>The linear regression analysis revealed a statistically significant
+upward trend.</p>
+<p><strong>Cross validation : linear vs pwl vs smooth</strong></p>
+<p>While the SLR suggested a significant upward trend, visual inspection
+implied a non-linear pattern with distinct peaks and valleys. To
+scientifically determine the best approach for describing this
+historical data, we performed Cross-Validation (CV). We compared three
+candidate models: a linear model, a piece wise linear model (assuming a
+structural break around 1990), and a generalized additive model (GAM)
+using smoothing splines. We evaluated them based on their ability to
+predict unseen data subsets.</p>
+<p>The visual comparison of the cross-validated predictions clearly
+demonstrated the limitations of the linear model. The linear fit (left
+panel) failed to capture the mid-century rise and the late-century
+decline in crashes, resulting in high systematic error. The piece wise
+model (middle panel) offered an improvement by accounting for the recent
+downtrend, but the Smooth (GAM) model (right panel) provides the
+superior fit.</p>
 </div>
 </div>
 <div id="discussion" class="section level1">

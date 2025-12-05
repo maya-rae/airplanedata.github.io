@@ -104,9 +104,9 @@ df_map <- airplane_df |>
 
 ## Are total airplane crashes evenly distributed across the four seasons?
 
-To investigate potential seasonal trends in aviation safety, we select data from northern hemisphere grouped the crash data by month of the accident. We then performed a Chi-Square Goodness of Fit Test to determine if total historical crashes are evenly distributed throughout the year. The null hypothesis assumes that accidents occur with equal frequency across all months. 
+To investigate potential seasonal trends in aviation safety, we selected data from Northern Hemisphere and grouped the crash data by month of the accident. We then performed a Chi-Squared Test to determine if total historical crashes were evenly distributed throughout the year. The null hypothesis assumed that accidents occurred with equal frequency across all months. 
 
-The analysis reveals a statistically significant difference in crash frequency across seasons. The Chi-Square test yields a p-value well below the 0.05 significance threshold, leading us to reject the null.
+The analysis revealed a statistically significant difference in crash frequency across seasons. The Chi-Squared test yielded a p-value below the 0.05 significance threshold, allowing us to reject the null.
 
 ```{r chisq for crash distribution across season}
 
@@ -163,9 +163,9 @@ month_summary |>
 
 ## Does the average yearly crashes differ across the months?
 
-Chi-Square test examined aggregate totals, but it did not account for year-to-year variability. To address this, we aggregate crash counts by year and season to calculate the mean yearly crash rate. We then perform a One-Way ANOVA to determine if the average number of airplane crashes per year differs significantly across the months.
+The Chi-Squared test examined aggregate totals, but it did not account for year-to-year variability. To address this, we aggregated crash counts by year and season to calculate the mean yearly crash rate. We then performed a One-Way ANOVA to determine if the average number of airplane crashes per year differs significantly across the months.
 
-The ANOVA results yield a p-value of 0.039, which is below the 0.05 significance level. 
+The ANOVA results yielded a p-value of 0.039, which was below the 0.05 significance level. 
 
 ```{r anova for seaonal crashes per year}
 
@@ -203,7 +203,7 @@ aov(crash_count ~ factor(month), data = _) |>
 
 ## What about differences of fatality rate across months?
 
-No significant evidence suggest that there are monthly differences of fatality rate.
+No significant evidence suggested a monthly difference of fatality rate.
 
 ```{r anova for season and fatality}
 
@@ -218,8 +218,9 @@ summary()
 ```
 ## Is the fatality rate lower over the years?
 
-Statistical evidence confirms that airplanes have become safer over time regarding survivability. Linear regression analysis reveals a statistically significant negative correlation between year and fatality rate (p < 0.001). 
-However, the low R-squared value (0.004) indicates that while the downward trend is consistent, the outcome of any individual crash is heavily influenced by situational factors other than just the time period.
+Statistical evidence confirmed that airplanes have become safer over time regarding rate of survival. Linear regression analysis revealed a statistically significant negative correlation between year and fatality rate (p < 0.001). 
+
+However, the low R-squared value (0.004) indicated that while the downward trend is consistent, the outcome of any individual crash is heavily influenced by situational factors other than just the time period.
 
 ```{r lm year ~ fatality}
 
@@ -252,9 +253,10 @@ However, the low R-squared value (0.004) indicates that while the downward trend
 
 ## Are the number of crash events higher or lower over the years?
 
-To describe the historical trend of aviation safety, we aggregate the total number of crashes per year. We then fit a simple linear regression model to determine if there is a statistically significant linear increase or decrease in crash frequency over the recorded time period (1908–2009).
+To describe the historical trend of aviation safety, we aggregated the total number of crashes per year. We then fitted a simple linear regression model to determine if there was a statistically significant linear increase or decrease in crash frequency over the recorded time period (1908–2009).
 
-The linear regression analysis reveals a statistically significant upward trend.
+The linear regression analysis revealed a statistically significant upward trend.
+
 ```{r}
 
 crashes_by_year = airplane_df |> 
@@ -276,7 +278,8 @@ summary(fit_count)
 ```
 
 ## Cross validation : linear vs pwl vs smooth
-While the simple linear regression suggests a significant upward trend, visual inspection implies a non-linear pattern with distinct peaks and valleys. To scientifically determine the best approach for describing this historical data, we performed Cross-Validation (CV). We compared three candidate models: a linear model, a piecewise linear model (assuming a structural break around 1990), and a generalized additive model (GAM) using smoothing splines. We evaluated them based on their ability to predict unseen data subsets.
+
+While the SLR suggested a significant upward trend, visual inspection implied a non-linear pattern with distinct peaks and valleys. To scientifically determine the best approach for describing this historical data, we performed Cross-Validation (CV). We compared three candidate models: a linear model, a piece wise linear model (assuming a structural break around 1990), and a generalized additive model (GAM) using smoothing splines. We evaluated them based on their ability to predict unseen data subsets.
 
 ```{r cross validation}
 
@@ -334,4 +337,4 @@ cv_df |>
 summary(smooth_mod)
 ```
 
-The visual comparison of the cross-validated predictions clearly demonstrates the limitations of the linear model. The linear fit (left panel) fails to capture the mid-century rise and the late-century decline in crashes, resulting in high systematic error. The piecewise model (middle panel) offers an improvement by accounting for the recent downtrend, but the Smooth (GAM) model (right panel) provides the superior fit。
+The visual comparison of the cross-validated predictions clearly demonstrated the limitations of the linear model. The linear fit (left panel) failed to capture the mid-century rise and the late-century decline in crashes, resulting in high systematic error. The piece wise model (middle panel) offered an improvement by accounting for the recent downtrend, but the Smooth (GAM) model (right panel) provides the superior fit. 
