@@ -11,7 +11,7 @@
 
 
 
-<title>Aviation Crash Data Analysis</title>
+<title>index.knit</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -283,19 +283,68 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Aviation Crash Data Analysis</h1>
 
 </div>
 
 
-<p><img
-src="https://plus.unsplash.com/premium_photo-1661962354730-cda54fa4f9f1?w=1000&amp;auto=format&amp;fit=crop&amp;q=60&amp;ixlib=rb-4.1.0&amp;ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8YWlycGxhbmV8ZW58MHx8MHx8fDA%3D" /></p>
-<p><a href="project_proposal.html">Project Proposal</a></p>
-<p><a href="descriptive_stats.html">Descriptive Statistics and
-Plots</a></p>
-<p><a href="InteractiveMapSearch.html">Interactive Map Search</a></p>
-<p><a href="ANOVA.html">ANOVA</a></p>
-<p><a href="final_report.html">Final Report</a></p>
+<style>
+/* --- Centered Hero Image + Title --- */
+.hero-container {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;   /* centers content nicely */
+  margin: 0 auto;      /* centers container */
+  text-align: center;
+}
+
+.hero-image {
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+  border-radius: 8px;
+}
+
+.hero-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 3rem;
+  font-weight: 700;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.6);
+  padding: 10px 20px;
+  text-align: center;
+}
+
+/* --- Center & style video nicely --- */
+.video-wrapper {
+  max-width: 800px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.video-wrapper video {
+  width: 100%;
+  max-width: 800px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+</style>
+<!-- Hero Section -->
+<div class="hero-container">
+<img class="hero-image" 
+       src="https://plus.unsplash.com/premium_photo-1661962354730-cda54fa4f9f1?w=1000&auto=format&fit=crop&q=60"
+       alt="Plane">
+<div class="hero-title">
+Aviation Crash Data Analysis
+</div>
+</div>
+<!-- Centered Video -->
+<div class="video-wrapper">
+<p><video src="path/to/your/video.mp4" 
+         autoplay loop muted playsinline controls></video></p>
+</div>
 
 
 
