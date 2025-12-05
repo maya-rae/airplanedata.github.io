@@ -107,10 +107,12 @@ df_map <- airplane_df |>
 To investigate potential seasonal trends in aviation safety, we select data from northern hemisphere grouped the crash data by month of the accident. We then performed a Chi-Square Goodness of Fit Test to determine if total historical crashes are evenly distributed throughout the year. The null hypothesis assumes that accidents occur with equal frequency across all months. 
 
 The analysis reveals a statistically significant difference in crash frequency across seasons. The Chi-Square test yields a p-value of approximately 0.0003, which is well below the 0.05 significance threshold, leading us to reject the null.
+
 ```{r chisq for crash distribution across season}
 
-airplane_season = airplane_df |>
-  filter(aboard > 0, !is.na(fatalities)) |> 
+airplane_north = df_map |>
+  filter(aboard > 0, !is.na(fatalities))|>
+   filter(Latitude> 0)|> 
   mutate(
     survival_rate = (aboard - fatalities) / aboard,
     month_num     = month(date),
@@ -124,21 +126,11 @@ airplane_season = airplane_df |>
   filter(!is.na(season)) |>
   mutate(season = fct_relevel(season, "Spring", "Summer", "Fall", "Winter"))
 
-season_summary = airplane_season |>
-  # ---- seasonal crash counts ----
-  count(season, name = "n") |>
-
-  # ---- compute expected + chisq ----
-  mutate(
-    expected = mean(n),
-    chisq = list(chisq.test(n)),
-    residual = n - expected,
-    std_resid = (n - expected) / sqrt(expected)
-  )|> print()
- 
-month_summary = df_map |>
+  
+month_summary = airplane_north |>
    filter(Latitude> 0)|> 
   count(month, name = "n")|>
+  # ---- compute expected + chisq ----
     mutate(
     expected = mean (n),
     chisq = list(chisq.test(n)),
@@ -169,34 +161,34 @@ month_summary |>
 
 ```
 
-## Does the average yearly crashes differ across the four seasons?
+## Does the average yearly crashes differ across the months?
 ```{r anova for seaonal crashes per year}
 
 cat("=== ANOVA result ===\n")
-airplane_season |> 
+airplane_north |> 
   # Count crashes per year/season combo
-  count(year, season, name = "crash_count")|>
+  count(year, month, name = "crash_count")|>
 
 # ANOVA 
-aov(crash_count ~ season, data = _) |> 
+aov(crash_count ~ factor(month), data = _) |> 
   summary()
 
 # ---- plot ----
- airplane_season |> 
-  count(year, season, name = "crash_count")|>
-  group_by(season) |>
+ airplane_north |> 
+  count(year, month, name = "crash_count")|>
+  group_by(month) |>
   summarise(
     mean_crashes = mean(crash_count),
     se = sd(crash_count) / sqrt(n())
   ) |>
-  ggplot(aes(x = season, y = mean_crashes)) +
+  ggplot(aes(x = month, y = mean_crashes)) +
   geom_col(fill = "steelblue",show.legend = FALSE) +
   geom_errorbar(aes(ymin = mean_crashes - se,
                     ymax = mean_crashes + se),
                 width = 0.15) +
   labs(
-    title = "Average Yearly Airplane Crashes by Season",
-        x = "Season",
+    title = "Average Yearly Airplane Crashes in Northern Hemisphere by Month",
+        x = "Month",
     y = "Average Crash Count"
   ) +
   theme_minimal()
