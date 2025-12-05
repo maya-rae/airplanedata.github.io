@@ -280,4 +280,4 @@ airplane_df |>
 
 ```
 
-Based on this map, the 1970s, particularly the January, December, October, September, and August months have especially high numbers of crashes compared to other decades and months. July in the 1990s, also had a particularly high number of crashes, indicated by the darker red color. The monthly and seasonal trends will be looked at in more detail using ANOVA <a href="anova.html" target="_blank">here.</a>
+Based on this map, the 1970s, particularly the January, December, October, September, and August months have especially high numbers of crashes compared to other decades and months. July in the 1990s, also had a particularly high number of crashes, indicated by the darker red color. The monthly and seasonal trends will be looked at in more detail using [ANOVA](ANOVA.html).

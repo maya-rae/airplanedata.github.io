@@ -33,7 +33,6 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
@@ -222,9 +221,6 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
 
 
 
@@ -361,14 +357,6 @@ div.tocify {
 
 <div id="header">
 
-<div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-</ul>
-</div>
-
 
 
 <h1 class="title toc-ignore">Meet the Team</h1>
@@ -475,19 +463,46 @@ Collaborator
 </p>
 <div class="bio">
 <p>Maya is a Master’s Student in Environmental Health Data Science at
-the Columbia University’s Mailman School of Public Health.</p>
+Columbia University’s Mailman School of Public Health.</p>
 </div>
 </div>
 <div class="team-member">
-<img src="images/.jpg" alt="XX">
+<img src="images/cassie_laney.png" alt="Casandra Laney">
 <h3>
-XX
+Casandra Laney
 </h3>
 <p>
 Collaborator
 </p>
 <div class="bio">
-
+<p>Casandra is a Master’s Student in Environmental Health Data Science
+at Columbia University’s Mailman School of Public Health.</p>
+</div>
+</div>
+<div class="team-member">
+<img src="images/zichen_fan.jpg" alt="Zichen Fan">
+<h3>
+Zichen Fan
+</h3>
+<p>
+Collaborator
+</p>
+<div class="bio">
+<p>Zichen graduated from Duke Kunshan University and is now studying
+Environmental Health Data Science at Columbia Mailman.</p>
+</div>
+</div>
+<div class="team-member">
+<img src="images/xx.png" alt="Karolina Wiesiolek">
+<h3>
+Karolina Wiesiolek
+</h3>
+<p>
+Collaborator
+</p>
+<div class="bio">
+<p>Karolina is a Master’s Student in Environmental Health Data Science
+at Columbia University’s Mailman School of Public Health.</p>
 </div>
 </div>
 </div>
@@ -527,11 +542,6 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
 
 <script>
 $(document).ready(function ()  {

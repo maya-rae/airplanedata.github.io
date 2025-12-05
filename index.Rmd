@@ -10,8 +10,6 @@ title: "Aviation Crash Data Analysis"
 
 [Descriptive Statistics and Plots](descriptive_stats.html)
 
-[Exploratory Analysis](exploratory_analysis.html)
-
 [Interactive Map Search](InteractiveMapSearch.html)
 
 [ANOVA](ANOVA.html)

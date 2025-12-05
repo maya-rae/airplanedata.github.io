@@ -1,5 +1,5 @@
 ---
-title: "ANOVA"
+title: "Statistical Analysis"
 output: 
   html_document:
     toc: true
@@ -18,10 +18,14 @@ Load & Clean Data
 ```{r message=FALSE, warning=FALSE, include=FALSE}
 
 library(tidyverse)
+library(janitor)
 library(lubridate)
-library(stringr)
-library(plotly)
-library(ggthemes)
+library(leaflet)
+library(crosstalk)
+library(htmltools)
+library(DT)
+library(modelr) 
+library(mgcv) 
 
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -31,42 +35,37 @@ knitr::opts_chunk$set(
   out.width = "90%"
   )
 
-theme_set(theme_minimal() + theme(legend.position = "bottom"))
 
 ```
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 
-```{r}
+```{r, echo=FALSE}
+airplane_df = read_csv("datasets/airplane_crashes_data.csv") |>
+  clean_names() |>
+  filter(ground != "NULL", aboard != "NULL") |>
+  select(-flight_number, -time, -registration)
+```
 
-airplane_df = read_csv("datasets/airplane_crashes_data.csv") |> 
-  janitor::clean_names() |> 
-  filter(ground != "NULL", aboard != "NULL") |> 
-
-  # removes unnecessary columns for our analyses
-  select(-flight_number, -time, - registration)
-
-airplane_df = 
-  airplane_df |> 
+```{r, echo=FALSE}
+airplane_df = airplane_df |> 
   mutate(
-    # remove leading and trailing spaces
+  
     date = str_trim(date),
     
-    # extract month, day, and year from the date string
-    m = as.numeric(sub("/.*", "", date)),                    
+      m = as.numeric(sub("/.*", "", date)),                    
     d = as.numeric(sub(".*/(.*)/.*", "\\1", date)),          
     y = as.numeric(sub(".*/(.*)$", "\\1", date)),            
     
-    # convert 2-digit years (<100) to 4-digit (1900s)
     y = ifelse(y < 100, y + 1900, y),
     
-    # rebuild the string
     date_clean = paste(m, d, y, sep = "/"),
     
-    # convert to Date type
     date = mdy(date_clean),
     
-    # extract numeric year and month
     year = year(date),
     month = month(date),
     month_name = factor(month(date, 
@@ -74,21 +73,237 @@ airplane_df =
                               abbr = TRUE), 
                               levels = month.abb)
   ) |>
-  select(-m, -d, -y, -date_clean)  # remove unnecessary columns
+  select(-m, -d, -y, -date_clean) 
+```
 
-airplane_df = 
-  airplane_df |> 
+```{r, echo=FALSE}
+airplane_df = airplane_df |>
   mutate(
     aboard     = as.numeric(aboard),
-    fatalities =  as.numeric(ground),
-    operator   = as.factor(operator)  # to group by operator
-    )
+    fatalities = as.numeric(fatalities),
+    ground     = as.numeric(ground),
+    operator   = as.factor(operator)
+  )
+```
 
-airplane_df = 
-  airplane_df |> 
+```{r}
+airplane_df = airplane_df |> 
   mutate(
     decade = floor(year / 10) * 10, 
     decade = paste0(decade, "s")
   ) |> 
   select(date, year, decade, month, month_name, everything()) 
 ```
+--- 
+
+## Are total airplane crashes evenly distributed across the four seasons?
+```{r chisq for crash distribution across season}
+
+airplane_season = airplane_df |>
+  filter(aboard > 0, !is.na(fatalities)) |> 
+  mutate(
+    survival_rate = (aboard - fatalities) / aboard,
+    month_num     = month(date),
+    season = case_when(
+      month_num %in% c(12, 1, 2)  ~ "Winter",
+      month_num %in% c(3, 4, 5)   ~ "Spring",
+      month_num %in% c(6, 7, 8)   ~ "Summer",
+      month_num %in% c(9, 10, 11) ~ "Fall"
+    )
+  ) |>
+  filter(!is.na(season)) |>
+  mutate(season = fct_relevel(season, "Spring", "Summer", "Fall", "Winter"))
+
+season_summary = airplane_season |>
+  # ---- seasonal crash counts ----
+  count(season, name = "n") |>
+
+  # ---- compute expected + chisq ----
+  mutate(
+    expected = mean(n),
+    chisq = list(chisq.test(n)),
+    residual = n - expected,
+    std_resid = (n - expected) / sqrt(expected)
+  )|> print()
+ 
+
+# extract p-value
+chisq_p = season_summary$chisq[[1]]$p.value
+chisq_p
+
+
+# ---- plot ----
+season_summary |>
+  ggplot(aes(season, n)) +
+  geom_col(fill = "steelblue") +
+  geom_hline(aes(yintercept = expected),
+             linetype = "dashed", size = 1) +
+  labs(
+    title = "Total Crashes by Season",
+    subtitle = paste("Chi-Square p-value =", format.pval(chisq_p)),
+    x = "Season",
+    y = "Total Number of Crashes"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+```
+
+## Does the average yearly crashes differ across four seasons?
+```{r anova for seaonal crashes per year}
+
+cat("=== ANOVA result ===\n")
+airplane_season |> 
+  # Count crashes per year/season combo
+  count(year, season, name = "crash_count")|>
+
+# ANOVA 
+aov(crash_count ~ season, data = _) |> 
+  summary()
+
+# ---- plot ----
+ airplane_season |> 
+  count(year, season, name = "crash_count")|>
+  group_by(season) |>
+  summarise(
+    mean_crashes = mean(crash_count),
+    se = sd(crash_count) / sqrt(n())
+  ) |>
+  ggplot(aes(x = season, y = mean_crashes)) +
+  geom_col(fill = "steelblue",show.legend = FALSE) +
+  geom_errorbar(aes(ymin = mean_crashes - se,
+                    ymax = mean_crashes + se),
+                width = 0.15) +
+  labs(
+    title = "Average Yearly Airplane Crashes by Season",
+        x = "Season",
+    y = "Average Crash Count"
+  ) +
+  theme_minimal()
+
+```
+
+## What about seasonale differences of fatality rate?
+
+No significant evidence suggest there's seasonal differences of fatality rate
+
+```{r anova for season and fatality}
+
+cat("=== ANOVA result ===\n")
+
+airplane_season|>
+ ##ANOVA
+aov(survival_rate ~ season, data = _ )|>
+summary()
+
+
+```
+## Is the fatality rate lower over the years?
+
+Statistical evidence confirms that airplane has become safer over time regarding survivability. linear regression analysis reveals a statistically significant negative correlation between year and fatality rate (p < 0.001). 
+However, the low R-squared value (0.004) indicates that while the downward trend is consistent, the outcome of any individual crash is heavily influenced by situational factors other than just the time period.
+
+```{r lm year ~ fatality}
+
+ airplane_df |> 
+  filter(aboard > 0, !is.na(fatalities)) |> 
+  mutate(fatality_rate = fatalities / aboard) |> 
+  group_by(year) |> 
+  summarise(mean_fatality_rate = mean(fatality_rate)) |> 
+  ggplot(aes(x = year, y = mean_fatality_rate)) +
+  geom_point(color = "steelblue", alpha = 0.6) +
+  geom_smooth(method = "lm", color = "red", fill = "pink",se = TRUE) +
+  labs(
+    title = "Trend in Airplane Fatality Rate Over Time",,
+    x = "Year",
+    y = "Average Fatality Rate"
+  ) +
+  theme_minimal()
+
+ airplane_df|>
+  filter(aboard > 0, !is.na(fatalities)) |> 
+  
+  ## Calculate fatality rate
+  mutate(fatality_rate = fatalities / aboard) |> 
+  ## for individual event
+ lm(fatality_rate ~ year, data = _)|> summary()
+
+
+```
+
+
+## Is the number of crash event higher or lower over the years?
+```{r}
+
+crashes_by_year = airplane_df |> 
+  count(year, name = "total_crashes")
+
+ggplot(crashes_by_year, aes(x = year, y = total_crashes)) +
+  geom_point(color = "steelblue", alpha = 0.6) +
+  geom_smooth(method = "lm", color = "red", fill = "pink") +
+  labs(
+    title = "Trend of Total Airplane Crashes per Year",
+    x = "Year",
+    y = "Total Number of Crashes"
+  ) +
+  theme_minimal()
+
+fit_count <- lm(total_crashes ~ year, data = crashes_by_year)
+
+summary(fit_count)
+```
+## Cross validation : linear vs pwl vs smooth
+```{r cross validation}
+
+crashes_by_year     = airplane_df |> 
+  count(year, name  = "total_crashes")|>
+  mutate(year_cp1990= (year > 1990) * (year - 1990))
+
+set.seed(1)
+cv_df = crossv_mc(crashes_by_year, 100)
+
+linear_mod = lm(total_crashes ~ year, data = crashes_by_year)
+pwl_mod    = lm(total_crashes ~ year + year_cp1990, data = crashes_by_year)
+smooth_mod = gam(total_crashes ~ s(year), data = crashes_by_year)
+## compare 3 models
+## visually smooth mod is better
+crashes_by_year |> 
+  gather_predictions(linear_mod, pwl_mod, smooth_mod) |> 
+  mutate(model = fct_inorder(model)) |> 
+  ggplot(aes(x = year, y = total_crashes)) + 
+  geom_point(alpha = .5) +
+  geom_line(aes(y = pred), color = "red") + 
+  facet_grid(~model)
+             
+cv_df <- cv_df |> 
+  mutate(
+    train = map(train, as_tibble),
+    test  = map(test, as_tibble)
+  ) |> 
+  mutate(
+    
+    linear_mod = map(train, \(df) lm(total_crashes ~ year, data = df)),
+    pwl_mod     = map(train, \(df) lm(total_crashes ~ year + year_cp1990, data = df)),
+    smooth_mod = map(train, \(df) gam(total_crashes ~ s(year), data = df))
+  ) |> 
+  mutate(
+    # calculate RMSE
+    rmse_linear = map2_dbl(linear_mod, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_pwl   = map2_dbl(pwl_mod, test, \(mod, df) rmse(model = mod, data = df)),
+    rmse_smooth = map2_dbl(smooth_mod, test, \(mod, df) rmse(model = mod, data = df))
+  )
+
+
+cv_df |> 
+  select(starts_with("rmse")) |> 
+  pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_"
+  ) |> 
+  mutate(model = fct_inorder(model)) |> 
+  ggplot(aes(x = model, y = rmse)) + 
+  geom_violin()
+
+summary(smooth_mod)

@@ -147,7 +147,6 @@ airplane_df = airplane_df |>
   )
 ```
 
-
 Cleaning these variables allowed us to:
 - filter crashes by fatality count
 - color-code operators in maps
@@ -158,7 +157,6 @@ Because the raw dataset contained only text descriptions of crash locations, our
 - latitude and longitude for each crash
 We merged this data with our cleaned dataset, this action produced the final dataset used in all mapping visuals: 
 
-
 ```{r, eval=FALSE}
 df_map <- airplane_df |>
   left_join(geocoded_locations,
@@ -166,7 +164,6 @@ df_map <- airplane_df |>
   filter(!is.na(Latitude), !is.na(Longitude))
 ```
 
-  
 5. Preparing the Shared Dataset for Interactive Filtering
 To allow dynamic filtering without Shiny, I used the crosstalk package. This connects:
 - the map
