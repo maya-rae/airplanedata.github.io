@@ -163,7 +163,7 @@ month_summary |>
 
 ## Does the average yearly crashes differ across the months?
 
-While the Chi-Square test examined aggregate totals, it did not account for year-to-year variability. To address this, we aggregate crash counts by year and season to calculate the mean yearly crash rate. We then perform a One-Way ANOVA to determine if the average number of airplane crashes per year differs significantly across the four seasons.
+Chi-Square test examined aggregate totals, but it did not account for year-to-year variability. To address this, we aggregate crash counts by year and season to calculate the mean yearly crash rate. We then perform a One-Way ANOVA to determine if the average number of airplane crashes per year differs significantly across the months.
 
 The ANOVA results yield a p-value of 0.039, which is below the 0.05 significance level. 
 
@@ -187,6 +187,7 @@ aov(crash_count ~ factor(month), data = _) |>
     se = sd(crash_count) / sqrt(n())
   ) |>
   ggplot(aes(x = month, y = mean_crashes)) +
+  scale_x_continuous(breaks = 1:12) +
   geom_col(fill = "steelblue",show.legend = FALSE) +
   geom_errorbar(aes(ymin = mean_crashes - se,
                     ymax = mean_crashes + se),

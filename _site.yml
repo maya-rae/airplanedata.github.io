@@ -11,7 +11,7 @@ navbar:
       href: descriptive_stats.html
     - text: "Interactive Map Search"
       href: InteractiveMapSearch.html
-    - text: "ANOVA"
+    - text: "Statistical Analysis"
       href: ANOVA.html    
     - text: "Final Report"
       href: final_report.html

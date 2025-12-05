@@ -380,27 +380,40 @@ div.tocify {
 dataset.</p>
 <p>Load &amp; Clean Data</p>
 <pre><code>## Rows: 5268 Columns: 13
-## ── Column specification ─────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (10): Date, Time, Location, Operator, Flight #, Route, Type, Registratio...
 ## dbl  (3): Aboard, Fatalities, Ground
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>airplane_df = airplane_df |&gt; 
-  mutate(
-    decade = floor(year / 10) * 10, 
-    decade = paste0(decade, &quot;s&quot;)
-  ) |&gt; 
-  select(date, year, decade, month, month_name, everything()) </code></pre>
+<pre><code>## Rows: 4304 Columns: 3
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (1): location_clean
+## dbl (2): Latitude, Longitude
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <hr />
 <div
 id="are-total-airplane-crashes-evenly-distributed-across-the-four-seasons"
 class="section level2">
 <h2>Are total airplane crashes evenly distributed across the four
 seasons?</h2>
-<pre class="r"><code>airplane_season = airplane_df |&gt;
-  filter(aboard &gt; 0, !is.na(fatalities)) |&gt; 
+<p>To investigate potential seasonal trends in aviation safety, we
+select data from northern hemisphere grouped the crash data by month of
+the accident. We then performed a Chi-Square Goodness of Fit Test to
+determine if total historical crashes are evenly distributed throughout
+the year. The null hypothesis assumes that accidents occur with equal
+frequency across all months.</p>
+<p>The analysis reveals a statistically significant difference in crash
+frequency across seasons. The Chi-Square test yields a p-value well
+below the 0.05 significance threshold, leading us to reject the
+null.</p>
+<pre class="r"><code>airplane_north = df_map |&gt;
+  filter(aboard &gt; 0, !is.na(fatalities))|&gt;
+   filter(Latitude&gt; 0)|&gt; 
   mutate(
     survival_rate = (aboard - fatalities) / aboard,
     month_num     = month(date),
@@ -414,96 +427,113 @@ seasons?</h2>
   filter(!is.na(season)) |&gt;
   mutate(season = fct_relevel(season, &quot;Spring&quot;, &quot;Summer&quot;, &quot;Fall&quot;, &quot;Winter&quot;))
 
-season_summary = airplane_season |&gt;
-  # ---- seasonal crash counts ----
-  count(season, name = &quot;n&quot;) |&gt;
-
+  
+month_summary = airplane_north |&gt;
+   filter(Latitude&gt; 0)|&gt; 
+  count(month, name = &quot;n&quot;)|&gt;
   # ---- compute expected + chisq ----
-  mutate(
-    expected = mean(n),
+    mutate(
+    expected = mean (n),
     chisq = list(chisq.test(n)),
     residual = n - expected,
     std_resid = (n - expected) / sqrt(expected)
   )|&gt; print()</code></pre>
-<pre><code>## # A tibble: 4 × 6
-##   season     n expected chisq   residual std_resid
-##   &lt;fct&gt;  &lt;int&gt;    &lt;dbl&gt; &lt;list&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 Spring  1194    1308. &lt;htest&gt;   -114.     -3.17 
-## 2 Summer  1283    1308. &lt;htest&gt;    -25.5    -0.705
-## 3 Fall    1357    1308. &lt;htest&gt;     48.5     1.34 
-## 4 Winter  1400    1308. &lt;htest&gt;     91.5     2.53</code></pre>
+<pre><code>## # A tibble: 12 × 6
+##    month     n expected chisq   residual std_resid
+##    &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;list&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1     1   257     230. &lt;htest&gt;  26.9      1.77   
+##  2     2   230     230. &lt;htest&gt;  -0.0833  -0.00549
+##  3     3   231     230. &lt;htest&gt;   0.917    0.0604 
+##  4     4   194     230. &lt;htest&gt; -36.1     -2.38   
+##  5     5   170     230. &lt;htest&gt; -60.1     -3.96   
+##  6     6   197     230. &lt;htest&gt; -33.1     -2.18   
+##  7     7   223     230. &lt;htest&gt;  -7.08    -0.467  
+##  8     8   241     230. &lt;htest&gt;  10.9      0.720  
+##  9     9   235     230. &lt;htest&gt;   4.92     0.324  
+## 10    10   247     230. &lt;htest&gt;  16.9      1.12   
+## 11    11   248     230. &lt;htest&gt;  17.9      1.18   
+## 12    12   288     230. &lt;htest&gt;  57.9      3.82</code></pre>
 <pre class="r"><code># extract p-value
-chisq_p = season_summary$chisq[[1]]$p.value
+chisq_p = month_summary$chisq[[1]]$p.value
 chisq_p</code></pre>
-<pre><code>## [1] 0.0003135229</code></pre>
+<pre><code>## [1] 1.888765e-06</code></pre>
 <pre class="r"><code># ---- plot ----
-season_summary |&gt;
-  ggplot(aes(season, n)) +
+month_summary |&gt;
+  ggplot(aes(month, n)) +
   geom_col(fill = &quot;steelblue&quot;) +
   geom_hline(aes(yintercept = expected),
              linetype = &quot;dashed&quot;, size = 1) +
+  scale_x_continuous(breaks = 1:12) +
   labs(
-    title = &quot;Total Crashes by Season&quot;,
+    title = &quot;Total Crashes by month&quot;,
     subtitle = paste(&quot;Chi-Square p-value =&quot;, format.pval(chisq_p)),
-    x = &quot;Season&quot;,
+    x = &quot;Month&quot;,
     y = &quot;Total Number of Crashes&quot;
   ) +
   theme_minimal() +
   theme(legend.position = &quot;none&quot;)</code></pre>
 <p><img src="ANOVA_files/figure-html/chisq%20for%20crash%20distribution%20across%20season-1.png" width="90%" /></p>
 </div>
-<div id="does-the-average-yearly-crashes-differ-across-the-four-seasons"
+<div id="does-the-average-yearly-crashes-differ-across-the-months"
 class="section level2">
-<h2>Does the average yearly crashes differ across the four seasons?</h2>
+<h2>Does the average yearly crashes differ across the months?</h2>
+<p>Chi-Square test examined aggregate totals, but it did not account for
+year-to-year variability. To address this, we aggregate crash counts by
+year and season to calculate the mean yearly crash rate. We then perform
+a One-Way ANOVA to determine if the average number of airplane crashes
+per year differs significantly across the months.</p>
+<p>The ANOVA results yield a p-value of 0.039, which is below the 0.05
+significance level.</p>
 <pre class="r"><code>cat(&quot;=== ANOVA result ===\n&quot;)</code></pre>
 <pre><code>## === ANOVA result ===</code></pre>
-<pre class="r"><code>airplane_season |&gt; 
+<pre class="r"><code>airplane_north |&gt; 
   # Count crashes per year/season combo
-  count(year, season, name = &quot;crash_count&quot;)|&gt;
+  count(year, month, name = &quot;crash_count&quot;)|&gt;
 
 # ANOVA 
-aov(crash_count ~ season, data = _) |&gt; 
+aov(crash_count ~ factor(month), data = _) |&gt; 
   summary()</code></pre>
-<pre><code>##              Df Sum Sq Mean Sq F value Pr(&gt;F)  
-## season        3    433  144.25   2.815 0.0391 *
-## Residuals   370  18963   51.25                 
+<pre><code>##                Df Sum Sq Mean Sq F value Pr(&gt;F)  
+## factor(month)  11   60.2   5.470   1.873 0.0393 *
+## Residuals     923 2695.8   2.921                 
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <pre class="r"><code># ---- plot ----
- airplane_season |&gt; 
-  count(year, season, name = &quot;crash_count&quot;)|&gt;
-  group_by(season) |&gt;
+ airplane_north |&gt; 
+  count(year, month, name = &quot;crash_count&quot;)|&gt;
+  group_by(month) |&gt;
   summarise(
     mean_crashes = mean(crash_count),
     se = sd(crash_count) / sqrt(n())
   ) |&gt;
-  ggplot(aes(x = season, y = mean_crashes)) +
+  ggplot(aes(x = month, y = mean_crashes)) +
+  scale_x_continuous(breaks = 1:12) +
   geom_col(fill = &quot;steelblue&quot;,show.legend = FALSE) +
   geom_errorbar(aes(ymin = mean_crashes - se,
                     ymax = mean_crashes + se),
                 width = 0.15) +
   labs(
-    title = &quot;Average Yearly Airplane Crashes by Season&quot;,
-        x = &quot;Season&quot;,
+    title = &quot;Average Yearly Airplane Crashes in Northern Hemisphere by Month&quot;,
+        x = &quot;Month&quot;,
     y = &quot;Average Crash Count&quot;
   ) +
   theme_minimal()</code></pre>
 <p><img src="ANOVA_files/figure-html/anova%20for%20seaonal%20crashes%20per%20year-1.png" width="90%" /></p>
 </div>
-<div id="what-about-seasonale-differences-of-fatality-rate"
+<div id="what-about-differences-of-fatality-rate-across-months"
 class="section level2">
-<h2>What about seasonale differences of fatality rate?</h2>
-<p>No significant evidence suggest that there are seasonal differences
-of fatality rate.</p>
+<h2>What about differences of fatality rate across months?</h2>
+<p>No significant evidence suggest that there are monthly differences of
+fatality rate.</p>
 <pre class="r"><code>cat(&quot;=== ANOVA result ===\n&quot;)</code></pre>
 <pre><code>## === ANOVA result ===</code></pre>
-<pre class="r"><code>airplane_season|&gt;
+<pre class="r"><code>airplane_north|&gt;
  ##ANOVA
-aov(survival_rate ~ season, data = _ )|&gt;
+aov(survival_rate ~ factor(month), data = _ )|&gt;
 summary()</code></pre>
-<pre><code>##               Df Sum Sq Mean Sq F value Pr(&gt;F)
-## season         3    0.5 0.17340   1.942  0.121
-## Residuals   5230  467.1 0.08931</code></pre>
+<pre><code>##                 Df Sum Sq Mean Sq F value Pr(&gt;F)
+## factor(month)   11   0.76 0.06933   0.675  0.764
+## Residuals     2749 282.37 0.10272</code></pre>
 </div>
 <div id="is-the-fatality-rate-lower-over-the-years"
 class="section level2">
@@ -561,6 +591,13 @@ just the time period.</p>
 <div id="are-the-number-of-crash-events-higher-or-lower-over-the-years"
 class="section level2">
 <h2>Are the number of crash events higher or lower over the years?</h2>
+<p>To describe the historical trend of aviation safety, we aggregate the
+total number of crashes per year. We then fit a simple linear regression
+model to determine if there is a statistically significant linear
+increase or decrease in crash frequency over the recorded time period
+(1908–2009).</p>
+<p>The linear regression analysis reveals a statistically significant
+upward trend.</p>
 <pre class="r"><code>crashes_by_year = airplane_df |&gt; 
   count(year, name = &quot;total_crashes&quot;)
 
@@ -600,6 +637,14 @@ summary(fit_count)</code></pre>
 <div id="cross-validation-linear-vs-pwl-vs-smooth"
 class="section level2">
 <h2>Cross validation : linear vs pwl vs smooth</h2>
+<p>While the simple linear regression suggests a significant upward
+trend, visual inspection implies a non-linear pattern with distinct
+peaks and valleys. To scientifically determine the best approach for
+describing this historical data, we performed Cross-Validation (CV). We
+compared three candidate models: a linear model, a piecewise linear
+model (assuming a structural break around 1990), and a generalized
+additive model (GAM) using smoothing splines. We evaluated them based on
+their ability to predict unseen data subsets.</p>
 <pre class="r"><code>crashes_by_year     = airplane_df |&gt; 
   count(year, name  = &quot;total_crashes&quot;)|&gt;
   mutate(year_cp1990= (year &gt; 1990) * (year - 1990))
@@ -673,6 +718,13 @@ cv_df |&gt;
 ## 
 ## R-sq.(adj) =   0.86   Deviance explained = 87.2%
 ## GCV = 116.67  Scale est. = 105.48    n = 98</code></pre>
+<p>The visual comparison of the cross-validated predictions clearly
+demonstrates the limitations of the linear model. The linear fit (left
+panel) fails to capture the mid-century rise and the late-century
+decline in crashes, resulting in high systematic error. The piecewise
+model (middle panel) offers an improvement by accounting for the recent
+downtrend, but the Smooth (GAM) model (right panel) provides the
+superior fit。</p>
 </div>
 
 
