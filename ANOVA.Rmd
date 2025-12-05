@@ -149,7 +149,7 @@ season_summary |>
 
 ```
 
-## Does the average yearly crashes differ across four seasons?
+## Does the average yearly crashes differ across the four seasons?
 ```{r anova for seaonal crashes per year}
 
 cat("=== ANOVA result ===\n")
@@ -185,7 +185,7 @@ aov(crash_count ~ season, data = _) |>
 
 ## What about seasonale differences of fatality rate?
 
-No significant evidence suggest there's seasonal differences of fatality rate
+No significant evidence suggest that there are seasonal differences of fatality rate.
 
 ```{r anova for season and fatality}
 
@@ -200,7 +200,7 @@ summary()
 ```
 ## Is the fatality rate lower over the years?
 
-Statistical evidence confirms that airplane has become safer over time regarding survivability. linear regression analysis reveals a statistically significant negative correlation between year and fatality rate (p < 0.001). 
+Statistical evidence confirms that airplanes have become safer over time regarding survivability. Linear regression analysis reveals a statistically significant negative correlation between year and fatality rate (p < 0.001). 
 However, the low R-squared value (0.004) indicates that while the downward trend is consistent, the outcome of any individual crash is heavily influenced by situational factors other than just the time period.
 
 ```{r lm year ~ fatality}
@@ -232,7 +232,7 @@ However, the low R-squared value (0.004) indicates that while the downward trend
 ```
 
 
-## Is the number of crash event higher or lower over the years?
+## Are the number of crash events higher or lower over the years?
 ```{r}
 
 crashes_by_year = airplane_df |> 
@@ -252,6 +252,7 @@ fit_count <- lm(total_crashes ~ year, data = crashes_by_year)
 
 summary(fit_count)
 ```
+
 ## Cross validation : linear vs pwl vs smooth
 ```{r cross validation}
 
