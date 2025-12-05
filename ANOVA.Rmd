@@ -86,17 +86,27 @@ airplane_df = airplane_df |>
   )
 ```
 
-```{r}
+```{r echo = FALSE}
 airplane_df = airplane_df |> 
   mutate(
     decade = floor(year / 10) * 10, 
     decade = paste0(decade, "s")
   ) |> 
   select(date, year, decade, month, month_name, everything()) 
+
+geocoded_locations = read_csv("datasets/geocoded_cache.csv")
+
+df_map <- airplane_df |>
+  left_join(geocoded_locations, by = c("location" = "location_clean")) |>
+  filter(!is.na(Latitude), !is.na(Longitude))
 ```
 --- 
 
 ## Are total airplane crashes evenly distributed across the four seasons?
+
+To investigate potential seasonal trends in aviation safety, we select data from northern hemisphere grouped the crash data by month of the accident. We then performed a Chi-Square Goodness of Fit Test to determine if total historical crashes are evenly distributed throughout the year. The null hypothesis assumes that accidents occur with equal frequency across all months. 
+
+The analysis reveals a statistically significant difference in crash frequency across seasons. The Chi-Square test yields a p-value of approximately 0.0003, which is well below the 0.05 significance threshold, leading us to reject the null.
 ```{r chisq for crash distribution across season}
 
 airplane_season = airplane_df |>
@@ -126,22 +136,32 @@ season_summary = airplane_season |>
     std_resid = (n - expected) / sqrt(expected)
   )|> print()
  
-
+month_summary = df_map |>
+   filter(Latitude> 0)|> 
+  count(month, name = "n")|>
+    mutate(
+    expected = mean (n),
+    chisq = list(chisq.test(n)),
+    residual = n - expected,
+    std_resid = (n - expected) / sqrt(expected)
+  )|> print()
+  
 # extract p-value
-chisq_p = season_summary$chisq[[1]]$p.value
+chisq_p = month_summary$chisq[[1]]$p.value
 chisq_p
 
 
 # ---- plot ----
-season_summary |>
-  ggplot(aes(season, n)) +
+month_summary |>
+  ggplot(aes(month, n)) +
   geom_col(fill = "steelblue") +
   geom_hline(aes(yintercept = expected),
              linetype = "dashed", size = 1) +
+  scale_x_continuous(breaks = 1:12) +
   labs(
-    title = "Total Crashes by Season",
+    title = "Total Crashes by month",
     subtitle = paste("Chi-Square p-value =", format.pval(chisq_p)),
-    x = "Season",
+    x = "Month",
     y = "Total Number of Crashes"
   ) +
   theme_minimal() +
