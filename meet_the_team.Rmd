@@ -4,7 +4,6 @@ output:
   html_document:
     toc: true
     toc_float: true 
-    code_folding: hide 
 editor_options: 
   chunk_output_type: console
 
@@ -110,11 +109,11 @@ Maya is a Master's Student in Environmental Health Data Science at Columbia Univ
 </div>
 
 <div class="team-member">
-<img src="images/.jpg" alt="XX">
-<h3>XX</h3>
+<img src="images/cassie_laney.png" alt="Casandra Laney">
+<h3>Casandra Laney</h3>
 <p>Collaborator</p>
 <div class="bio">
-  
+Casandra is a Master's Student in Environmental Health Data Science at Columbia University's Mailman School of Public Health.
 </div>
 </div>
 
@@ -124,5 +123,14 @@ Maya is a Master's Student in Environmental Health Data Science at Columbia Univ
 <p>Collaborator</p>
 <div class="bio">
 Zichen graduated from Duke Kunshan University and is now studying Environmental Health Data Science at Columbia Mailman.
+</div>
+</div>
+
+<div class="team-member">
+<img src="images/xx.png" alt="Karolina Wiesiolek">
+<h3>Karolina Wiesiolek</h3>
+<p>Collaborator</p>
+<div class="bio">
+Karolina is a Master's Student in Environmental Health Data Science at Columbia University's Mailman School of Public Health.
 </div>
 </div>
