@@ -127,7 +127,7 @@ Zichen graduated from Duke Kunshan University and is now studying Environmental 
 </div>
 
 <div class="team-member">
-<img src="images/xx.png" alt="Karolina Wiesiolek">
+<img src="images/karolina_wiesiolek.jpg" alt="Karolina Wiesiolek">
 <h3>Karolina Wiesiolek</h3>
 <p>Collaborator</p>
 <div class="bio">
