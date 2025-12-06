@@ -87,7 +87,7 @@ The dataset was sourced as a CSV file from [Kaggle](https://www.kaggle.com) and 
 ### Data Cleaning and Preparation
 Before performing geographic or temporal analysis, our dataset required substantial cleaning due to inconsistent formatting and missing coordinate data. We wrote the preprocessing code used throughout the analysis pipeline. It included four major steps:  
 
-1. The dataset was initially loaded as a tibble to be able to process, clean, and analyze it. Rows from `aboard` and `ground` with missing or placeholder values were  were removed to ensure cleaner data for analysis. `flight-number`, `time`, and `registration` columns were dropped because these did not contain relevant information for our analysis.
+1. The dataset was initially loaded as a tibble to be able to process, clean, and analyze it. Rows from `aboard` and `ground` with missing or placeholder values were  removed to ensure cleaner data for analysis. `flight-number`, `time`, and `registration` columns were dropped because these did not contain relevant information for our analysis.
 
 ```{r, eval=FALSE}
 airplane_df = read_csv("datasets/airplane_crashes_data.csv", show_col_types = FALSE) |> 
