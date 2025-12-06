@@ -13,7 +13,7 @@ editor_options:
 This file contains ANOVA and respective post-hoc tests of the dataset.
 
 
-Load & Clean Data
+First, the same loading and cleaning method was used. 
 
 ```{r message=FALSE, warning=FALSE, include=FALSE}
 
@@ -94,7 +94,7 @@ airplane_df = airplane_df |>
   ) |> 
   select(date, year, decade, month, month_name, everything()) 
 
-geocoded_locations = read_csv("datasets/geocoded_cache.csv")
+geocoded_locations = read_csv("datasets/geocoded_cache.csv", show_col_types = FALSE)
 
 df_map <- airplane_df |>
   left_join(geocoded_locations, by = c("location" = "location_clean")) |>

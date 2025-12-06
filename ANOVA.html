@@ -379,22 +379,6 @@ div.tocify {
 <p>This file contains ANOVA and respective post-hoc tests of the
 dataset.</p>
 <p>Load &amp; Clean Data</p>
-<pre><code>## Rows: 5268 Columns: 13
-## ── Column specification ─────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (10): Date, Time, Location, Operator, Flight #, Route, Type, Registratio...
-## dbl  (3): Aboard, Fatalities, Ground
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre><code>## Rows: 4304 Columns: 3
-## ── Column specification ─────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (1): location_clean
-## dbl (2): Latitude, Longitude
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <hr />
 <div
 id="are-total-airplane-crashes-evenly-distributed-across-the-four-seasons"
@@ -482,7 +466,9 @@ crash counts by year and season to calculate the mean yearly crash rate.
 We then performed a One-Way ANOVA to determine if the average number of
 airplane crashes per year differs significantly across the months.</p>
 <p>The ANOVA results yielded a p-value of 0.039, which was below the
-0.05 significance level.</p>
+0.05 significance level. Although, the average number of crashes per
+month is small, so even a few events can create “significant”
+differences.</p>
 <pre class="r"><code>cat(&quot;=== ANOVA result ===\n&quot;)</code></pre>
 <pre><code>## === ANOVA result ===</code></pre>
 <pre class="r"><code>airplane_north |&gt; 
