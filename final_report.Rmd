@@ -194,46 +194,44 @@ This enabled an interactive interface where users can:
 
 ### Statistical Analysis
 
-We used ANOVA to statistically investigate questions about our dataset. To see the code we used to conduct our statistical analyses along with our figures, check out our [Statistical Analysis page](ANOVA.html).
+We used methods including ANOVA to statistically investigate questions about our dataset. To see the code we used to conduct our statistical analyses along with our figures, check out our [Statistical Analysis page](ANOVA.html).
 
-**Are total airplane crashes evenly distributed across the four seasons?**
+**Seasonal Trends: Does the average number of crash events differ across months? **
 
-To investigate potential seasonal trends in aviation safety, we selected data from Northern Hemisphere and grouped the crash data by month of the accident. We then performed a Chi-Squared Test to determine if total historical crashes were evenly distributed throughout the year. The null hypothesis assumed that accidents occurred with equal frequency across all months. 
+To investigate potential seasonal trends in aviation safety, we focused on data from the Northern Hemisphere and aggregated crash counts by month. We performed a One-Way ANOVA to test the null hypothesis that accident frequency is evenly distributed throughout the year.
 
-The analysis revealed a statistically significant difference in crash frequency across seasons. The Chi-Squared test yielded a p-value below the 0.05 significance threshold, allowing us to reject the null.
+- Significant Finding: The analysis yielded a p-value of 0.039, falling below the 0.05 significance threshold.
 
+- We reject the null hypothesis. There is statistically significant evidence that crash frequencies vary by month in the Northern Hemisphere.
 
-**Does the average yearly crashes differ across the months?**
-
-The Chi-Squared test examined aggregate totals, but it did not account for year-to-year variability. To address this, we aggregated crash counts by year and season to calculate the mean yearly crash rate. We then performed a One-Way ANOVA to determine if the average number of airplane crashes per year differs significantly across the months.
-
-The ANOVA results yielded a p-value of 0.039, which was below the 0.05 significance level. Although, the average number of crashes per month is small, so even a few events can create "significant" differences.
-
-**What about differences of fatality rate across months?**
-
-No significant evidence suggested a monthly difference of fatality rate.
+This finding suggest that seasonal factors (such as winter weather conditions) likely contribute to accident rates. However, we note that secondary analysis on fatality rates across months did not yield significant results, implying that while seasons affect the occurrence of crashes, they do not necessarily dictate the survivability of those crashes.
 
 
-**Is the fatality rate lower over the years?*
+**Survivability Trends: Is the fatality rate lower over time?**
 
-Statistical evidence confirmed that airplanes have become safer over time regarding rate of survival. Linear regression analysis revealed a statistically significant negative correlation between year and fatality rate (p < 0.001). 
+We evaluated long-term improvements in aviation survivability by modeling the relationship between time (Year) and Fatality Rate (Fatalities / Aboard), with simple linear regression.
 
-However, the low R-squared value (0.004) indicated that while the downward trend is consistent, the outcome of any individual crash is heavily influenced by situational factors other than just the time period.
+- The model revealed a highly statistically significant negative correlation ($p < 0.001$) between year and fatality rate.
+- Airplanes have become statistically safer over time regarding survivability. 
 
+However, the low R-squared value (0.015) shows that while the aggregate risk has decreased historically, "time" itself explains very little of the variance for individual crashes. The outcome of any specific incident is determined primarily by immediate situational factors rather than the broad historical era in which it occurred. And the year's average fatility rate is still largely determined by random effect.
 
-**Are the number of crash events higher or lower over the years?**
+**Historical Frequency: Are the number of crash events higher or lower over the years?**
 
-To describe the historical trend of aviation safety, we aggregated the total number of crashes per year. We then fitted a simple linear regression model to determine if there was a statistically significant linear increase or decrease in crash frequency over the recorded time period (1908–2009).
+To describe the historical trajectory of aviation safety, we analyzed the total number of crashes per year (1908–2009). We compared two modeling approaches: a Simple Linear Regression and a LOESS (Locally Estimated Scatterplot Smoothing) model.
 
-The linear regression analysis revealed a statistically significant upward trend.
+- The LOESS model provides a better fit.
+- Linear model fails to describe the historical fluctuations and recent down trend.
 
+The linear model showed a significant upward trend but have a relatively high error.Linear interpretation is misleading. The LOESS model reveals the true non-linear history of aviation: a sharp rise in accidents during the mid-20th century (the expansion of commercial aviation) followed by a distinct decline in recent decades due to technological and regulatory advancements.
 
-**Cross validation : linear vs pwl vs smooth**
+**Cause Analysis: What are the primary recurring themes？**
 
-While the SLR suggested a significant upward trend, visual inspection implied a non-linear pattern with distinct peaks and valleys. To scientifically determine the best approach for describing this historical data, we performed Cross-Validation (CV). We compared three candidate models: a linear model, a piece wise linear model (assuming a structural break around 1990), and a generalized additive model (GAM) using smoothing splines. We evaluated them based on their ability to predict unseen data subsets.
+To identify the common causes of accidents, we moved beyond numerical testing to perform unstructured text mining on crash summary descriptions.We used text tokenization and stop-word removal, followed by frequency analysis (Word Cloud).
 
+- After removing generic terms (e.g., "plane", "crashed"), the most frequent terms included "engine", "runway", "landing", "approach", and "weather".
 
-The visual comparison of the cross-validated predictions clearly demonstrated the limitations of the linear model. The linear fit (left panel) failed to capture the mid-century rise and the late-century decline in crashes, resulting in high systematic error. The piece wise model (middle panel) offered an improvement by accounting for the recent downtrend, but the Smooth (GAM) model (right panel) provides the superior fit. 
+The qualitative data may suggest mechanical failure (engine) and the critical phases of flight (takeoff/landing/approach) are the predominant contexts for historical accidents. Environmental factors, indicated by terms like "fog" and "weather," also play a substantial role.
 
 
 # Discussion
