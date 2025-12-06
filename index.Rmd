@@ -60,6 +60,6 @@ output: html_document
 
 <!-- Centered Video -->
 <div class="video-wrapper">
-  <video src="path/to/your/video.mp4" 
+  <video src="images/sitecast.mp4" 
          autoplay loop muted playsinline controls></video>
 </div>
