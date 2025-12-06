@@ -378,22 +378,19 @@ div.tocify {
 
 <p>This file contains ANOVA and respective post-hoc tests of the
 dataset.</p>
-<p>Load &amp; Clean Data</p>
+<p>First, the same loading and cleaning method was used.</p>
 <hr />
-<div
-id="are-total-airplane-crashes-evenly-distributed-across-the-four-seasons"
+<div id="does-the-average-number-of-crashes-differs-across-months"
 class="section level2">
-<h2>Are total airplane crashes evenly distributed across the four
-seasons?</h2>
+<h2>Does the average number of crashes differs across months?</h2>
 <p>To investigate potential seasonal trends in aviation safety, we
-selected data from Northern Hemisphere and grouped the crash data by
-month of the accident. We then performed a Chi-Squared Test to determine
-if total historical crashes were evenly distributed throughout the year.
-The null hypothesis assumed that accidents occurred with equal frequency
-across all months.</p>
-<p>The analysis revealed a statistically significant difference in crash
-frequency across seasons. The Chi-Squared test yielded a p-value below
-the 0.05 significance threshold, allowing us to reject the null.</p>
+selected data from Northern Hemisphere and plot the accident per month.
+We then performed a One-Way ANOVA to determine if the average number of
+airplane crashes differs significantly across the months.</p>
+<p>The ANOVA results yielded a p-value of 0.039, which was below the
+0.05 significance level. Although, the average number of crashes per
+month is small, so even a few events can create “significant”
+differences.</p>
 <pre class="r"><code>airplane_north = df_map |&gt;
   filter(aboard &gt; 0, !is.na(fatalities))|&gt;
    filter(Latitude&gt; 0)|&gt; 
@@ -410,66 +407,7 @@ the 0.05 significance threshold, allowing us to reject the null.</p>
   filter(!is.na(season)) |&gt;
   mutate(season = fct_relevel(season, &quot;Spring&quot;, &quot;Summer&quot;, &quot;Fall&quot;, &quot;Winter&quot;))
 
-  
-month_summary = airplane_north |&gt;
-   filter(Latitude&gt; 0)|&gt; 
-  count(month, name = &quot;n&quot;)|&gt;
-  # ---- compute expected + chisq ----
-    mutate(
-    expected = mean (n),
-    chisq = list(chisq.test(n)),
-    residual = n - expected,
-    std_resid = (n - expected) / sqrt(expected)
-  )|&gt; print()</code></pre>
-<pre><code>## # A tibble: 12 × 6
-##    month     n expected chisq   residual std_resid
-##    &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;list&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-##  1     1   257     230. &lt;htest&gt;  26.9      1.77   
-##  2     2   230     230. &lt;htest&gt;  -0.0833  -0.00549
-##  3     3   231     230. &lt;htest&gt;   0.917    0.0604 
-##  4     4   194     230. &lt;htest&gt; -36.1     -2.38   
-##  5     5   170     230. &lt;htest&gt; -60.1     -3.96   
-##  6     6   197     230. &lt;htest&gt; -33.1     -2.18   
-##  7     7   223     230. &lt;htest&gt;  -7.08    -0.467  
-##  8     8   241     230. &lt;htest&gt;  10.9      0.720  
-##  9     9   235     230. &lt;htest&gt;   4.92     0.324  
-## 10    10   247     230. &lt;htest&gt;  16.9      1.12   
-## 11    11   248     230. &lt;htest&gt;  17.9      1.18   
-## 12    12   288     230. &lt;htest&gt;  57.9      3.82</code></pre>
-<pre class="r"><code># extract p-value
-chisq_p = month_summary$chisq[[1]]$p.value
-chisq_p</code></pre>
-<pre><code>## [1] 1.888765e-06</code></pre>
-<pre class="r"><code># ---- plot ----
-month_summary |&gt;
-  ggplot(aes(month, n)) +
-  geom_col(fill = &quot;steelblue&quot;) +
-  geom_hline(aes(yintercept = expected),
-             linetype = &quot;dashed&quot;, size = 1) +
-  scale_x_continuous(breaks = 1:12) +
-  labs(
-    title = &quot;Total Crashes by month&quot;,
-    subtitle = paste(&quot;Chi-Square p-value =&quot;, format.pval(chisq_p)),
-    x = &quot;Month&quot;,
-    y = &quot;Total Number of Crashes&quot;
-  ) +
-  theme_minimal() +
-  theme(legend.position = &quot;none&quot;)</code></pre>
-<p><img src="ANOVA_files/figure-html/chisq%20for%20crash%20distribution%20across%20season-1.png" width="90%" /></p>
-</div>
-<div id="does-the-average-yearly-crashes-differ-across-the-months"
-class="section level2">
-<h2>Does the average yearly crashes differ across the months?</h2>
-<p>The Chi-Squared test examined aggregate totals, but it did not
-account for year-to-year variability. To address this, we aggregated
-crash counts by year and season to calculate the mean yearly crash rate.
-We then performed a One-Way ANOVA to determine if the average number of
-airplane crashes per year differs significantly across the months.</p>
-<p>The ANOVA results yielded a p-value of 0.039, which was below the
-0.05 significance level. Although, the average number of crashes per
-month is small, so even a few events can create “significant”
-differences.</p>
-<pre class="r"><code>cat(&quot;=== ANOVA result ===\n&quot;)</code></pre>
+cat(&quot;=== ANOVA result ===\n&quot;)</code></pre>
 <pre><code>## === ANOVA result ===</code></pre>
 <pre class="r"><code>airplane_north |&gt; 
   # Count crashes per year/season combo
