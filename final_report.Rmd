@@ -33,7 +33,7 @@ Our project is motivated by two main goals:
 2. Understand patterns across aircraft, operators, and seasons:
 
   + We are interested in which aircraft types, operators, and seasons are associated with more frequent or more severe crashes. We also plan to explore whether climate or seasonal patterns might be related to the timing or characteristics of crashes.
-  + By combining historical crash records with external data (e.g., climate data), we hope to create a clearer, data-driven picture of aviation safety trends that goes beyond anecdotal media coverage.
+  
 
 # Related work
 Several sources inspired this project:
