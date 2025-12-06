@@ -165,7 +165,7 @@ month_summary |>
 
 The Chi-Squared test examined aggregate totals, but it did not account for year-to-year variability. To address this, we aggregated crash counts by year and season to calculate the mean yearly crash rate. We then performed a One-Way ANOVA to determine if the average number of airplane crashes per year differs significantly across the months.
 
-The ANOVA results yielded a p-value of 0.039, which was below the 0.05 significance level. 
+The ANOVA results yielded a p-value of 0.039, which was below the 0.05 significance level. Although, the average number of crashes per month is small, so even a few events can create "significant" differences.
 
 ```{r anova for seaonal crashes per year}
 
