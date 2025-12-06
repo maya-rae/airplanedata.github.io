@@ -101,7 +101,7 @@ df_map <- airplane_df |>
   filter(!is.na(Latitude), !is.na(Longitude))
 ```
 --- 
-## Does the average number of crashes differs across months?
+## Does the average number of crash events differs across months?
 
 To investigate potential seasonal trends in aviation safety, we selected data from Northern Hemisphere and plot the accident per month. We then performed a One-Way ANOVA to determine if the average number of airplane crashes differs significantly across the months.
 
@@ -149,7 +149,7 @@ aov(crash_count ~ factor(month), data = _) |>
                     ymax = mean_crashes + se),
                 width = 0.15) +
   labs(
-    title = "Average Yearly Airplane Crashes in Northern Hemisphere by Month",
+    title = "Average Airplane Crashes in Northern Hemisphere per Month",
         x = "Month",
     y = "Average Crash Count"
   ) +
@@ -157,9 +157,7 @@ aov(crash_count ~ factor(month), data = _) |>
 
 ```
 
-## What about differences of fatality rate across months?
-
-No significant evidence suggested a monthly difference of fatality rate.
+We also test for the differences of fatality rate across months. BUt there is no significant evidence suggested a monthly difference of fatality rate.
 
 ```{r anova for season and fatality}
 
@@ -172,9 +170,9 @@ summary()
 
 
 ```
-## Is the fatality rate lower over the years?
+## Is the fatality rate lower over time?
 
-Statistical evidence confirmed that airplanes have become safer over time regarding rate of survival. Linear regression analysis revealed a statistically significant negative correlation between year and fatality rate (p < 0.001). 
+To evaluate the long-term trend in survivability, we plot the fatality rates per year. Statistical evidence confirmed that airplanes have become safer over time regarding rate of survival. Linear regression analysis revealed a statistically significant negative correlation between year and fatality rate (p < 0.001). 
 
 However, the low R-squared value (0.004) indicated that while the downward trend is consistent, the outcome of any individual crash is heavily influenced by situational factors other than just the time period.
 
@@ -188,6 +186,8 @@ However, the low R-squared value (0.004) indicated that while the downward trend
   ggplot(aes(x = year, y = mean_fatality_rate)) +
   geom_point(color = "steelblue", alpha = 0.6) +
   geom_smooth(method = "lm", color = "red", fill = "pink",se = TRUE) +
+   scale_x_continuous(breaks = seq(1910, 2010, by = 10) 
+  )+
   labs(
     title = "Trend in Airplane Fatality Rate Over Time",,
     x = "Year",
@@ -209,9 +209,8 @@ However, the low R-squared value (0.004) indicated that while the downward trend
 
 ## Are the number of crash events higher or lower over the years?
 
-To describe the historical trend of aviation safety, we aggregated the total number of crashes per year. We then fitted a simple linear regression model to determine if there was a statistically significant linear increase or decrease in crash frequency over the recorded time period (1908–2009).
-
-The linear regression analysis revealed a statistically significant upward trend.
+To describe the historical trend of aviation safety, we aggregated the total number of crashes per year. We then fitted a simple linear regression model and Loess model to determine if there was a statistically significant linear increase or decrease in crash frequency over the recorded time period (1908–2009).
+With a medium fitted model, the linear regression analysis revealed a statistically significant upward trend.But this failed to accurately describe the crash events overtime, LOESS could reveal more specific fluctuations and details in history.
 
 ```{r}
 
@@ -220,77 +219,21 @@ crashes_by_year = airplane_df |>
 
 ggplot(crashes_by_year, aes(x = year, y = total_crashes)) +
   geom_point(color = "steelblue", alpha = 0.6) +
-  geom_smooth(method = "lm", color = "red", fill = "pink") +
+  geom_smooth(method = "lm", color = "red", fill = "pink", se = TRUE, span = 0.2)+
+  geom_smooth(method = "loess", color = "royalblue", fill = "lightblue", se = TRUE, span = 0.2) +
+  scale_x_continuous(breaks = seq(1910, 2010, by = 10) 
+  ) +
   labs(
     title = "Trend of Total Airplane Crashes per Year",
+    subtitle = "Red: Linear Trend | Blue: LOESS Trend",
     x = "Year",
     y = "Total Number of Crashes"
   ) +
   theme_minimal()
 
-fit_count <- lm(total_crashes ~ year, data = crashes_by_year)
+fit_count_linear = lm(total_crashes ~ year, data = crashes_by_year)
+summary(fit_count_linear)
 
-summary(fit_count)
 ```
 
-## Cross validation : linear vs pwl vs smooth
-
-While the SLR suggested a significant upward trend, visual inspection implied a non-linear pattern with distinct peaks and valleys. To scientifically determine the best approach for describing this historical data, we performed Cross-Validation (CV). We compared three candidate models: a linear model, a piece wise linear model (assuming a structural break around 1990), and a generalized additive model (GAM) using smoothing splines. We evaluated them based on their ability to predict unseen data subsets.
-
-```{r cross validation}
-
-crashes_by_year     = airplane_df |> 
-  count(year, name  = "total_crashes")|>
-  mutate(year_cp1990= (year > 1990) * (year - 1990))
-
-set.seed(1)
-cv_df = crossv_mc(crashes_by_year, 100)
-
-linear_mod = lm(total_crashes ~ year, data = crashes_by_year)
-pwl_mod    = lm(total_crashes ~ year + year_cp1990, data = crashes_by_year)
-smooth_mod = gam(total_crashes ~ s(year), data = crashes_by_year)
-## compare 3 models
-## visually smooth mod is better
-crashes_by_year |> 
-  gather_predictions(linear_mod, pwl_mod, smooth_mod) |> 
-  mutate(model = fct_inorder(model)) |> 
-  ggplot(aes(x = year, y = total_crashes)) + 
-  geom_point(alpha = .5) +
-  geom_line(aes(y = pred), color = "red") + 
-  facet_grid(~model)
-             
-cv_df <- cv_df |> 
-  mutate(
-    train = map(train, as_tibble),
-    test  = map(test, as_tibble)
-  ) |> 
-  mutate(
-    
-    linear_mod = map(train, \(df) lm(total_crashes ~ year, data = df)),
-    pwl_mod     = map(train, \(df) lm(total_crashes ~ year + year_cp1990, data = df)),
-    smooth_mod = map(train, \(df) gam(total_crashes ~ s(year), data = df))
-  ) |> 
-  mutate(
-    # calculate RMSE
-    rmse_linear = map2_dbl(linear_mod, test, \(mod, df) rmse(model = mod, data = df)),
-    rmse_pwl   = map2_dbl(pwl_mod, test, \(mod, df) rmse(model = mod, data = df)),
-    rmse_smooth = map2_dbl(smooth_mod, test, \(mod, df) rmse(model = mod, data = df))
-  )
-
-
-cv_df |> 
-  select(starts_with("rmse")) |> 
-  pivot_longer(
-    everything(),
-    names_to = "model", 
-    values_to = "rmse",
-    names_prefix = "rmse_"
-  ) |> 
-  mutate(model = fct_inorder(model)) |> 
-  ggplot(aes(x = model, y = rmse)) + 
-  geom_violin()
-
-summary(smooth_mod)
-```
-
-The visual comparison of the cross-validated predictions clearly demonstrated the limitations of the linear model. The linear fit (left panel) failed to capture the mid-century rise and the late-century decline in crashes, resulting in high systematic error. The piece wise model (middle panel) offered an improvement by accounting for the recent downtrend, but the Smooth (GAM) model (right panel) provides the superior fit. 
+The visual comparison demonstrated the limitations of the linear model. The linear fit failed to capture the mid-century rise and the late-century decline in crashes, resulting in high systematic error. The LOESS model provides the superior fit account for historical fluctuations and recent down trend.

@@ -380,9 +380,9 @@ div.tocify {
 dataset.</p>
 <p>First, the same loading and cleaning method was used.</p>
 <hr />
-<div id="does-the-average-number-of-crashes-differs-across-months"
+<div id="does-the-average-number-of-crash-events-differs-across-months"
 class="section level2">
-<h2>Does the average number of crashes differs across months?</h2>
+<h2>Does the average number of crash events differs across months?</h2>
 <p>To investigate potential seasonal trends in aviation safety, we
 selected data from Northern Hemisphere and plot the accident per month.
 We then performed a One-Way ANOVA to determine if the average number of
@@ -436,18 +436,15 @@ aov(crash_count ~ factor(month), data = _) |&gt;
                     ymax = mean_crashes + se),
                 width = 0.15) +
   labs(
-    title = &quot;Average Yearly Airplane Crashes in Northern Hemisphere by Month&quot;,
+    title = &quot;Average Airplane Crashes in Northern Hemisphere per Month&quot;,
         x = &quot;Month&quot;,
     y = &quot;Average Crash Count&quot;
   ) +
   theme_minimal()</code></pre>
 <p><img src="ANOVA_files/figure-html/anova%20for%20seaonal%20crashes%20per%20year-1.png" width="90%" /></p>
-</div>
-<div id="what-about-differences-of-fatality-rate-across-months"
-class="section level2">
-<h2>What about differences of fatality rate across months?</h2>
-<p>No significant evidence suggested a monthly difference of fatality
-rate.</p>
+<p>We also test for the differences of fatality rate across months. BUt
+there is no significant evidence suggested a monthly difference of
+fatality rate.</p>
 <pre class="r"><code>cat(&quot;=== ANOVA result ===\n&quot;)</code></pre>
 <pre><code>## === ANOVA result ===</code></pre>
 <pre class="r"><code>airplane_north|&gt;
@@ -458,13 +455,13 @@ summary()</code></pre>
 ## factor(month)   11   0.76 0.06933   0.675  0.764
 ## Residuals     2749 282.37 0.10272</code></pre>
 </div>
-<div id="is-the-fatality-rate-lower-over-the-years"
-class="section level2">
-<h2>Is the fatality rate lower over the years?</h2>
-<p>Statistical evidence confirmed that airplanes have become safer over
-time regarding rate of survival. Linear regression analysis revealed a
-statistically significant negative correlation between year and fatality
-rate (p &lt; 0.001).</p>
+<div id="is-the-fatality-rate-lower-over-time" class="section level2">
+<h2>Is the fatality rate lower over time?</h2>
+<p>To evaluate the long-term trend in survivability, we plot the
+fatality rates per year. Statistical evidence confirmed that airplanes
+have become safer over time regarding rate of survival. Linear
+regression analysis revealed a statistically significant negative
+correlation between year and fatality rate (p &lt; 0.001).</p>
 <p>However, the low R-squared value (0.004) indicated that while the
 downward trend is consistent, the outcome of any individual crash is
 heavily influenced by situational factors other than just the time
@@ -477,6 +474,8 @@ period.</p>
   ggplot(aes(x = year, y = mean_fatality_rate)) +
   geom_point(color = &quot;steelblue&quot;, alpha = 0.6) +
   geom_smooth(method = &quot;lm&quot;, color = &quot;red&quot;, fill = &quot;pink&quot;,se = TRUE) +
+   scale_x_continuous(breaks = seq(1910, 2010, by = 10) 
+  )+
   labs(
     title = &quot;Trend in Airplane Fatality Rate Over Time&quot;,,
     x = &quot;Year&quot;,
@@ -517,28 +516,34 @@ class="section level2">
 <h2>Are the number of crash events higher or lower over the years?</h2>
 <p>To describe the historical trend of aviation safety, we aggregated
 the total number of crashes per year. We then fitted a simple linear
-regression model to determine if there was a statistically significant
-linear increase or decrease in crash frequency over the recorded time
-period (1908–2009).</p>
-<p>The linear regression analysis revealed a statistically significant
-upward trend.</p>
+regression model and Loess model to determine if there was a
+statistically significant linear increase or decrease in crash frequency
+over the recorded time period (1908–2009). With a medium fitted model,
+the linear regression analysis revealed a statistically significant
+upward trend.But this failed to accurately describe the crash events
+overtime, LOESS could reveal more specific fluctuations and details in
+history.</p>
 <pre class="r"><code>crashes_by_year = airplane_df |&gt; 
   count(year, name = &quot;total_crashes&quot;)
 
 ggplot(crashes_by_year, aes(x = year, y = total_crashes)) +
   geom_point(color = &quot;steelblue&quot;, alpha = 0.6) +
-  geom_smooth(method = &quot;lm&quot;, color = &quot;red&quot;, fill = &quot;pink&quot;) +
+  geom_smooth(method = &quot;lm&quot;, color = &quot;red&quot;, fill = &quot;pink&quot;, se = TRUE, span = 0.2)+
+  geom_smooth(method = &quot;loess&quot;, color = &quot;royalblue&quot;, fill = &quot;lightblue&quot;, se = TRUE, span = 0.2) +
+  scale_x_continuous(breaks = seq(1910, 2010, by = 10) 
+  ) +
   labs(
     title = &quot;Trend of Total Airplane Crashes per Year&quot;,
+    subtitle = &quot;Red: Linear Trend | Blue: LOESS Trend&quot;,
     x = &quot;Year&quot;,
     y = &quot;Total Number of Crashes&quot;
   ) +
   theme_minimal()</code></pre>
-<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;
+## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="ANOVA_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
-<pre class="r"><code>fit_count &lt;- lm(total_crashes ~ year, data = crashes_by_year)
-
-summary(fit_count)</code></pre>
+<pre class="r"><code>fit_count_linear = lm(total_crashes ~ year, data = crashes_by_year)
+summary(fit_count_linear)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = total_crashes ~ year, data = crashes_by_year)
@@ -557,98 +562,11 @@ summary(fit_count)</code></pre>
 ## Residual standard error: 18.03 on 96 degrees of freedom
 ## Multiple R-squared:  0.5722, Adjusted R-squared:  0.5677 
 ## F-statistic: 128.4 on 1 and 96 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-<div id="cross-validation-linear-vs-pwl-vs-smooth"
-class="section level2">
-<h2>Cross validation : linear vs pwl vs smooth</h2>
-<p>While the SLR suggested a significant upward trend, visual inspection
-implied a non-linear pattern with distinct peaks and valleys. To
-scientifically determine the best approach for describing this
-historical data, we performed Cross-Validation (CV). We compared three
-candidate models: a linear model, a piece wise linear model (assuming a
-structural break around 1990), and a generalized additive model (GAM)
-using smoothing splines. We evaluated them based on their ability to
-predict unseen data subsets.</p>
-<pre class="r"><code>crashes_by_year     = airplane_df |&gt; 
-  count(year, name  = &quot;total_crashes&quot;)|&gt;
-  mutate(year_cp1990= (year &gt; 1990) * (year - 1990))
-
-set.seed(1)
-cv_df = crossv_mc(crashes_by_year, 100)
-
-linear_mod = lm(total_crashes ~ year, data = crashes_by_year)
-pwl_mod    = lm(total_crashes ~ year + year_cp1990, data = crashes_by_year)
-smooth_mod = gam(total_crashes ~ s(year), data = crashes_by_year)
-## compare 3 models
-## visually smooth mod is better
-crashes_by_year |&gt; 
-  gather_predictions(linear_mod, pwl_mod, smooth_mod) |&gt; 
-  mutate(model = fct_inorder(model)) |&gt; 
-  ggplot(aes(x = year, y = total_crashes)) + 
-  geom_point(alpha = .5) +
-  geom_line(aes(y = pred), color = &quot;red&quot;) + 
-  facet_grid(~model)</code></pre>
-<p><img src="ANOVA_files/figure-html/cross%20validation-1.png" width="90%" /></p>
-<pre class="r"><code>cv_df &lt;- cv_df |&gt; 
-  mutate(
-    train = map(train, as_tibble),
-    test  = map(test, as_tibble)
-  ) |&gt; 
-  mutate(
-    
-    linear_mod = map(train, \(df) lm(total_crashes ~ year, data = df)),
-    pwl_mod     = map(train, \(df) lm(total_crashes ~ year + year_cp1990, data = df)),
-    smooth_mod = map(train, \(df) gam(total_crashes ~ s(year), data = df))
-  ) |&gt; 
-  mutate(
-    # calculate RMSE
-    rmse_linear = map2_dbl(linear_mod, test, \(mod, df) rmse(model = mod, data = df)),
-    rmse_pwl   = map2_dbl(pwl_mod, test, \(mod, df) rmse(model = mod, data = df)),
-    rmse_smooth = map2_dbl(smooth_mod, test, \(mod, df) rmse(model = mod, data = df))
-  )
-
-
-cv_df |&gt; 
-  select(starts_with(&quot;rmse&quot;)) |&gt; 
-  pivot_longer(
-    everything(),
-    names_to = &quot;model&quot;, 
-    values_to = &quot;rmse&quot;,
-    names_prefix = &quot;rmse_&quot;
-  ) |&gt; 
-  mutate(model = fct_inorder(model)) |&gt; 
-  ggplot(aes(x = model, y = rmse)) + 
-  geom_violin()</code></pre>
-<p><img src="ANOVA_files/figure-html/cross%20validation-2.png" width="90%" /></p>
-<pre class="r"><code>summary(smooth_mod)</code></pre>
-<pre><code>## 
-## Family: gaussian 
-## Link function: identity 
-## 
-## Formula:
-## total_crashes ~ s(year)
-## 
-## Parametric coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)   53.429      1.037    51.5   &lt;2e-16 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Approximate significance of smooth terms:
-##           edf Ref.df     F p-value    
-## s(year) 8.399    8.9 67.13  &lt;2e-16 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## R-sq.(adj) =   0.86   Deviance explained = 87.2%
-## GCV = 116.67  Scale est. = 105.48    n = 98</code></pre>
-<p>The visual comparison of the cross-validated predictions clearly
-demonstrated the limitations of the linear model. The linear fit (left
-panel) failed to capture the mid-century rise and the late-century
-decline in crashes, resulting in high systematic error. The piece wise
-model (middle panel) offered an improvement by accounting for the recent
-downtrend, but the Smooth (GAM) model (right panel) provides the
-superior fit.</p>
+<p>The visual comparison demonstrated the limitations of the linear
+model. The linear fit failed to capture the mid-century rise and the
+late-century decline in crashes, resulting in high systematic error. The
+LOESS model provides the superior fit account for historical
+fluctuations and recent down trend.</p>
 </div>
 
 
