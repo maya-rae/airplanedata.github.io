@@ -174,7 +174,7 @@ summary()
 
 To evaluate the long-term trend in survivability, we plot the fatality rates per year. Statistical evidence confirmed that airplanes have become safer over time regarding rate of survival. Linear regression analysis revealed a statistically significant negative correlation between year and fatality rate (p < 0.001). 
 
-However, the low R-squared value (0.004) indicated that while the downward trend is consistent, the outcome of any individual crash is heavily influenced by situational factors other than just the time period.
+However, the low R-squared value (0.015) indicated that while the downward trend is consistent, the outcome of any individual crash is heavily influenced by situational factors other than just the time period, and the average fatality rate of a single year is still largely determined by random effect.
 
 ```{r lm year ~ fatality}
 
@@ -195,14 +195,12 @@ However, the low R-squared value (0.004) indicated that while the downward trend
   ) +
   theme_minimal()
 
- airplane_df|>
+ airplane_df |> 
   filter(aboard > 0, !is.na(fatalities)) |> 
-  
-  ## Calculate fatality rate
   mutate(fatality_rate = fatalities / aboard) |> 
-  ## for individual event
- lm(fatality_rate ~ year, data = _)|> summary()
-
+  group_by(year) |> 
+  summarise(mean_fatality_rate = mean(fatality_rate))|> 
+ lm(mean_fatality_rate ~ year, data = _)|> summary()
 
 ```
 

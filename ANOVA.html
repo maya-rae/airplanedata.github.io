@@ -461,10 +461,11 @@ fatality rates per year. Statistical evidence confirmed that airplanes
 have become safer over time regarding rate of survival. Linear
 regression analysis revealed a statistically significant negative
 correlation between year and fatality rate (p &lt; 0.001).</p>
-<p>However, the low R-squared value (0.004) indicated that while the
+<p>However, the low R-squared value (0.015) indicated that while the
 downward trend is consistent, the outcome of any individual crash is
 heavily influenced by situational factors other than just the time
-period.</p>
+period, and the average fatality rate of a single year is still largely
+determined by random effect.</p>
 <pre class="r"><code> airplane_df |&gt; 
   filter(aboard &gt; 0, !is.na(fatalities)) |&gt; 
   mutate(fatality_rate = fatalities / aboard) |&gt; 
@@ -483,32 +484,32 @@ period.</p>
   theme_minimal()</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="ANOVA_files/figure-html/lm%20year%20~%20fatality-1.png" width="90%" /></p>
-<pre class="r"><code> airplane_df|&gt;
+<pre class="r"><code> airplane_df |&gt; 
   filter(aboard &gt; 0, !is.na(fatalities)) |&gt; 
-  
-  ## Calculate fatality rate
   mutate(fatality_rate = fatalities / aboard) |&gt; 
-  ## for individual event
- lm(fatality_rate ~ year, data = _)|&gt; summary()</code></pre>
+  group_by(year) |&gt; 
+  summarise(mean_fatality_rate = mean(fatality_rate))|&gt; 
+ lm(mean_fatality_rate ~ year, data = _)|&gt; summary()</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = fatality_rate ~ year, data = mutate(filter(airplane_df, 
-##     aboard &gt; 0, !is.na(fatalities)), fatality_rate = fatalities/aboard))
+## lm(formula = mean_fatality_rate ~ year, data = summarise(group_by(mutate(filter(airplane_df, 
+##     aboard &gt; 0, !is.na(fatalities)), fatality_rate = fatalities/aboard), 
+##     year), mean_fatality_rate = mean(fatality_rate)))
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -0.87369 -0.03091  0.15034  0.17330  0.19754 
+## -0.39929 -0.02716  0.00041  0.03606  0.11644 
 ## 
 ## Coefficients:
 ##               Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  2.5264723  0.3639697   6.941 4.35e-12 ***
-## year        -0.0008581  0.0001846  -4.648 3.43e-06 ***
+## (Intercept)  2.7754226  0.4526676   6.131 1.93e-08 ***
+## year        -0.0009833  0.0002309  -4.259 4.79e-05 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.2983 on 5232 degrees of freedom
-## Multiple R-squared:  0.004113,   Adjusted R-squared:  0.003922 
-## F-statistic: 21.61 on 1 and 5232 DF,  p-value: 3.428e-06</code></pre>
+## Residual standard error: 0.0649 on 96 degrees of freedom
+## Multiple R-squared:  0.1589, Adjusted R-squared:  0.1502 
+## F-statistic: 18.14 on 1 and 96 DF,  p-value: 4.79e-05</code></pre>
 </div>
 <div id="are-the-number-of-crash-events-higher-or-lower-over-the-years"
 class="section level2">
