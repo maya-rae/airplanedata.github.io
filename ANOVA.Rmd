@@ -9,9 +9,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-
-This file contains ANOVA and respective post-hoc tests of the dataset.
-
+Here is some additional analysis of the data set.
 
 First, the same loading and cleaning method was used. 
 
@@ -20,12 +18,14 @@ First, the same loading and cleaning method was used.
 library(tidyverse)
 library(janitor)
 library(lubridate)
-library(leaflet)
 library(crosstalk)
 library(htmltools)
 library(DT)
 library(modelr) 
 library(mgcv) 
+library(tidytext)
+library(wordcloud)
+library(RColorBrewer)
 
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -235,5 +235,34 @@ fit_count_linear = lm(total_crashes ~ year, data = crashes_by_year)
 summary(fit_count_linear)
 
 ```
-
 The visual comparison demonstrated the limitations of the linear model. The linear fit failed to capture the mid-century rise and the late-century decline in crashes, resulting in high systematic error. The LOESS model provides the superior fit account for historical fluctuations and recent down trend.
+
+## What could be the causes?
+
+To see the causes and recurring themes of aviation incidents, we performed text mining on the crash summary descriptions. After tokenizing the text and removing common stop words (e.g., 'the', 'and',"plane","crashed") and numbers, we generated a Word Cloud.
+
+```{r word cloud }
+word_counts = airplane_df |> 
+  filter(!is.na(summary)) |> 
+  select(date, summary) |> 
+  unnest_tokens(word, summary) |> 
+  anti_join(stop_words) |> 
+  filter(!str_detect(word, "^[0-9]"))  |> 
+  filter(word != "crashed", word != "plane", word !="aircraft", word != "flight")|>
+  count(word, sort = TRUE) 
+
+set.seed(1234)
+
+wordcloud(
+  words = word_counts$word,      
+  freq = word_counts$n,          
+  min.freq = 10,                 
+  max.words = 100,               
+  random.order = FALSE,          
+  rot.per = 0.25,   
+  colors = brewer.pal(9, "Blues")[5:9]
+)
+```
+
+
+

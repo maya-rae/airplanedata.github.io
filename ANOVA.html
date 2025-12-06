@@ -376,8 +376,7 @@ div.tocify {
 </div>
 
 
-<p>This file contains ANOVA and respective post-hoc tests of the
-dataset.</p>
+<p>Here is some additional analysis of the data set.</p>
 <p>First, the same loading and cleaning method was used.</p>
 <hr />
 <div id="does-the-average-number-of-crash-events-differs-across-months"
@@ -567,6 +566,34 @@ model. The linear fit failed to capture the mid-century rise and the
 late-century decline in crashes, resulting in high systematic error. The
 LOESS model provides the superior fit account for historical
 fluctuations and recent down trend.</p>
+</div>
+<div id="what-could-be-the-causes" class="section level2">
+<h2>What could be the causes?</h2>
+<p>To see the causes and recurring themes of aviation incidents, we
+performed text mining on the crash summary descriptions. After
+tokenizing the text and removing common stop words (e.g., ‘the’,
+‘and’,“plane”,“crashed”) and numbers, we generated a Word Cloud.</p>
+<pre class="r"><code>word_counts = airplane_df |&gt; 
+  filter(!is.na(summary)) |&gt; 
+  select(date, summary) |&gt; 
+  unnest_tokens(word, summary) |&gt; 
+  anti_join(stop_words) |&gt; 
+  filter(!str_detect(word, &quot;^[0-9]&quot;))  |&gt; 
+  filter(word != &quot;crashed&quot;, word != &quot;plane&quot;, word !=&quot;aircraft&quot;, word != &quot;flight&quot;)|&gt;
+  count(word, sort = TRUE) </code></pre>
+<pre><code>## Joining with `by = join_by(word)`</code></pre>
+<pre class="r"><code>set.seed(1234)
+
+wordcloud(
+  words = word_counts$word,      
+  freq = word_counts$n,          
+  min.freq = 10,                 
+  max.words = 100,               
+  random.order = FALSE,          
+  rot.per = 0.25,   
+  colors = brewer.pal(9, &quot;Blues&quot;)[5:9]
+)</code></pre>
+<p><img src="ANOVA_files/figure-html/word%20cloud-1.png" width="90%" /></p>
 </div>
 
 
