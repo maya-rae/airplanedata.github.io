@@ -21,6 +21,7 @@ library(lubridate)
 library(stringr)
 library(plotly)
 library(ggthemes)
+library(gt)
 
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -118,11 +119,56 @@ airplane_df = airplane_df |>
 # Descriptive Statistics
 
 ```{r}
-airplane_df |>
-  skimr::skim()
+
+airplane_df |> 
+  summarise(
+    across(where(is.numeric), list(
+      mean = ~mean(.x, na.rm = TRUE),
+      sd = ~sd(.x, na.rm = TRUE),
+      min = ~min(.x, na.rm = TRUE),
+      max = ~max(.x, na.rm = TRUE),
+      missing = ~sum(is.na(.x))
+    ), .names = "{col}_{fn}")
+  ) |> 
+  pivot_longer(everything(), names_to = c("variable","stat"), names_sep = "_") |> 
+  pivot_wider(names_from = stat, values_from = value) |> 
+  gt() |> 
+  tab_header(
+    title = "Airplane Dataset Summary"
+  )
 ```
 
-Our dataset, `airplane_df`, has 5,236 rows and 14 variables (columns). Some variables had missing values, such as `location`, `route`, `type`, `cn_in`, `summary`, and `operator`, but our key numeric variables had no missing values. p0, p50, p75, and p100 represent the minimal value, the 25th percentile, median, the 75th percentile, and the maximum value, respectively. 
+Our dataset, `airplane_df`, has 5,236 rows and 14 variables (columns). Some variables had missing values, such as `location`, `route`, `type`, `cn_in`, `summary`, and `operator`, but our key numeric variables had no missing values. This summary table outlines the mean, sd, and minimum and maximum value of the key numeric variables in our dataset.
+
+The cleaned dataset included the following variables:  
+
+* `date`: A date variable representing the date of the crash.
+
+* `year`: The year of the crash, stored as a numeric value. 
+
+* `decade`: The decade of the crash, stored as a character. 
+
+* `month`: The month of the crash, stored as a numeric value. 
+
+* `month_name`: The name of the month of the crash, stored as an ordered factor.  
+
+* `location`: The location of the crash, stored as a character.
+
+* `operator`: The plane operator type, stored as a factor.  
+
+* `route`: The route the plane was taking, stored as a character.
+
+* `type`: The aircraft type, stored as a character.
+
+* `cn_in`: A unique identifier of the construction/serial number of the plane.
+
+* `aboard`: The number of people aboard the plane, stored as a numeric value.
+
+* `fatalities`: The number of people who died on the plane, stored as a numeric value.  
+
+* `ground` : The number of people who died on the ground related to the crash, stored as a numeric value.
+
+* `summary`: A description explaining the cause of the plane crash, stored as a character.
 
 # Final Plots
 
