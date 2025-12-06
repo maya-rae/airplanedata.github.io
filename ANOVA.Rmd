@@ -44,7 +44,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r, echo=FALSE}
-airplane_df = read_csv("datasets/airplane_crashes_data.csv") |>
+airplane_df = read_csv("datasets/airplane_crashes_data.csv", show_col_types = FALSE) |>
   clean_names() |>
   filter(ground != "NULL", aboard != "NULL") |>
   select(-flight_number, -time, -registration)
